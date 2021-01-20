@@ -18,5 +18,5 @@ SOURCES +=    kconfig.cpp \
     kcoreconfigskeleton.cpp \
     kauthorized.cpp \
     kemailsettings.cpp \
-    kconfigwatcher.cpp \
-    kconfig_core_log_settings.cpp
+    kconfigwatcher.cpp
+#    kconfig_core_log_settings.cpp
