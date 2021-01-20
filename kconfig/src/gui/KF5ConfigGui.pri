@@ -12,5 +12,4 @@ SOURCES += kconfiggui.cpp \
            kconfigloader.cpp \
            kconfigskeleton.cpp \
            kstandardshortcut.cpp \
-           kwindowconfig.cpp \
-           ECMQmLoader-kconfig5_qt.cpp
+           kwindowconfig.cpp
