@@ -12,7 +12,7 @@
 
 #include "kconfig.h"
 #include "kconfig_p.h"
-#include "kconfig_core_log_settings.h"
+//#include "kconfig_core_log_settings.h"
 #include "ksharedconfig.h"
 #include "kconfigdata.h"
 
@@ -248,8 +248,8 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         const auto list = asIntList(value);
 
         if (list.count() != 2) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(2, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(2, list.count());
             return aDefault;
         }
         return QPoint(list.at(0), list.at(1));
@@ -258,8 +258,8 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         const auto list = asRealList(value);
 
         if (list.count() != 2) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(2, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(2, list.count());
             return aDefault;
         }
         return QPointF(list.at(0), list.at(1));
@@ -268,13 +268,13 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         const auto list = asIntList(value);
 
         if (list.count() != 4) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(4, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(4, list.count());
             return aDefault;
         }
         const QRect rect(list.at(0), list.at(1), list.at(2), list.at(3));
         if (!rect.isValid()) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
             return aDefault;
         }
         return rect;
@@ -283,13 +283,13 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         const auto list = asRealList(value);
 
         if (list.count() != 4) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(4, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(4, list.count());
             return aDefault;
         }
         const QRectF rect(list.at(0), list.at(1), list.at(2), list.at(3));
         if (!rect.isValid()) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
             return aDefault;
         }
         return rect;
@@ -298,13 +298,13 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         const auto list = asIntList(value);
 
         if (list.count() != 2) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(2, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(2, list.count());
             return aDefault;
         }
         const QSize size(list.at(0), list.at(1));
         if (!size.isValid()) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
             return aDefault;
         }
         return size;
@@ -313,13 +313,13 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         const auto list = asRealList(value);
 
         if (list.count() != 2) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(2, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(2, list.count());
             return aDefault;
         }
         const QSizeF size(list.at(0), list.at(1));
         if (!size.isValid()) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
             return aDefault;
         }
         return size;
@@ -327,15 +327,15 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
     case QMetaType::QDateTime: {
         const auto list = asIntList(value);
         if (list.count() != 6) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(6, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(6, list.count());
             return aDefault;
         }
         const QDate date(list.at(0), list.at(1), list.at(2));
         const QTime time(list.at(3), list.at(4), list.at(5));
         const QDateTime dt(date, time);
         if (!dt.isValid()) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
             return aDefault;
         }
         return dt;
@@ -346,23 +346,23 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
             list = list.mid(0, 3);    // don't break config files that stored QDate as QDateTime
         }
         if (list.count() != 3) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
-                       << formatError(3, list.count());
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault)
+//                       << formatError(3, list.count());
             return aDefault;
         }
         const QDate date(list.at(0), list.at(1), list.at(2));
         if (!date.isValid()) {
-            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
+//            qCWarning(KCONFIG_CORE_LOG) << errString(pKey, value, aDefault);
             return aDefault;
         }
         return date;
     }
     case QMetaType::QColor:
     case QMetaType::QFont:
-        qCWarning(KCONFIG_CORE_LOG) << "KConfigGroup::readEntry was passed GUI type '"
-                   << aDefault.typeName()
-                   << "' but KConfigGui isn't linked! If it is linked to your program, "
-                   "this is a platform bug. Please inform the KDE developers";
+//        qCWarning(KCONFIG_CORE_LOG) << "KConfigGroup::readEntry was passed GUI type '"
+//                   << aDefault.typeName()
+//                   << "' but KConfigGui isn't linked! If it is linked to your program, "
+//                   "this is a platform bug. Please inform the KDE developers";
         break;
     case QMetaType::QUrl:
         return QUrl(QString::fromUtf8(value));
@@ -371,7 +371,7 @@ QVariant KConfigGroup::convertToQVariant(const char *pKey, const QByteArray &val
         break;
     }
 
-    qCWarning(KCONFIG_CORE_LOG) << "unhandled type " << aDefault.typeName();
+//    qCWarning(KCONFIG_CORE_LOG) << "unhandled type " << aDefault.typeName();
     return QVariant();
 }
 
@@ -942,9 +942,9 @@ void KConfigGroup::writeEntry(const char *key, const QVariant &value,
         data = value.toString().toUtf8();
         break;
     case QMetaType::QVariantList:
-        if (!value.canConvert(QMetaType::QStringList))
-            qCWarning(KCONFIG_CORE_LOG) << "not all types in \"" << key << "\" can convert to QString,"
-                       " information will be lost";
+//        if (!value.canConvert(QMetaType::QStringList))
+//            qCWarning(KCONFIG_CORE_LOG) << "not all types in \"" << key << "\" can convert to QString,"
+//                       " information will be lost";
         Q_FALLTHROUGH();
     case QMetaType::QStringList:
         writeEntry(key, value.toList(), flags);
@@ -1053,16 +1053,17 @@ void KConfigGroup::writeEntry(const char *key, const QVariant &value,
 
     case QMetaType::QColor:
     case QMetaType::QFont:
-        qCWarning(KCONFIG_CORE_LOG) << "KConfigGroup::writeEntry was passed GUI type '"
-                   << value.typeName()
-                   << "' but KConfigGui isn't linked! If it is linked to your program, this is a platform bug. "
-                   "Please inform the KDE developers";
+//        qCWarning(KCONFIG_CORE_LOG) << "KConfigGroup::writeEntry was passed GUI type '"
+//                   << value.typeName()
+//                   << "' but KConfigGui isn't linked! If it is linked to your program, this is a platform bug. "
+//                   "Please inform the KDE developers";
         break;
     case QMetaType::QUrl:
         data = QUrl(value.toUrl()).toString().toUtf8();
         break;
     default:
-        qCWarning(KCONFIG_CORE_LOG) << "KConfigGroup::writeEntry - unhandled type" << value.typeName() << "in group" << name();
+//        qCWarning(KCONFIG_CORE_LOG) << "KConfigGroup::writeEntry - unhandled type" << value.typeName() << "in group" << name();
+        QString qCWarning =  "KConfigGroup::writeEntry - unhandled type";// << value.typeName() << "in group" << name();
     }
 
     writeEntry(key, data, flags);

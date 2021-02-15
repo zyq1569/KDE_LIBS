@@ -11,7 +11,7 @@
 #include "kconfig_p.h"
 
 #include "config-kconfig.h"
-#include "kconfig_core_log_settings.h"
+//#include "kconfig_core_log_settings.h"
 
 #include <cstdlib>
 #include <fcntl.h>
@@ -30,6 +30,7 @@
 #include <QSet>
 #include <QBasicMutex>
 #include <QMutexLocker>
+//#include <QLoggingCategory>
 
 #if KCONFIG_USE_DBUS
 #include <QDBusMessage>
@@ -421,7 +422,7 @@ bool KConfig::sync()
 
         // lock the local file
         if (d->configState == ReadWrite && !d->lockLocal()) {
-            qCWarning(KCONFIG_CORE_LOG) << "couldn't lock local file";
+//            qCWarning(KCONFIG_CORE_LOG) << "couldn't lock local file";
             return false;
         }
 
@@ -451,7 +452,7 @@ bool KConfig::sync()
         if (d->wantGlobals() && writeGlobals) {
             QExplicitlySharedDataPointer<KConfigBackend> tmp = KConfigBackend::create(*sGlobalFileName);
             if (d->configState == ReadWrite && !tmp->lock()) {
-                qCWarning(KCONFIG_CORE_LOG) << "couldn't lock global file";
+//                qCWarning(KCONFIG_CORE_LOG) << "couldn't lock global file";
 
                 //unlock the local config if we're returning early
                 if (d->mBackend->isLocked()) {
@@ -532,8 +533,11 @@ void KConfig::checkUpdate(const QString &id, const QString &updateFile)
     const QString cfg_id = updateFile + QLatin1Char(':') + id;
     const QStringList ids = cg.readEntry("update_info", QStringList());
     if (!ids.contains(cfg_id)) {
-        QProcess::execute(QStringLiteral(KCONF_UPDATE_INSTALL_LOCATION), QStringList { QStringLiteral("--check"), updateFile });
-        reparseConfiguration();
+#ifndef KCONF_UPDATE_INSTALL_LOCATION
+        QProcess::execute(QStringLiteral( "C:/Program Files/KConfig/bin/kconf_update.exe"), QStringList { QStringLiteral("--check"), updateFile });
+#else
+         QProcess::execute(QStringLiteral(KCONF_UPDATE_INSTALL_LOCATION), QStringList { QStringLiteral("--check"), updateFile });
+#endif        reparseConfiguration();
     }
 }
 

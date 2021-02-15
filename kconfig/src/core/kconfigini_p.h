@@ -18,7 +18,7 @@ class QIODevice;
 
 class KConfigIniBackend : public KConfigBackend
 {
-Q_OBJECT
+//Q_OBJECT
 private:
     QLockFile *lockFile;
 

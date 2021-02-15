@@ -69,10 +69,10 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting s) const
         return cg.readEntry("OutgoingServerTLS", QVariant(false)).toString();
     }
 #else
-    case OutServerType_DEPRECATED_DO_NOT_USE:
-    case OutServerCommand_DEPRECATED_DO_NOT_USE:
-    case OutServerTLS_DEPRECATED_DO_NOT_USE:
-        break;
+//    case OutServerType_DEPRECATED_DO_NOT_USE:
+//    case OutServerCommand_DEPRECATED_DO_NOT_USE:
+//    case OutServerTLS_DEPRECATED_DO_NOT_USE:
+//        break;
 #endif
     case InServer: {
         return cg.readEntry("IncomingServer");
@@ -151,10 +151,10 @@ void KEMailSettings::setSetting(KEMailSettings::Setting s, const QString  &v)
         break;
     }
 #else
-    case OutServerType_DEPRECATED_DO_NOT_USE:
-    case OutServerCommand_DEPRECATED_DO_NOT_USE:
-    case OutServerTLS_DEPRECATED_DO_NOT_USE:
-        break;
+//    case OutServerType_DEPRECATED_DO_NOT_USE:
+//    case OutServerCommand_DEPRECATED_DO_NOT_USE:
+//    case OutServerTLS_DEPRECATED_DO_NOT_USE:
+//        break;
 #endif
     case InServer: {
         cg.writeEntry("IncomingServer", v);

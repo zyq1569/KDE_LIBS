@@ -35,7 +35,7 @@ class QByteArray;
  */
 class KConfigBackend : public QObject, public QSharedData
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     /**

@@ -73,7 +73,7 @@ KConfigWatcher::KConfigWatcher(const KSharedConfig::Ptr &config):
                                               SLOT(onConfigChangeNotification(QHash<QString,QByteArrayList>)));
     }
 #else
-    qCWarning(KCONFIG_CORE_LOG) << "Use of KConfigWatcher without DBus support. You will not receive updates";
+//    qCWarning(KCONFIG_CORE_LOG) << "Use of KConfigWatcher without DBus support. You will not receive updates";
 #endif
 }
 

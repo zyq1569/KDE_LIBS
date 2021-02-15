@@ -127,7 +127,7 @@ KConfigIniBackend::parseConfig(const QByteArray &currentLocale, KEntryMap &entry
                 end = start;
                 for (;;) {
                     if (end == line.length()) {
-                        qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo) << "Invalid group header.";
+//                        qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo) << "Invalid group header.";
                         // XXX maybe reset the current group here?
                         goto next_line;
                     }
@@ -184,7 +184,7 @@ KConfigIniBackend::parseConfig(const QByteArray &currentLocale, KEntryMap &entry
                 line.trim();
             }
             if (aKey.isEmpty()) {
-                qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo) << "Invalid entry (empty key)";
+//                qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo) << "Invalid entry (empty key)";
                 continue;
             }
 
@@ -198,8 +198,8 @@ KConfigIniBackend::parseConfig(const QByteArray &currentLocale, KEntryMap &entry
             while ((start = aKey.lastIndexOf('[')) >= 0) {
                 int end = aKey.indexOf(']', start);
                 if (end < 0) {
-                    qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo)
-                               << "Invalid entry (missing ']')";
+//                    qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo)
+//                               << "Invalid entry (missing ']')";
                     goto next_line;
                 } else if (end > start + 1 && aKey.at(start + 1) == '$') { // found option(s)
                     int i = start + 2;
@@ -228,8 +228,8 @@ KConfigIniBackend::parseConfig(const QByteArray &currentLocale, KEntryMap &entry
                     }
                 } else { // found a locale
                     if (!locale.isNull()) {
-                        qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo)
-                                   << "Invalid entry (second locale!?)";
+//                        qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo)
+//                                   << "Invalid entry (second locale!?)";
                         goto next_line;
                     }
 
@@ -238,7 +238,7 @@ KConfigIniBackend::parseConfig(const QByteArray &currentLocale, KEntryMap &entry
                 aKey.truncate(start);
             }
             if (eqpos < 0) { // Do this here after [$d] was checked
-                qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo) << "Invalid entry (missing '=')";
+//                qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, lineNo) << "Invalid entry (missing '=')";
                 continue;
             }
             printableToString(&aKey, file, lineNo);
@@ -502,7 +502,7 @@ bool KConfigIniBackend::writeConfig(const QByteArray &locale, KEntryMap &entryMa
                 return true;
             }
             // Couldn't write. Disk full?
-            qCWarning(KCONFIG_CORE_LOG) << "Couldn't write" << filePath() << ". Disk full?";
+//            qCWarning(KCONFIG_CORE_LOG) << "Couldn't write" << filePath() << ". Disk full?";
             return false;
         }
     } else {
@@ -846,8 +846,8 @@ char KConfigIniBackend::charFromHex(const char *str, const QFile &file, int line
         } else {
             QByteArray e(str, 2);
             e.prepend("\\x");
-            qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, line) << "Invalid hex character " << c
-                       << " in \\x<nn>-type escape sequence \"" << e.constData() << "\".";
+//            qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, line) << "Invalid hex character " << c
+//                       << " in \\x<nn>-type escape sequence \"" << e.constData() << "\".";
             return 'x';
         }
     }
@@ -914,8 +914,8 @@ void KConfigIniBackend::printableToString(BufferFragment *aString, const QFile &
                 break;
             default:
                 *r = '\\';
-                qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, line)
-                           << QStringLiteral("Invalid escape sequence \"\\%1\".").arg(str[i]);
+//                qCWarning(KCONFIG_CORE_LOG) << warningProlog(file, line)
+//                           << QStringLiteral("Invalid escape sequence \"\\%1\".").arg(str[i]);
             }
         }
     }
