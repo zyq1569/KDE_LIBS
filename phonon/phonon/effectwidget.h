@@ -34,34 +34,34 @@ namespace Phonon
 {
 class Effect;
 
-    class EffectWidgetPrivate;
+class EffectWidgetPrivate;
 
-    /** \class EffectWidget effectwidget.h phonon/EffectWidget
+/** \class EffectWidget effectwidget.h phonon/EffectWidget
      * \brief Widget to control the parameters of an Effect.
      *
      * \ingroup PhononWidgets
      * \ingroup PhononEffects
      * \author Matthias Kretz <kretz@kde.org>
-     */
-    class PHONON_EXPORT EffectWidget : public QWidget
-    {
-        Q_OBJECT
-        P_DECLARE_PRIVATE(EffectWidget)
-        public:
-            explicit EffectWidget(Effect *effect, QWidget *parent = 0);
-            ~EffectWidget();
+*/
+class PHONON_EXPORT EffectWidget : public QWidget
+{
+    Q_OBJECT
+    P_DECLARE_PRIVATE(EffectWidget)
+    public:
+        explicit EffectWidget(Effect *effect, QWidget *parent = 0);
+    ~EffectWidget();
 
-        protected:
-            //EffectWidget(EffectWidgetPrivate &dd, QWidget *parent);
-            EffectWidgetPrivate *const k_ptr;
+protected:
+    //EffectWidget(EffectWidgetPrivate &dd, QWidget *parent);
+    EffectWidgetPrivate *const k_ptr;
 
-        private:
-            Q_PRIVATE_SLOT(k_func(), void _k_setToggleParameter(bool checked))
-            Q_PRIVATE_SLOT(k_func(), void _k_setIntParameter(int value))
-            Q_PRIVATE_SLOT(k_func(), void _k_setDoubleParameter(double value))
-            Q_PRIVATE_SLOT(k_func(), void _k_setStringParameter(const QString &))
-            Q_PRIVATE_SLOT(k_func(), void _k_setSliderParameter(int))
-    };
+private:
+    Q_PRIVATE_SLOT(k_func(), void _k_setToggleParameter(bool checked))
+    Q_PRIVATE_SLOT(k_func(), void _k_setIntParameter(int value))
+    Q_PRIVATE_SLOT(k_func(), void _k_setDoubleParameter(double value))
+    Q_PRIVATE_SLOT(k_func(), void _k_setStringParameter(const QString &))
+    Q_PRIVATE_SLOT(k_func(), void _k_setSliderParameter(int))
+};
 } // namespace Phonon
 
 #endif //QT_NO_PHONON_EFFECTWIDGET
