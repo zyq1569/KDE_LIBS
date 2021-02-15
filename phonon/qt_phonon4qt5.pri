@@ -1,0 +1,12 @@
+QT.phonon4qt5.VERSION = 4.11.1
+QT.phonon4qt5.MAJOR_VERSION = 4
+QT.phonon4qt5.MINOR_VERSION = 11
+QT.phonon4qt5.PATCH_VERSION = 1
+QT.phonon4qt5.name = phonon4qt5
+QT.phonon4qt5.module = phonon4qt5
+QT.phonon4qt5.defines = 
+QT.phonon4qt5.includes = $$PWD/../../include/phonon4qt5
+QT.phonon4qt5.private_includes =
+QT.phonon4qt5.libs = $$PWD/../../lib
+QT.phonon4qt5.depends = core widgets
+QT.phonon4qt5.module_config = 
