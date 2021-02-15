@@ -1,5 +1,10 @@
 
 
+HEADERS +=  backendselection.h \
+            devicepreference.h \
+            main.h \
+            settings.h
+
 
 SOURCES +=  backendselection.cpp \
             devicepreference.cpp \
