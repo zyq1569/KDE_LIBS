@@ -32,7 +32,7 @@ namespace Phonon
 {
 
 SwiftSlider::SwiftSlider(Qt::Orientation orientation, QWidget * parent)
-	: QSlider(orientation, parent)
+    : QSlider(orientation, parent)
     , m_wheelTimer(this)
 {
     m_wheelTimer.setInterval(100);

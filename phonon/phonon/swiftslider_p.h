@@ -47,22 +47,22 @@ namespace Phonon
  */
 class SwiftSlider : public QSlider
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	SwiftSlider(Qt::Orientation orientation, QWidget * parent);
-	~SwiftSlider();
+    SwiftSlider(Qt::Orientation orientation, QWidget * parent);
+    ~SwiftSlider();
 
 signals:
-        void scrollStart();
-        void scrollEnd();
+    void scrollStart();
+    void scrollEnd();
 
 private:
     void mousePressEvent(QMouseEvent *event) override;
-        void wheelEvent(QWheelEvent *event) override;
-	inline int pick(const QPoint &pt) const;
-        int pixelPosToRangeValue(int pos) const;
+    void wheelEvent(QWheelEvent *event) override;
+    inline int pick(const QPoint &pt) const;
+    int pixelPosToRangeValue(int pos) const;
 
-        QTimer m_wheelTimer;
+    QTimer m_wheelTimer;
 };
 
 } // namespace Phonon
