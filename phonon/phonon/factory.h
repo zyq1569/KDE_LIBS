@@ -25,6 +25,8 @@
 
 #include "phonon_export.h"
 
+#include "factory_p.h"
+#include "objectdescription.h"
 #include <QObject>
 #include <QFileInfo>
 #include <QPluginLoader>
@@ -265,6 +267,38 @@ namespace Factory
 //X     */
 //X    void freeSoundcardDevices();
 } // namespace Factory
+
+
+class PlatformPlugin;
+class FactoryPrivate : public Phonon::Factory::Sender
+{
+    friend QObject *Factory::backend(bool);
+    Q_OBJECT
+    public:
+        FactoryPrivate();
+        ~FactoryPrivate();
+        bool tryCreateBackend(const QString &path);
+        bool createBackend();
+#ifndef QT_NO_PHONON_PLATFORMPLUGIN
+        PlatformPlugin *platformPlugin();
+
+        PlatformPlugin *m_platformPlugin;
+        bool m_noPlatformPlugin;
+#endif //QT_NO_PHONON_PLATFORMPLUGIN
+        QPointer<QObject> m_backendObject;
+
+        QList<QObject *> objects;
+        QList<MediaNodePrivate *> mediaNodePrivateList;
+
+    private Q_SLOTS:
+        /**
+         * unregisters the backend object
+        */
+        void objectDestroyed(QObject *);
+
+        void objectDescriptionChanged(ObjectDescriptionType);
+};
+
 } // namespace Phonon
 
 

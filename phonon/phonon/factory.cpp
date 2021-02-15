@@ -20,14 +20,14 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "factory_p.h"
-
+//#include "factory_p.h"
+#include "factory.h"
 #include "backendinterface.h"
 #include "medianode_p.h"
 #include "mediaobject.h"
 #include "audiooutput.h"
 #include "globalstatic_p.h"
-#include "objectdescription.h"
+//#include "objectdescription.h"
 #include "platformplugin.h"
 #include "phononconfig_p.h"
 #include "phononnamespace_p.h"
@@ -43,38 +43,39 @@
 #include <QString>
 
 #define  PHONON_BACKEND_DIR_SUFFIX "phonon4qt5_backend"
+#define PHONON_PLUGIN_PATH "bin"
 namespace Phonon
 {
 
-class PlatformPlugin;
-class FactoryPrivate : public Phonon::Factory::Sender
-{
-    friend QObject *Factory::backend(bool);
-    Q_OBJECT
-    public:
-        FactoryPrivate();
-        ~FactoryPrivate();
-        bool tryCreateBackend(const QString &path);
-        bool createBackend();
-#ifndef QT_NO_PHONON_PLATFORMPLUGIN
-        PlatformPlugin *platformPlugin();
+//class PlatformPlugin;
+//class FactoryPrivate : public Phonon::Factory::Sender
+//{
+//    friend QObject *Factory::backend(bool);
+//    Q_OBJECT
+//    public:
+//        FactoryPrivate();
+//        ~FactoryPrivate();
+//        bool tryCreateBackend(const QString &path);
+//        bool createBackend();
+//#ifndef QT_NO_PHONON_PLATFORMPLUGIN
+//        PlatformPlugin *platformPlugin();
 
-        PlatformPlugin *m_platformPlugin;
-        bool m_noPlatformPlugin;
-#endif //QT_NO_PHONON_PLATFORMPLUGIN
-        QPointer<QObject> m_backendObject;
+//        PlatformPlugin *m_platformPlugin;
+//        bool m_noPlatformPlugin;
+//#endif //QT_NO_PHONON_PLATFORMPLUGIN
+//        QPointer<QObject> m_backendObject;
 
-        QList<QObject *> objects;
-        QList<MediaNodePrivate *> mediaNodePrivateList;
+//        QList<QObject *> objects;
+//        QList<MediaNodePrivate *> mediaNodePrivateList;
 
-    private Q_SLOTS:
-        /**
-         * unregisters the backend object
-         */
-        void objectDestroyed(QObject *);
+//    private Q_SLOTS:
+//        /**
+//         * unregisters the backend object
+//         */
+//        void objectDestroyed(QObject *);
 
-        void objectDescriptionChanged(ObjectDescriptionType);
-};
+//        void objectDescriptionChanged(ObjectDescriptionType);
+//};
 
 PHONON_GLOBAL_STATIC(Phonon::FactoryPrivate, globalFactory)
 
@@ -82,7 +83,8 @@ static inline void ensureLibraryPathSet()
 {
 #ifdef PHONON_PLUGIN_PATH
     static bool done = false;
-    if (!done) {
+    if (!done)
+    {
         done = true;
         QCoreApplication::addLibraryPath(QLatin1String(PHONON_PLUGIN_PATH));
     }

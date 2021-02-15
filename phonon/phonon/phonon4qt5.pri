@@ -15,8 +15,10 @@ HEADERS +=  abstractaudiooutput.cpp \
             effectwidget.h \
             EffectWidgetPrivate.h \
             factory.h \
+#            factory_p.h \
             globalconfig.h \
             iodevicestream.h \
+            iodevicestream_p.h \
             mediacontroller.h \
             mediaobject.h \
             medianode.h \
@@ -30,6 +32,7 @@ HEADERS +=  abstractaudiooutput.cpp \
             pulsesupport.h \
             seekslider.h \
             seekslider_p.h \
+            swiftslider_p.h \
             statesvalidator.h \
             statesvalidator_p.h \
             streaminterface.h \
