@@ -1,0 +1,103 @@
+# ----------------------------------------------------
+# 
+# ------------------------------------------------------
+
+SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
+SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
+
+CONFIG += debug_and_release  c++11
+
+INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
+                $$SDK_INSTALL_PREFIX/KF5 \
+                $$SDK_INSTALL_PREFIX/KF5/KrossUi \
+                $$SDK_INSTALL_PREFIX/KF5/KrossCore \
+                $$SDK_INSTALL_PREFIX/KF5/KAuth \
+                $$SDK_INSTALL_PREFIX/KF5/KArchive \
+                $$SDK_INSTALL_PREFIX/KF5/KActivities \
+                $$SDK_INSTALL_PREFIX/KF5/KIOCore \
+                $$SDK_INSTALL_PREFIX/KF5/ki18n \
+                $$SDK_INSTALL_PREFIX/KF5/kdecore \
+                $$SDK_INSTALL_PREFIX/KF5/KDBusAddons \
+                $$SDK_INSTALL_PREFIX/KF5/KGuiAddons \
+                $$SDK_INSTALL_PREFIX/KF5/KService \
+                $$SDK_INSTALL_PREFIX/KF5/KXmlGui \
+                $$SDK_INSTALL_PREFIX/KF5/KConfigWidgets \
+                $$SDK_INSTALL_PREFIX/KF5/KCodecs \
+                $$SDK_INSTALL_PREFIX/KF5/KConfigGui \
+                $$SDK_INSTALL_PREFIX/KF5/KConfigCore \
+                $$SDK_INSTALL_PREFIX/KF5/KCoreAddons \
+                $$SDK_INSTALL_PREFIX/KF5/KCompletion \
+                $$SDK_INSTALL_PREFIX/KF5/KTextWidgets \
+                $$SDK_INSTALL_PREFIX/KF5/KIOWidgets \
+                $$SDK_INSTALL_PREFIX/KF5/KIOGui \
+                $$SDK_INSTALL_PREFIX/KF5/KItemViews \
+                $$SDK_INSTALL_PREFIX/KF5/KIOFileWidgets \
+                $$SDK_INSTALL_PREFIX/KF5/KIconThemes \
+                $$SDK_INSTALL_PREFIX/KF5/KWindowSystem \
+                $$SDK_INSTALL_PREFIX/KF5/KWidgetsAddons \
+                $$SDK_INSTALL_PREFIX/KF5/KJobWidgets \
+                $$SDK_INSTALL_PREFIX/KF5/KNotifications \
+                $$SDK_INSTALL_PREFIX/KF5/KBookmarks \
+                $$SDK_INSTALL_PREFIX/KF5/SonnetUi \
+                $$SDK_INSTALL_PREFIX/KF5/Solid \
+                $$SDK_INSTALL_PREFIX/phonon4qt5 \
+                $$SDK_INSTALL_PREFIX/phonon4qt5/KDE \
+                $$SDK_INSTALL_PREFIX/KChart
+
+#    -lkernel32 \
+#    -luser32 \
+#    -lgdi32 \
+#    -lwinspool \
+#    -lshell32 \
+#    -lole32 \
+#    -loleaut32 \
+#    -luuid \
+#    -lcomdlg32 \
+#    -ladvapi32 \
+
+LIBS += -L$${SDK_LIB_PREFIX} \
+        -lws2_32 \
+        -lnetapi32 \
+        -lkernel32 \
+        -luser32 \
+        -lgdi32 \
+        -lwinspool \
+        -lshell32 \
+        -lole32 \
+        -loleaut32 \
+        -luuid \
+        -lcomdlg32 \
+        -ladvapi32 \
+        -lKF5I18n \
+        -lKF5WidgetsAddons \
+        -lKF5KIOCore \
+        -lKF5Service \
+        -lKF5Crash \
+        -lKF5DBusAddons \
+        -lKF5XmlGui \
+        -lKF5KIOFileWidgets \
+        -lKF5IconThemes \
+        -lKF5ConfigWidgets \
+        -lKF5Codecs \
+        -lKF5ConfigGui \
+        -lKF5ConfigCore \
+        -lKF5Auth \
+        -lKF5AuthCore \
+        -lKF5Activities \
+        -lKF5Archive \
+        -lKF5AuthCore \
+        -lKF5CoreAddons \
+        -lKF5JobWidgets \
+        -lKF5Parts \
+        -lKF5SonnetUi \
+        -lKF5Crash \
+        -lKF5Solid \
+        -lKF5Completion \
+        -lKF5GuiAddons \
+        -lKF5TextWidgets \
+        -lKF5WindowSystem \
+        -lKF5ItemViews \
+        -lKF5KIOWidgets \
+        -lKF5KrossCore \
+        -lKF5KrossUi \
+        -lKF5Notifications
