@@ -88,7 +88,7 @@
 #include "pagecontroller_p.h"
 #include "script/event_p.h"
 #include "scripter.h"
-#include "settings_core.h"
+//#include "settings_core.h"
 #include "sourcereference.h"
 #include "sourcereference_p.h"
 #include "texteditors_p.h"
@@ -257,37 +257,38 @@ qulonglong DocumentPrivate::calculateMemoryToFree()
     // [MEM] choose memory parameters based on configuration profile
     qulonglong clipValue = 0;
     qulonglong memoryToFree = 0;
+    //openokular
+    memoryToFree = m_allocatedPixmapsTotalMemory;
+    //switch (SettingsCore::memoryLevel()) {
+    //case SettingsCore::EnumMemoryLevel::Low:
+    //    memoryToFree = m_allocatedPixmapsTotalMemory;
+    //    break;
 
-    switch (SettingsCore::memoryLevel()) {
-    case SettingsCore::EnumMemoryLevel::Low:
-        memoryToFree = m_allocatedPixmapsTotalMemory;
-        break;
+    //case SettingsCore::EnumMemoryLevel::Normal: {
+    //    qulonglong thirdTotalMemory = getTotalMemory() / 3;
+    //    qulonglong freeMemory = getFreeMemory();
+    //    if (m_allocatedPixmapsTotalMemory > thirdTotalMemory)
+    //        memoryToFree = m_allocatedPixmapsTotalMemory - thirdTotalMemory;
+    //    if (m_allocatedPixmapsTotalMemory > freeMemory)
+    //        clipValue = (m_allocatedPixmapsTotalMemory - freeMemory) / 2;
+    //} break;
 
-    case SettingsCore::EnumMemoryLevel::Normal: {
-        qulonglong thirdTotalMemory = getTotalMemory() / 3;
-        qulonglong freeMemory = getFreeMemory();
-        if (m_allocatedPixmapsTotalMemory > thirdTotalMemory)
-            memoryToFree = m_allocatedPixmapsTotalMemory - thirdTotalMemory;
-        if (m_allocatedPixmapsTotalMemory > freeMemory)
-            clipValue = (m_allocatedPixmapsTotalMemory - freeMemory) / 2;
-    } break;
+    //case SettingsCore::EnumMemoryLevel::Aggressive: {
+    //    qulonglong freeMemory = getFreeMemory();
+    //    if (m_allocatedPixmapsTotalMemory > freeMemory)
+    //        clipValue = (m_allocatedPixmapsTotalMemory - freeMemory) / 2;
+    //} break;
+    //case SettingsCore::EnumMemoryLevel::Greedy: {
+    //    qulonglong freeSwap;
+    //    qulonglong freeMemory = getFreeMemory(&freeSwap);
+    //    const qulonglong memoryLimit = qMin(qMax(freeMemory, getTotalMemory() / 2), freeMemory + freeSwap);
+    //    if (m_allocatedPixmapsTotalMemory > memoryLimit)
+    //        clipValue = (m_allocatedPixmapsTotalMemory - memoryLimit) / 2;
+    //} break;
+    //}
 
-    case SettingsCore::EnumMemoryLevel::Aggressive: {
-        qulonglong freeMemory = getFreeMemory();
-        if (m_allocatedPixmapsTotalMemory > freeMemory)
-            clipValue = (m_allocatedPixmapsTotalMemory - freeMemory) / 2;
-    } break;
-    case SettingsCore::EnumMemoryLevel::Greedy: {
-        qulonglong freeSwap;
-        qulonglong freeMemory = getFreeMemory(&freeSwap);
-        const qulonglong memoryLimit = qMin(qMax(freeMemory, getTotalMemory() / 2), freeMemory + freeSwap);
-        if (m_allocatedPixmapsTotalMemory > memoryLimit)
-            clipValue = (m_allocatedPixmapsTotalMemory - memoryLimit) / 2;
-    } break;
-    }
-
-    if (clipValue > memoryToFree)
-        memoryToFree = clipValue;
+    //if (clipValue > memoryToFree)
+    //    memoryToFree = clipValue;
 
     return memoryToFree;
 }
@@ -1260,8 +1261,8 @@ void DocumentPrivate::saveDocumentInfo() const
 void DocumentPrivate::slotTimedMemoryCheck()
 {
     // [MEM] clean memory (for 'free mem dependent' profiles only)
-    if (SettingsCore::memoryLevel() != SettingsCore::EnumMemoryLevel::Low && m_allocatedPixmapsTotalMemory > 1024 * 1024)
-        cleanupPixmapMemory();
+    //    if (SettingsCore::memoryLevel() != SettingsCore::EnumMemoryLevel::Low && m_allocatedPixmapsTotalMemory > 1024 * 1024)
+    cleanupPixmapMemory();
 }
 
 void DocumentPrivate::sendGeneratorPixmapRequest()
@@ -3445,7 +3446,7 @@ void Document::setPrevPage()
 }
 */
 
-void Document::setViewportWithHistory(const DocumentViewport &viewport, DocumentObserver *excludeObserver, bool smoothMove, bool updateHistory)
+    void Document::setViewportWithHistory(const DocumentViewport &viewport, DocumentObserver *excludeObserver, bool smoothMove, bool updateHistory)
 {
     if (!viewport.isValid()) {
         qCDebug(OkularCoreDebug) << "invalid viewport:" << viewport.toString();

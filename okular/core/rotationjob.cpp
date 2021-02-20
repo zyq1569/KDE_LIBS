@@ -126,4 +126,4 @@ void RotationJobInternal::run(ThreadWeaver::JobPointer self, ThreadWeaver::Threa
     mRotatedImage = mImage.transformed(matrix);
 }
 
-#include "moc_rotationjob_p.cpp"
+//#include "moc_rotationjob_p.cpp"
