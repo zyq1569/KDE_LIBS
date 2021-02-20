@@ -2,13 +2,12 @@
 # 
 # ------------------------------------------------------
 
+HEADERS +=   shell.h \
+             okular_main.h \
+             shellutils.h
 
-# .
 
-
-
-SOURCES += ./okular_autogen/mocs_compilation.cpp \
-    ../../okular/shell/main.cpp \
-    ../../okular/shell/okular_main.cpp \
-    ../../okular/shell/shell.cpp \
-    ../../okular/shell/shellutils.cpp
+SOURCES +=   main.cpp \
+             okular_main.cpp \
+             shell.cpp \
+             shellutils.cpp

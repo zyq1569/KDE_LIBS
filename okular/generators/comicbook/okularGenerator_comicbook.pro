@@ -33,38 +33,9 @@ INCLUDEPATH += ../ \
     ../../../../../../include/KF5/KIOCore \
     ../../../../../../include/KF5/KService \
     ../../../../../../include/KF5/KArchive
-LIBS += -L"." \
-    -l../../lib/Debug/okular_comicbook \
-    -l../../lib/Debug/Okular5Core \
-    -lD://lib/KF5XmlGui \
-    -lD://lib/KF5ConfigWidgets \
-    -lD://lib/KF5ConfigGui \
-    -lD://lib/KF5Codecs \
-    -lD://lib/KF5Auth \
-    -lD://lib/KF5AuthCore \
-    -lD://lib/KF5WidgetsAddons \
-    -lD://lib/KF5KIOCore \
-    -lD://lib/KF5Service \
-    -lD://lib/KF5ConfigCore \
-    -lD://lib/KF5Crash \
-    -lD:/CraftRoot/lib/libKF5CoreAddons.dll.a \
-    -lKF5::DBusAddons \
-    -lKF5::I18n \
-    -lD://lib/KF5Archive \
-    -lkernel32 \
-    -luser32 \
-    -lgdi32 \
-    -lwinspool \
-    -lshell32 \
-    -lole32 \
-    -loleaut32 \
-    -luuid \
-    -lcomdlg32 \
-    -ladvapi32 \
-    -l$(NOINHERIT)
-DEPENDPATH += .
-MOC_DIR += ./GeneratedFiles/$(ConfigurationName)
-OBJECTS_DIR += debug
-UI_DIR += ./GeneratedFiles
-RCC_DIR += ./GeneratedFiles
+
+LIBS += -L$${SDK_LIB_PREFIX} \
+    Okular5Core \
+    okular_comicbook
+include(../../okularAll.pri)
 include(okularGenerator_comicbook.pri)

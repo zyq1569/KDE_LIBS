@@ -40,6 +40,9 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5/KBookmarks \
                 $$SDK_INSTALL_PREFIX/KF5/SonnetUi \
                 $$SDK_INSTALL_PREFIX/KF5/Solid \
+                $$SDK_INSTALL_PREFIX/KF5/kcrash \
+                $$SDK_INSTALL_PREFIX/KF5/kparts \
+                $$SDK_INSTALL_PREFIX/KF5/ThreadWeaver \
                 $$SDK_INSTALL_PREFIX/phonon4qt5 \
                 $$SDK_INSTALL_PREFIX/phonon4qt5/KDE \
                 $$SDK_INSTALL_PREFIX/KChart
