@@ -13,9 +13,9 @@ HEADERS +=      core/action.h \
                 core/area.h \
                 core/audioplayer.h \
                 core/bookmarkmanager.h \
-                core/chooseenginedialog.h \
+                core/chooseenginedialog_p.h \
                 core/document.h \
-                core/documentcommands.h \
+                core/documentcommands_p.h \
                 core/fontinfo.h \
                 core/form.h \
                 core/generator.h \
@@ -23,41 +23,41 @@ HEADERS +=      core/action.h \
                 core/misc.h \
                 core/movie.h \
                 core/observer.h \
-                core/debug.h \
+                core/debug_p.h \
                 core/page.h \
-                core/pagecontroller.h \
+                core/pagecontroller_p.h \
                 core/pagesize.h \
                 core/pagetransition.h \
-                core/rotationjob.h \
+                core/rotationjob_p.h \
                 core/scripter.h \
                 core/sound.h \
                 core/sourcereference.h \
                 core/textdocumentgenerator.h \
                 core/textdocumentsettings.h \
+                core/textdocumentsettings_p.h \
                 core/textpage.h \
-                core/tilesmanager.h \
+                core/tilesmanager_p.h \
                 core/utils.h \
                 core/view.h \
                 core/fileprinter.h \
                 core/printoptionswidget.h \
                 core/signatureutils.h \
-                core/script/event.h \
+                core/script/event_p.h \
                 core/synctex/synctex_parser.h \
                 core/synctex/synctex_parser_utils.h \
-#                ./qrc_builtin.h \
-#                ./settings_core.h \
-                core/script/executor_kjs.h \
-                core/script/kjs_app.h \
-                core/script/kjs_console.h \
-                core/script/kjs_data.h \
-                core/script/kjs_display.h \
-                core/script/kjs_document.h \
-                core/script/kjs_field.h \
-                core/script/kjs_fullscreen.h \
-                core/script/kjs_spell.h \
-                core/script/kjs_util.h \
-                core/script/kjs_event.h \
-                core/script/kjs_ocg.h
+                core/script/executor_kjs_p.h \
+                core/script/kjs_app_p.h \
+                core/script/kjs_console_p.h \
+                core/script/kjs_data_p.h \
+                core/script/kjs_display_p.h \
+                core/script/kjs_document_p.h \
+                core/script/kjs_field_p.h \
+                core/script/kjs_fullscreen_p.h \
+                core/script/kjs_spell_p.h \
+                core/script/kjs_util_p.h \
+                core/script/kjs_event_p.h \
+                core/script/kjs_ocg_p.h
+
 
 
 SOURCES +=      core/action.cpp \

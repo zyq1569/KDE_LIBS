@@ -3,7 +3,6 @@
 # ------------------------------------------------------
 
 
+HEADERS += generator_comicbook.h
 
-
-SOURCES += ./okularGenerator_comicbook_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/comicbook/generator_comicbook.cpp
+SOURCES += generator_comicbook.cpp

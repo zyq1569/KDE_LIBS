@@ -59,18 +59,6 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
 #    -ladvapi32 \
 
 LIBS += -L$${SDK_LIB_PREFIX} \
-        -lws2_32 \
-        -lnetapi32 \
-        -lkernel32 \
-        -luser32 \
-        -lgdi32 \
-        -lwinspool \
-        -lshell32 \
-        -lole32 \
-        -loleaut32 \
-        -luuid \
-        -lcomdlg32 \
-        -ladvapi32 \
         -lKF5I18n \
         -lKF5WidgetsAddons \
         -lKF5KIOCore \
@@ -103,4 +91,74 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -lKF5KIOWidgets \
         -lKF5KrossCore \
         -lKF5KrossUi \
-        -lKF5Notifications
+        -lKF5Notifications \
+        -lphonon4qt5 \
+        -lKF5Bookmarks \
+        -lKF5ThreadWeaver \
+        -llibKF5JS \
+        -llibKF5JSApi \
+        -lws2_32 \
+        -lnetapi32 \
+        -lkernel32 \
+        -luser32 \
+        -lgdi32 \
+        -lwinspool \
+        -lshell32 \
+        -lole32 \
+        -loleaut32 \
+        -luuid \
+        -lcomdlg32 \
+        -ladvapi32 \
+        -lshlwapi
+
+
+
+#//OKULAR_EXPORT_PLUGIN(ComicBookGenerator, "libokularGenerator_comicbook.json")
+
+#//static_assert(json[0] != '\0', "arg2 must be a string literal");                                                                                                                                                                           \
+#//    K_PLUGIN_CLASS_WITH_JSON(classname, json)
+
+#//#define K_PLUGIN_CLASS_WITH_JSON(classname, jsonFile) K_PLUGIN_FACTORY_WITH_JSON(classname ## Factory, jsonFile, registerPlugin<classname >();)
+
+#//#define K_PLUGIN_FACTORY_WITH_JSON(name, jsonFile, pluginRegistrations)  K_PLUGIN_FACTORY_WITH_BASEFACTORY_JSON(name, KPluginFactory, jsonFile, pluginRegistrations)
+
+#//#define K_PLUGIN_FACTORY_WITH_BASEFACTORY_JSON(name, baseFactory, jsonFile, pluginRegistrations) \
+#//    K_PLUGIN_FACTORY_DECLARATION_WITH_BASEFACTORY_JSON(name, baseFactory, jsonFile) \
+#//    K_PLUGIN_FACTORY_DEFINITION_WITH_BASEFACTORY(name, baseFactory, pluginRegistrations)
+
+#//#define K_PLUGIN_FACTORY_DECLARATION_WITH_BASEFACTORY_SKEL(name, baseFactory, ...) \
+#//    class name : public KPluginFactory \
+#//    { \
+#//        Q_OBJECT \
+#//        Q_INTERFACES(KPluginFactory) \
+#//        __VA_ARGS__ \
+#//    public: \
+#//        explicit name(); \
+#//        ~name(); \
+#//    };
+
+#//#define K_PLUGIN_FACTORY_DEFINITION_WITH_BASEFACTORY(name, baseFactory, pluginRegistrations) \
+#//    name::name() \
+#//    { \
+#//        pluginRegistrations \
+#//    } \
+#//    name::~name() {}
+
+#    //static_assert(json[0] != '\0', "arg2 must be a string literal");
+#class ComicBookGeneratorFactory : public KPluginFactory
+#{
+#    Q_OBJECT
+#    Q_INTERFACES(KPluginFactory)
+#    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_comicbook.json")
+#public:
+#    explicit ComicBookGeneratorFactory();
+#    ~ComicBookGeneratorFactory();
+#};
+
+#ComicBookGeneratorFactory::ComicBookGeneratorFactory()
+#{
+#    registerPlugin<ComicBookGenerator >();
+#}
+#ComicBookGeneratorFactory::~ComicBookGeneratorFactory()
+#{
+#}
