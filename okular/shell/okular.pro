@@ -84,6 +84,8 @@ INCLUDEPATH +=  ../shell \
 #    -lcomdlg32 \
 #    -ladvapi32 \
 #    -l$(NOINHERIT)
+LIBS +=    -L$${DESTDIR} \
+            -lokularcore
 
 include(../okularAll.pri)
 include(okular.pri)
