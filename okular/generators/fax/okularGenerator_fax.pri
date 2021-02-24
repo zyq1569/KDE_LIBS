@@ -3,13 +3,16 @@
 # ------------------------------------------------------
 
 
-# .
+HEADERS +=  generator_fax.h \
+            faxdocument.h \
+            faxexpand.h \
+            faxinit.h \
+            fax_debug.h
 
 
 
-SOURCES += ./okularGenerator_fax_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/fax/generator_fax.cpp \
-    ../../../okular/generators/fax/faxdocument.cpp \
-    ../../../okular/generators/fax/faxexpand.cpp \
-    ../../../okular/generators/fax/faxinit.cpp \
-    ../../../okular/generators/fax/fax_debug.cpp
+SOURCES +=  generator_fax.cpp \
+            faxdocument.cpp \
+            faxexpand.cpp \
+            faxinit.cpp \
+            fax_debug.cpp

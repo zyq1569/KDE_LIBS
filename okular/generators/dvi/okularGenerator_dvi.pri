@@ -3,35 +3,60 @@
 # ------------------------------------------------------
 
 
-# .
+HEADERS +=  generator_dvi.h \
+            bigEndianByteReader.h \
+            dviRenderer.h \
+            dviRenderer_draw.h \
+            dviRenderer_prescan.h \
+            dviRenderer_dr.h \
+            special.h \
+            dviFile.h \
+            dviPageInfo.h \
+            psgs.h \
+            glyph.h \
+            TeXFont.h \
+            TeXFontDefinition.h \
+            vf.h \
+            TeXFont_PFB.h \
+            TeXFont_PK.h \
+            TeXFont_TFM.h \
+            util.h \
+            pageSize.h \
+            simplePageSize.h \
+            length.h \
+            fontEncoding.h \
+            fontEncodingPool.h \
+            fontMap.h \
+            fontpool.h \
+            dvisourcesplitter.h \
+            dviexport.h
 
 
 
-SOURCES += ./okularGenerator_dvi_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/dvi/generator_dvi.cpp \
-    ../../../okular/generators/dvi/bigEndianByteReader.cpp \
-    ../../../okular/generators/dvi/dviRenderer.cpp \
-    ../../../okular/generators/dvi/dviRenderer_draw.cpp \
-    ../../../okular/generators/dvi/dviRenderer_prescan.cpp \
-    ../../../okular/generators/dvi/dviRenderer_dr.cpp \
-    ../../../okular/generators/dvi/special.cpp \
-    ../../../okular/generators/dvi/dviFile.cpp \
-    ../../../okular/generators/dvi/dviPageInfo.cpp \
-    ../../../okular/generators/dvi/psgs.cpp \
-    ../../../okular/generators/dvi/glyph.cpp \
-    ../../../okular/generators/dvi/TeXFont.cpp \
-    ../../../okular/generators/dvi/TeXFontDefinition.cpp \
-    ../../../okular/generators/dvi/vf.cpp \
-    ../../../okular/generators/dvi/TeXFont_PFB.cpp \
-    ../../../okular/generators/dvi/TeXFont_PK.cpp \
-    ../../../okular/generators/dvi/TeXFont_TFM.cpp \
-    ../../../okular/generators/dvi/util.cpp \
-    ../../../okular/generators/dvi/pageSize.cpp \
-    ../../../okular/generators/dvi/simplePageSize.cpp \
-    ../../../okular/generators/dvi/length.cpp \
-    ../../../okular/generators/dvi/fontEncoding.cpp \
-    ../../../okular/generators/dvi/fontEncodingPool.cpp \
-    ../../../okular/generators/dvi/fontMap.cpp \
-    ../../../okular/generators/dvi/fontpool.cpp \
-    ../../../okular/generators/dvi/dvisourcesplitter.cpp \
-    ../../../okular/generators/dvi/dviexport.cpp
+SOURCES +=  generator_dvi.cpp \
+            bigEndianByteReader.cpp \
+            dviRenderer.cpp \
+            dviRenderer_draw.cpp \
+            dviRenderer_prescan.cpp \
+            dviRenderer_dr.cpp \
+            special.cpp \
+            dviFile.cpp \
+            dviPageInfo.cpp \
+            psgs.cpp \
+            glyph.cpp \
+            TeXFont.cpp \
+            TeXFontDefinition.cpp \
+            vf.cpp \
+            TeXFont_PFB.cpp \
+            TeXFont_PK.cpp \
+            TeXFont_TFM.cpp \
+            util.cpp \
+            pageSize.cpp \
+            simplePageSize.cpp \
+            length.cpp \
+            fontEncoding.cpp \
+            fontEncodingPool.cpp \
+            fontMap.cpp \
+            fontpool.cpp \
+            dvisourcesplitter.cpp \
+            dviexport.cpp

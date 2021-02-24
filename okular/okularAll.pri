@@ -5,7 +5,7 @@
 SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
 SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
 
-CONFIG += debug_and_release 
+CONFIG += debug_and_release c++17
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
@@ -45,6 +45,8 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5/ThreadWeaver \
                 $$SDK_INSTALL_PREFIX/KF5/purpose \
                 $$SDK_INSTALL_PREFIX/KF5/purposewidgets \
+                $$SDK_INSTALL_PREFIX/openjpeg-2.3 \
+                $$SDK_INSTALL_PREFIX/zlib \
                 $$SDK_INSTALL_PREFIX/phonon4qt5 \
                 $$SDK_INSTALL_PREFIX/phonon4qt5/KDE \
                 $$SDK_INSTALL_PREFIX/KChart
@@ -113,7 +115,8 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -luuid \
         -lcomdlg32 \
         -ladvapi32 \
-        -lshlwapi
+        -lshlwapi \
+        -llibdjvulibre
 
 
 

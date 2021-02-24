@@ -3,11 +3,11 @@
 # ------------------------------------------------------
 
 
-# .
+HEADERS +=  converter.h \
+            document.h \
+            generator_fb.h
 
 
-
-SOURCES += ./okularGenerator_fb_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/fictionbook/converter.cpp \
-    ../../../okular/generators/fictionbook/document.cpp \
-    ../../../okular/generators/fictionbook/generator_fb.cpp
+SOURCES +=  converter.cpp \
+            document.cpp \
+            generator_fb.cpp
