@@ -135,15 +135,15 @@ public:
 };
 
 const QList<QPair<KLocalizedString, QColor>> AnnotationActionHandlerPrivate::defaultColors = {{ki18nc("@item:inlistbox Color name", "Red"), Qt::red},
-    {ki18nc("@item:inlistbox Color name", "Orange"), QColor(255, 85, 0)},
-    {ki18nc("@item:inlistbox Color name", "Yellow"), Qt::yellow},
-    {ki18nc("@item:inlistbox Color name", "Green"), Qt::green},
-    {ki18nc("@item:inlistbox Color name", "Cyan"), Qt::cyan},
-    {ki18nc("@item:inlistbox Color name", "Blue"), Qt::blue},
-    {ki18nc("@item:inlistbox Color name", "Magenta"), Qt::magenta},
-    {ki18nc("@item:inlistbox Color name", "White"), Qt::white},
-    {ki18nc("@item:inlistbox Color name", "Gray"), Qt::gray},
-    {ki18nc("@item:inlistbox Color name", "Black"), Qt::black}
+                                                                                              {ki18nc("@item:inlistbox Color name", "Orange"), QColor(255, 85, 0)},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Yellow"), Qt::yellow},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Green"), Qt::green},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Cyan"), Qt::cyan},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Blue"), Qt::blue},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Magenta"), Qt::magenta},
+                                                                                              {ki18nc("@item:inlistbox Color name", "White"), Qt::white},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Gray"), Qt::gray},
+                                                                                              {ki18nc("@item:inlistbox Color name", "Black"), Qt::black}
 
 };
 
@@ -153,19 +153,15 @@ const QList<double> AnnotationActionHandlerPrivate::opacityStandardValues = {0.1
 
 QAction *AnnotationActionHandlerPrivate::selectActionItem(KSelectAction *aList, QAction *aCustomCurrent, double value, const QList<double> &defaultValues, const QIcon &icon, const QString &label)
 {
-    if (aCustomCurrent)
-    {
+    if (aCustomCurrent) {
         aList->removeAction(aCustomCurrent);
         delete aCustomCurrent;
     }
     QAction *aCustom = nullptr;
     const int defaultValueIdx = defaultValues.indexOf(value);
-    if (defaultValueIdx >= 0)
-    {
+    if (defaultValueIdx >= 0) {
         aList->setCurrentItem(defaultValueIdx);
-    }
-    else
-    {
+    } else {
         aCustom = new KToggleAction(icon, label, q);
         const int aBeforeIdx = std::lower_bound(defaultValues.begin(), defaultValues.end(), value) - defaultValues.begin();
         QAction *aBefore = aBeforeIdx < defaultValues.size() ? aList->actions().at(aBeforeIdx) : nullptr;
@@ -177,21 +173,16 @@ QAction *AnnotationActionHandlerPrivate::selectActionItem(KSelectAction *aList, 
 
 void AnnotationActionHandlerPrivate::maybeUpdateCustomStampAction(const QString &stampIconName)
 {
-    auto it = std::find_if(StampAnnotationWidget::defaultStamps.begin(), StampAnnotationWidget::defaultStamps.end(), [&stampIconName](const QPair<QString, QString> &element)
-    {
-        return element.second == stampIconName;
-    });
+    auto it = std::find_if(StampAnnotationWidget::defaultStamps.begin(), StampAnnotationWidget::defaultStamps.end(), [&stampIconName](const QPair<QString, QString> &element) { return element.second == stampIconName; });
     bool defaultStamp = it != StampAnnotationWidget::defaultStamps.end();
 
-    if (aCustomStamp)
-    {
+    if (aCustomStamp) {
         aStamp->removeAction(aCustomStamp);
         agTools->removeAction(aCustomStamp);
         delete aCustomStamp;
         aCustomStamp = nullptr;
     }
-    if (!defaultStamp)
-    {
+    if (!defaultStamp) {
         QFileInfo info(stampIconName);
         QString stampActionName = info.fileName();
         aCustomStamp = new KToggleAction(stampIcon(stampIconName), stampActionName, q);
@@ -199,17 +190,13 @@ void AnnotationActionHandlerPrivate::maybeUpdateCustomStampAction(const QString 
         aStamp->setDefaultAction(aCustomStamp);
         agTools->addAction(aCustomStamp);
         aCustomStamp->setChecked(true);
-        QObject::connect(aCustomStamp, &QAction::triggered, q, [this, stampIconName]()
-        {
-            slotStampToolSelected(stampIconName);
-        });
+        QObject::connect(aCustomStamp, &QAction::triggered, q, [this, stampIconName]() { slotStampToolSelected(stampIconName); });
     }
 }
 
 void AnnotationActionHandlerPrivate::parseTool(int toolId)
 {
-    if (toolId == -1)
-    {
+    if (toolId == -1) {
         updateConfigActions();
         return;
     }
@@ -220,55 +207,43 @@ void AnnotationActionHandlerPrivate::parseTool(int toolId)
     QDomElement annElement = engineElement.firstChildElement(QStringLiteral("annotation"));
 
     QColor color, innerColor, textColor;
-    if (annElement.hasAttribute(QStringLiteral("color")))
-    {
+    if (annElement.hasAttribute(QStringLiteral("color"))) {
         color = QColor(annElement.attribute(QStringLiteral("color")));
     }
-    if (annElement.hasAttribute(QStringLiteral("innerColor")))
-    {
+    if (annElement.hasAttribute(QStringLiteral("innerColor"))) {
         innerColor = QColor(annElement.attribute(QStringLiteral("innerColor")));
     }
-    if (annElement.hasAttribute(QStringLiteral("textColor")))
-    {
+    if (annElement.hasAttribute(QStringLiteral("textColor"))) {
         textColor = QColor(annElement.attribute(QStringLiteral("textColor")));
     }
-    if (textColor.isValid())
-    {
+    if (textColor.isValid()) {
         currentColor = textColor;
         currentInnerColor = color;
-    }
-    else
-    {
+    } else {
         currentColor = color;
         currentInnerColor = innerColor;
     }
 
-    if (annElement.hasAttribute(QStringLiteral("font")))
-    {
+    if (annElement.hasAttribute(QStringLiteral("font"))) {
         currentFont.fromString(annElement.attribute(QStringLiteral("font")));
     }
 
     // if the width value is not a default one, insert a new action in the width list
-    if (annElement.hasAttribute(QStringLiteral("width")))
-    {
+    if (annElement.hasAttribute(QStringLiteral("width"))) {
         double width = annElement.attribute(QStringLiteral("width")).toDouble();
         aCustomWidth = selectActionItem(aWidth, aCustomWidth, width, widthStandardValues, widthIcon(width), i18nc("@item:inlistbox", "Width %1", width));
     }
 
     // if the opacity value is not a default one, insert a new action in the opacity list
-    if (annElement.hasAttribute(QStringLiteral("opacity")))
-    {
+    if (annElement.hasAttribute(QStringLiteral("opacity"))) {
         double opacity = annElement.attribute(QStringLiteral("opacity")).toDouble();
         aCustomOpacity = selectActionItem(aOpacity, aCustomOpacity, opacity, opacityStandardValues, GuiUtils::createOpacityIcon(opacity), i18nc("@item:inlistbox", "%1\%", opacity * 100));
-    }
-    else
-    {
+    } else {
         aOpacity->setCurrentItem(opacityStandardValues.size() - 1); // 100 %
     }
 
     // if the tool is a custom stamp, insert a new action in the stamp list
-    if (annotType == QStringLiteral("stamp"))
-    {
+    if (annotType == QStringLiteral("stamp")) {
         QString stampIconName = annElement.attribute(QStringLiteral("icon"));
         maybeUpdateCustomStampAction(stampIconName);
     }
@@ -288,12 +263,9 @@ void AnnotationActionHandlerPrivate::updateConfigActions(const QString &annotTyp
     const bool isLine = annotType == QStringLiteral("ink") || isStraightLine;
     const bool isStamp = annotType == QStringLiteral("stamp");
 
-    if (isTypewriter)
-    {
+    if (isTypewriter) {
         aColor->setIcon(GuiUtils::createColorIcon({currentColor}, QIcon::fromTheme(QStringLiteral("format-text-color"))));
-    }
-    else
-    {
+    } else {
         aColor->setIcon(GuiUtils::createColorIcon({currentColor}, QIcon::fromTheme(QStringLiteral("format-stroke-color"))));
     }
     aInnerColor->setIcon(GuiUtils::createColorIcon({currentInnerColor}, QIcon::fromTheme(QStringLiteral("format-fill-color"))));
@@ -308,8 +280,7 @@ void AnnotationActionHandlerPrivate::updateConfigActions(const QString &annotTyp
     aAdvancedSettings->setEnabled(isAnnotationSelected);
 
     // set tooltips
-    if (!isAnnotationSelected)
-    {
+    if (!isAnnotationSelected) {
         aWidth->setToolTip(i18nc("@info:tooltip", "Annotation line width (No annotation selected)"));
         aColor->setToolTip(i18nc("@info:tooltip", "Annotation color (No annotation selected)"));
         aInnerColor->setToolTip(i18nc("@info:tooltip", "Annotation fill color (No annotation selected)"));
@@ -321,56 +292,37 @@ void AnnotationActionHandlerPrivate::updateConfigActions(const QString &annotTyp
         return;
     }
 
-    if (isLine || isShape)
-    {
+    if (isLine || isShape) {
         aWidth->setToolTip(i18nc("@info:tooltip", "Annotation line width"));
-    }
-    else
-    {
+    } else {
         aWidth->setToolTip(i18nc("@info:tooltip", "Annotation line width (Current annotation has no line width)"));
     }
 
-    if (isTypewriter)
-    {
+    if (isTypewriter) {
         aColor->setToolTip(i18nc("@info:tooltip", "Annotation text color"));
-    }
-    else if (isShape)
-    {
+    } else if (isShape) {
         aColor->setToolTip(i18nc("@info:tooltip", "Annotation border color"));
-    }
-    else
-    {
+    } else {
         aColor->setToolTip(i18nc("@info:tooltip", "Annotation color"));
     }
 
-    if (isShape)
-    {
+    if (isShape) {
         aInnerColor->setToolTip(i18nc("@info:tooltip", "Annotation fill color"));
-    }
-    else
-    {
+    } else {
         aInnerColor->setToolTip(i18nc("@info:tooltip", "Annotation fill color (Current annotation has no fill color)"));
     }
 
-    if (isText)
-    {
+    if (isText) {
         aFont->setToolTip(i18nc("@info:tooltip", "Annotation font"));
-    }
-    else
-    {
+    } else {
         aFont->setToolTip(i18nc("@info:tooltip", "Annotation font (Current annotation has no font)"));
     }
 
-    if (isStraightLine || isPolygon)
-    {
+    if (isStraightLine || isPolygon) {
         aConstrainRatioAndAngle->setToolTip(i18nc("@info:tooltip", "Constrain line angle to 15° steps"));
-    }
-    else if (isShape)
-    {
+    } else if (isShape) {
         aConstrainRatioAndAngle->setToolTip(i18nc("@info:tooltip", "Constrain shape ratio to 1:1"));
-    }
-    else
-    {
+    } else {
         aConstrainRatioAndAngle->setToolTip(i18nc("@info:tooltip", "Constrain shape ratio to 1:1 or line angle to 15° steps (Not supported by current annotation)"));
     }
 
@@ -381,8 +333,7 @@ void AnnotationActionHandlerPrivate::updateConfigActions(const QString &annotTyp
 
 void AnnotationActionHandlerPrivate::populateQuickAnnotations()
 {
-    if (!aQuickTools->isEnabled())
-    {
+    if (!aQuickTools->isEnabled()) {
         return;
     }
 
@@ -394,28 +345,20 @@ void AnnotationActionHandlerPrivate::populateQuickAnnotations()
     int favToolId = 1;
     QList<int>::const_iterator shortcutNumber = numberKeys.begin();
     QDomElement favToolElement = annotator->quickTool(favToolId);
-    while (!favToolElement.isNull())
-    {
+    while (!favToolElement.isNull()) {
         QString itemText = favToolElement.attribute(QStringLiteral("name"));
-        if (itemText.isEmpty())
-        {
+        if (itemText.isEmpty()) {
             itemText = PageViewAnnotator::defaultToolName(favToolElement);
         }
         QIcon toolIcon = QIcon(PageViewAnnotator::makeToolPixmap(favToolElement));
         QAction *annFav = new QAction(toolIcon, itemText, q);
         aQuickTools->addAction(annFav);
         if (shortcutNumber != numberKeys.end())
-        {
             annFav->setShortcut(QKeySequence(*(shortcutNumber++)));
-        }
-        QObject::connect(annFav, &QAction::triggered, q, [this, favToolId]()
-        {
-            slotQuickToolSelected(favToolId);
-        });
+        QObject::connect(annFav, &QAction::triggered, q, [this, favToolId]() { slotQuickToolSelected(favToolId); });
 
         QDomElement engineElement = favToolElement.firstChildElement(QStringLiteral("engine"));
-        if (engineElement.attribute(QStringLiteral("type")) == QStringLiteral("TextSelector"))
-        {
+        if (engineElement.attribute(QStringLiteral("type")) == QStringLiteral("TextSelector")) {
             textQuickTools.append(annFav);
             annFav->setEnabled(textToolsEnabled);
         }
@@ -428,8 +371,7 @@ void AnnotationActionHandlerPrivate::populateQuickAnnotations()
     // add action to open "Configure Annotation" settings dialog
     KActionCollection *ac = qobject_cast<PageView *>(q->parent()->parent())->actionCollection();
     QAction *aConfigAnnotation = ac->action(QStringLiteral("options_configure_annotations"));
-    if (aConfigAnnotation)
-    {
+    if (aConfigAnnotation) {
         aQuickTools->addAction(aConfigAnnotation);
     }
 }
@@ -438,29 +380,21 @@ KSelectAction *AnnotationActionHandlerPrivate::colorPickerAction(AnnotationColor
 {
     auto colorList = defaultColors;
     QString aText(i18nc("@action:intoolbar Current annotation config option", "Color"));
-    if (colorType == AnnotationColor::InnerColor)
-    {
+    if (colorType == AnnotationColor::InnerColor) {
         aText = i18nc("@action:intoolbar Current annotation config option", "Fill Color");
         colorList.append(QPair<KLocalizedString, Qt::GlobalColor>(ki18nc("@item:inlistbox Color name", "Transparent"), Qt::transparent));
     }
     KSelectAction *aColorPicker = new KSelectAction(QIcon(), aText, q);
     aColorPicker->setToolBarMode(KSelectAction::MenuMode);
-    for (const auto &colorNameValue : colorList)
-    {
+    for (const auto &colorNameValue : colorList) {
         QColor color(colorNameValue.second);
         QAction *aColor = new QAction(GuiUtils::createColorIcon({color}, QIcon(), GuiUtils::VisualizeTransparent), colorNameValue.first.toString(), q);
         aColorPicker->addAction(aColor);
-        QObject::connect(aColor, &QAction::triggered, q, [this, colorType, color]()
-        {
-            slotSetColor(colorType, color);
-        });
+        QObject::connect(aColor, &QAction::triggered, q, [this, colorType, color]() { slotSetColor(colorType, color); });
     }
     QAction *aCustomColor = new QAction(QIcon::fromTheme(QStringLiteral("color-picker")), i18nc("@item:inlistbox", "Custom Color..."), q);
     aColorPicker->addAction(aCustomColor);
-    QObject::connect(aCustomColor, &QAction::triggered, q, [this, colorType]()
-    {
-        slotSetColor(colorType);
-    });
+    QObject::connect(aCustomColor, &QAction::triggered, q, [this, colorType]() { slotSetColor(colorType); });
     return aColorPicker;
 }
 
@@ -480,13 +414,9 @@ const QIcon AnnotationActionHandlerPrivate::stampIcon(const QString &stampIconNa
 {
     QPixmap stampPix = GuiUtils::loadStamp(stampIconName, 32);
     if (stampPix.width() == stampPix.height())
-    {
         return QIcon(stampPix);
-    }
     else
-    {
         return QIcon::fromTheme(QStringLiteral("tag"));
-    }
 }
 
 void AnnotationActionHandlerPrivate::selectTool(int toolId)
@@ -506,44 +436,33 @@ void AnnotationActionHandlerPrivate::slotStampToolSelected(const QString &stamp)
 void AnnotationActionHandlerPrivate::slotQuickToolSelected(int favToolId)
 {
     int toolId = annotator->setQuickTool(favToolId); // always triggers an unuseful reparsing
-    if (toolId == -1)
-    {
+    if (toolId == -1) {
         qWarning("Corrupted configuration for quick annotation tool with id: %d", favToolId);
         return;
     }
     int indexOfActionInGroup = toolId - 1;
-    if (toolId == PageViewAnnotator::STAMP_TOOL_ID)
-    {
+    if (toolId == PageViewAnnotator::STAMP_TOOL_ID) {
         // if the quick tool is a stamp we need to find its corresponding built-in tool action and select it
         QDomElement favToolElement = annotator->quickTool(favToolId);
         QDomElement engineElement = favToolElement.firstChildElement(QStringLiteral("engine"));
         QDomElement annotationElement = engineElement.firstChildElement(QStringLiteral("annotation"));
         QString stampIconName = annotationElement.attribute(QStringLiteral("icon"));
 
-        auto it = std::find_if(StampAnnotationWidget::defaultStamps.begin(), StampAnnotationWidget::defaultStamps.end(), [&stampIconName](const QPair<QString, QString> &element)
-        {
-            return element.second == stampIconName;
-        });
-        if (it != StampAnnotationWidget::defaultStamps.end())
-        {
+        auto it = std::find_if(StampAnnotationWidget::defaultStamps.begin(), StampAnnotationWidget::defaultStamps.end(), [&stampIconName](const QPair<QString, QString> &element) { return element.second == stampIconName; });
+        if (it != StampAnnotationWidget::defaultStamps.end()) {
             int stampActionIndex = std::distance(StampAnnotationWidget::defaultStamps.begin(), it);
             indexOfActionInGroup = PageViewAnnotator::STAMP_TOOL_ID + stampActionIndex - 1;
-        }
-        else
-        {
+        } else {
             maybeUpdateCustomStampAction(stampIconName);
             indexOfActionInGroup = agTools->actions().size() - 1;
         }
     }
     QAction *favToolAction = agTools->actions().at(indexOfActionInGroup);
-    if (!favToolAction->isChecked())
-    {
+    if (!favToolAction->isChecked()) {
         // action group workaround: activates the action slot calling selectTool
         //                          when new tool if different from the selected one
         favToolAction->trigger();
-    }
-    else
-    {
+    } else {
         selectTool(toolId);
     }
     aShowToolBar->setChecked(true);
@@ -552,21 +471,16 @@ void AnnotationActionHandlerPrivate::slotQuickToolSelected(int favToolId)
 void AnnotationActionHandlerPrivate::slotSetColor(AnnotationColor colorType, const QColor &color)
 {
     QColor selectedColor(color);
-    if (!selectedColor.isValid())
-    {
+    if (!selectedColor.isValid()) {
         selectedColor = QColorDialog::getColor(currentColor, nullptr, i18nc("@title:window", "Select color"));
-        if (!selectedColor.isValid())
-        {
+        if (!selectedColor.isValid()) {
             return;
         }
     }
-    if (colorType == AnnotationColor::Color)
-    {
+    if (colorType == AnnotationColor::Color) {
         currentColor = selectedColor;
         annotator->setAnnotationColor(selectedColor);
-    }
-    else if (colorType == AnnotationColor::InnerColor)
-    {
+    } else if (colorType == AnnotationColor::InnerColor) {
         currentInnerColor = selectedColor;
         annotator->setAnnotationInnerColor(selectedColor);
     }
@@ -576,8 +490,7 @@ void AnnotationActionHandlerPrivate::slotSelectAnnotationFont()
 {
     bool ok;
     QFont selectedFont = QFontDialog::getFont(&ok, currentFont);
-    if (ok)
-    {
+    if (ok) {
         currentFont = selectedFont;
         annotator->setAnnotationFont(currentFont);
     }
@@ -585,8 +498,7 @@ void AnnotationActionHandlerPrivate::slotSelectAnnotationFont()
 
 void AnnotationActionHandlerPrivate::slotToolBarVisibilityChanged(bool checked)
 {
-    if (!checked)
-    {
+    if (!checked) {
         q->deselectAllAnnotationActions();
     }
 }
@@ -600,10 +512,7 @@ AnnotationActionHandler::AnnotationActionHandler(PageViewAnnotator *parent, KAct
     // toolbar visibility actions
     d->aShowToolBar = new KToggleAction(QIcon::fromTheme(QStringLiteral("draw-freehand")), i18n("&Annotations"), this);
     d->aHideToolBar = new QAction(QIcon::fromTheme(QStringLiteral("dialog-close")), i18nc("@action:intoolbar Hide the toolbar", "Hide"), this);
-    connect(d->aHideToolBar, &QAction::triggered, this, [this]()
-    {
-        d->aShowToolBar->setChecked(false);
-    });
+    connect(d->aHideToolBar, &QAction::triggered, this, [this]() { d->aShowToolBar->setChecked(false); });
 
     // Text markup actions
     KToggleAction *aHighlighter = new KToggleAction(QIcon::fromTheme(QStringLiteral("draw-highlight")), i18nc("@action:intoolbar Annotation tool", "Highlighter"), this);
@@ -655,15 +564,11 @@ AnnotationActionHandler::AnnotationActionHandler(PageViewAnnotator *parent, KAct
 
     int toolId = 1;
     const QList<QAction *> tools = d->agTools->actions();
-    for (const auto &ann : tools)
-    {
+    for (const auto &ann : tools) {
         // action group workaround: connecting to toggled instead of triggered
-        connect(ann, &QAction::toggled, this, [this, toolId](bool checked)
-        {
+        connect(ann, &QAction::toggled, this, [this, toolId](bool checked) {
             if (checked)
-            {
                 d->selectTool(toolId);
-            }
         });
         toolId++;
     }
@@ -672,23 +577,17 @@ AnnotationActionHandler::AnnotationActionHandler(PageViewAnnotator *parent, KAct
     d->aStamp = new ToggleActionMenu(QIcon::fromTheme(QStringLiteral("tag")), QString(), this, ToggleActionMenu::MenuButtonPopup, ToggleActionMenu::ImplicitDefaultAction);
     d->aStamp->setText(i18nc("@action", "Stamp"));
 
-    for (const auto &stamp : StampAnnotationWidget::defaultStamps)
-    {
+    for (const auto &stamp : StampAnnotationWidget::defaultStamps) {
         KToggleAction *ann = new KToggleAction(d->stampIcon(stamp.second), stamp.first, this);
         if (!d->aStamp->defaultAction())
-        {
             d->aStamp->setDefaultAction(ann);
-        }
         d->aStamp->addAction(ann);
         d->agTools->addAction(ann);
         // action group workaround: connecting to toggled instead of triggered
         // (because deselectAllAnnotationActions has to call triggered)
-        connect(ann, &QAction::toggled, this, [this, stamp](bool checked)
-        {
+        connect(ann, &QAction::toggled, this, [this, stamp](bool checked) {
             if (checked)
-            {
                 d->slotStampToolSelected(stamp.second);
-            }
         });
     }
 
@@ -721,27 +620,19 @@ AnnotationActionHandler::AnnotationActionHandler(PageViewAnnotator *parent, KAct
     // Width list
     d->aWidth = new KSelectAction(QIcon::fromTheme(QStringLiteral("edit-line-width")), i18nc("@action:intoolbar Current annotation config option", "Line width"), this);
     d->aWidth->setToolBarMode(KSelectAction::MenuMode);
-    for (auto width : d->widthStandardValues)
-    {
+    for (auto width : d->widthStandardValues) {
         KToggleAction *ann = new KToggleAction(d->widthIcon(width), i18nc("@item:inlistbox", "Width %1", width), this);
         d->aWidth->addAction(ann);
-        connect(ann, &QAction::triggered, this, [this, width]()
-        {
-            d->annotator->setAnnotationWidth(width);
-        });
+        connect(ann, &QAction::triggered, this, [this, width]() { d->annotator->setAnnotationWidth(width); });
     }
 
     // Opacity list
     d->aOpacity = new KSelectAction(QIcon::fromTheme(QStringLiteral("edit-opacity")), i18nc("@action:intoolbar Current annotation config option", "Opacity"), this);
     d->aOpacity->setToolBarMode(KSelectAction::MenuMode);
-    for (double opacity : d->opacityStandardValues)
-    {
+    for (double opacity : d->opacityStandardValues) {
         KToggleAction *ann = new KToggleAction(GuiUtils::createOpacityIcon(opacity), QStringLiteral("%1\%").arg(opacity * 100), this);
         d->aOpacity->addAction(ann);
-        connect(ann, &QAction::triggered, this, [this, opacity]()
-        {
-            d->annotator->setAnnotationOpacity(opacity);
-        });
+        connect(ann, &QAction::triggered, this, [this, opacity]() { d->annotator->setAnnotationOpacity(opacity); });
     }
 
     connect(d->aAddToQuickTools, &QAction::triggered, d->annotator, &PageViewAnnotator::addToQuickAnnotations);
@@ -752,16 +643,12 @@ AnnotationActionHandler::AnnotationActionHandler(PageViewAnnotator *parent, KAct
 
     // action group workaround: allows unchecking the currently selected annotation action.
     // Other parts of code dependent to this workaround are marked with "action group workaround".
-    connect(d->agTools, &QActionGroup::triggered, this, [this](QAction *action)
-    {
-        if (action == d->agLastAction)
-        {
+    connect(d->agTools, &QActionGroup::triggered, this, [this](QAction *action) {
+        if (action == d->agLastAction) {
             d->agLastAction = nullptr;
             d->agTools->checkedAction()->setChecked(false);
             d->selectTool(-1);
-        }
-        else
-        {
+        } else {
             d->agLastAction = action;
             // Show the annotation toolbar whenever actions are triggered (e.g using shortcuts)
             d->aShowToolBar->setChecked(true);
@@ -821,27 +708,18 @@ void AnnotationActionHandler::setupAnnotationToolBarVisibilityAction()
 {
     // find the main window associated to the toggle toolbar action
     QList<QWidget *> widgets = d->aShowToolBar->associatedWidgets();
-    auto itMainWindow = std::find_if(widgets.begin(), widgets.end(), [](const QWidget *widget)
-    {
-        return qobject_cast<const KParts::MainWindow *>(widget) != nullptr;
-    });
+    auto itMainWindow = std::find_if(widgets.begin(), widgets.end(), [](const QWidget *widget) { return qobject_cast<const KParts::MainWindow *>(widget) != nullptr; });
     Q_ASSERT(itMainWindow != widgets.end());
     KParts::MainWindow *mw = qobject_cast<KParts::MainWindow *>(*itMainWindow);
     // ensure that the annotation toolbar has been created and retrieve it
     QList<KToolBar *> toolbars = mw->toolBars();
-    auto itToolBar = std::find_if(toolbars.begin(), toolbars.end(), [](const KToolBar *toolBar)
-    {
-        return toolBar->objectName() == QStringLiteral("annotationToolBar");
-    });
+    auto itToolBar = std::find_if(toolbars.begin(), toolbars.end(), [](const KToolBar *toolBar) { return toolBar->objectName() == QStringLiteral("annotationToolBar"); });
     Q_ASSERT(itToolBar != toolbars.end());
     KToolBar *annotationToolBar = mw->toolBar(QStringLiteral("annotationToolBar"));
     d->aShowToolBar->setChecked(annotationToolBar->isVisible());
     connect(annotationToolBar, &QToolBar::visibilityChanged, d->aShowToolBar, &QAction::setChecked, Qt::UniqueConnection);
     connect(d->aShowToolBar, &QAction::toggled, annotationToolBar, &KToolBar::setVisible, Qt::UniqueConnection);
-    connect(d->aShowToolBar, &QAction::toggled, this, [this](bool checked)
-    {
-        d->slotToolBarVisibilityChanged(checked);
-    });
+    connect(d->aShowToolBar, &QAction::toggled, this, [this](bool checked) { d->slotToolBarVisibilityChanged(checked); });
 }
 
 void AnnotationActionHandler::reparseBuiltinToolsConfig()
@@ -857,8 +735,7 @@ void AnnotationActionHandler::reparseQuickToolsConfig()
 void AnnotationActionHandler::setToolsEnabled(bool on)
 {
     const QList<QAction *> tools = d->agTools->actions();
-    for (QAction *ann : tools)
-    {
+    for (QAction *ann : tools) {
         ann->setEnabled(on);
     }
     d->aQuickTools->setEnabled(on);
@@ -870,12 +747,10 @@ void AnnotationActionHandler::setToolsEnabled(bool on)
 void AnnotationActionHandler::setTextToolsEnabled(bool on)
 {
     d->textToolsEnabled = on;
-    for (QAction *ann : qAsConst(d->textTools))
-    {
+    for (QAction *ann : qAsConst(d->textTools)) {
         ann->setEnabled(on);
     }
-    for (QAction *ann : qAsConst(d->textQuickTools))
-    {
+    for (QAction *ann : qAsConst(d->textQuickTools)) {
         ann->setEnabled(on);
     }
 }
@@ -883,8 +758,7 @@ void AnnotationActionHandler::setTextToolsEnabled(bool on)
 void AnnotationActionHandler::deselectAllAnnotationActions()
 {
     QAction *checkedAction = d->agTools->checkedAction();
-    if (checkedAction)
-    {
+    if (checkedAction) {
         checkedAction->trigger(); // action group workaround: using trigger instead of setChecked
     }
 }

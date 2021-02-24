@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "dlgperformance.h"
-
+#include <klocalizedstring.h>
 #include <QButtonGroup>
 #include <QFont>
 

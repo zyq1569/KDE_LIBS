@@ -33,7 +33,7 @@ public:
 
 class TextDocumentSettingsPrivate : public QObject
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     explicit TextDocumentSettingsPrivate(QObject *parent)

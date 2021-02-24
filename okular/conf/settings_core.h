@@ -11,47 +11,48 @@
 
 #include <kuser.h>
 
-namespace Okular {
+namespace Okular
+{
 
 class SettingsCorePrivate;
 
 class OKULARCORE_EXPORT SettingsCore : public KConfigSkeleton
 {
-  public:
+public:
     class EnumMemoryLevel
     {
-      public:
-      enum type { Low, Normal, Aggressive, Greedy, COUNT };
+    public:
+        enum type { Low, Normal, Aggressive, Greedy, COUNT };
     };
     class EnumTextAntialias
     {
-      public:
-      enum type { Disabled, Enabled, COUNT };
+    public:
+        enum type { Disabled, Enabled, COUNT };
     };
     class EnumGraphicsAntialias
     {
-      public:
-      enum type { Disabled, Enabled, COUNT };
+    public:
+        enum type { Disabled, Enabled, COUNT };
     };
     class EnumTextHinting
     {
-      public:
-      enum type { Disabled, Enabled, COUNT };
+    public:
+        enum type { Disabled, Enabled, COUNT };
     };
     class EnumRenderMode
     {
-      public:
-      enum type { Inverted, Paper, Recolor, BlackWhite, InvertLightness, InvertLuma, InvertLumaSymmetric, HueShiftPositive, HueShiftNegative, COUNT };
+    public:
+        enum type { Inverted, Paper, Recolor, BlackWhite, InvertLightness, InvertLuma, InvertLumaSymmetric, HueShiftPositive, HueShiftNegative, COUNT };
     };
     class EnumExternalEditor
     {
-      public:
-      enum type { Custom, Kate, Kile, Scite, Emacsclient, Lyxclient, Texstudio, Texifyidea, COUNT };
+    public:
+        enum type { Custom, Kate, Kile, Scite, Emacsclient, Lyxclient, Texstudio, Texifyidea, COUNT };
     };
     class EnumSlidesTapNavigation
     {
-      public:
-      enum type { ForwardBackward, Forward, Disabled, COUNT };
+    public:
+        enum type { ForwardBackward, Forward, Disabled, COUNT };
     };
 
     static SettingsCore *self();
@@ -347,11 +348,11 @@ class OKULARCORE_EXPORT SettingsCore : public KConfigSkeleton
     static
     bool isSlidesTapNavigationImmutable();
 
-  protected:
+protected:
     SettingsCore(KSharedConfig::Ptr config);
     friend class SettingsCoreHelper;
 
-  private:
+private:
     SettingsCorePrivate *d;
 };
 
