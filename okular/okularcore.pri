@@ -109,7 +109,8 @@ SOURCES +=      core/action.cpp \
                 core/script/kjs_spell.cpp \
                 core/script/kjs_util.cpp \
                 core/script/kjs_event.cpp \
-                core/script/kjs_ocg.cpp
+                core/script/kjs_ocg.cpp \
+                conf/settings_core.cpp
 
 
 FORMS +=  part/textdocumentsettings.ui \

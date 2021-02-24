@@ -5,7 +5,7 @@
 SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
 SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
 
-CONFIG += debug_and_release  c++11
+CONFIG += debug_and_release 
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
@@ -43,6 +43,8 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5/kcrash \
                 $$SDK_INSTALL_PREFIX/KF5/kparts \
                 $$SDK_INSTALL_PREFIX/KF5/ThreadWeaver \
+                $$SDK_INSTALL_PREFIX/KF5/purpose \
+                $$SDK_INSTALL_PREFIX/KF5/purposewidgets \
                 $$SDK_INSTALL_PREFIX/phonon4qt5 \
                 $$SDK_INSTALL_PREFIX/phonon4qt5/KDE \
                 $$SDK_INSTALL_PREFIX/KChart
@@ -97,6 +99,8 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -lKF5ThreadWeaver \
         -llibKF5JS \
         -llibKF5JSApi \
+        -llibKF5PurposeWidgets \
+        -llibKF5Purpose \
         -lws2_32 \
         -lnetapi32 \
         -lkernel32 \

@@ -12,6 +12,8 @@ QT += core xml network gui widgets printsupport concurrent dbus
 DEFINES += okularcore_EXPORTS
 
 INCLUDEPATH +=  ../ \
+                ../conf \
+                conf \
                 ../core/synctex \
                 ../core \
                 core/synctex
