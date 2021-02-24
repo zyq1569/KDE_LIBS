@@ -404,4 +404,4 @@ Okular::Annotation *AnnotationModel::annotationForIndex(const QModelIndex &index
     return item->annotation;
 }
 
-#include "moc_annotationmodel.cpp"
+//#include "moc_annotationmodel.cpp"

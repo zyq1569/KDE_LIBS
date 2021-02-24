@@ -18,6 +18,7 @@
 #include "sound.h"
 #include "sourcereference_p.h"
 
+#include <QUrl>
 using namespace Okular;
 
 class Okular::ActionPrivate

@@ -47,7 +47,7 @@
 #include <QTemporaryFile>
 #include <QTimer>
 #include <QWidgetAction>
-
+#include <QUrl>
 #include <KAboutPluginDialog>
 #include <KActionCollection>
 #include <KBookmarkAction>

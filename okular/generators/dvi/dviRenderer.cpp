@@ -26,7 +26,7 @@
 #include <QTime>
 #include <QVBoxLayout>
 #include <math.h>
-
+#include <QUrl>
 #include <QApplication>
 #include <QCheckBox>
 #include <QEventLoop>

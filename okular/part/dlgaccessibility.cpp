@@ -68,4 +68,4 @@ void DlgAccessibility::slotColorMode(int mode)
     m_selected = mode;
 }
 
-#include "moc_dlgaccessibility.cpp"
+//#include "moc_dlgaccessibility.cpp"

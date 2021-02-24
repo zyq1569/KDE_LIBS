@@ -262,4 +262,4 @@ int SignatureModel::rowCount(const QModelIndex &parent) const
     return item->children.count();
 }
 
-#include "moc_signaturemodel.cpp"
+//#include "moc_signaturemodel.cpp"

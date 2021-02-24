@@ -19,6 +19,7 @@
 #include <QMenu>
 #include <QToolBar>
 #include <QTreeWidget>
+#include <QUrl>
 
 #include <KLocalizedString>
 #include <KTitleWidget>
@@ -437,4 +438,4 @@ QTreeWidgetItem *BookmarkList::itemForUrl(const QUrl &url) const
     return nullptr;
 }
 
-#include "moc_bookmarklist.cpp"
+//#include "moc_bookmarklist.cpp"

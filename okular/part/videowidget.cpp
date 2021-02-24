@@ -24,7 +24,7 @@
 
 #include <KLocalizedString>
 #include <QIcon>
-
+#include <QUrl>
 #include <phonon/mediaobject.h>
 #include <phonon/seekslider.h>
 #include <phonon/videoplayer.h>
@@ -415,4 +415,4 @@ void VideoWidget::resizeEvent(QResizeEvent *event)
     }
 }
 
-#include "moc_videowidget.cpp"
+//#include "moc_videowidget.cpp"

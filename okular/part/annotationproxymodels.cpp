@@ -637,4 +637,4 @@ void AuthorGroupProxyModel::sourceDataChanged(const QModelIndex &topLeft, const 
     emit dataChanged(mapFromSource(topLeft), mapFromSource(bottomRight), roles);
 }
 
-#include "moc_annotationproxymodels.cpp"
+//#include "moc_annotationproxymodels.cpp"

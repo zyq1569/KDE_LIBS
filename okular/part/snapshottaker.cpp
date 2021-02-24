@@ -13,7 +13,7 @@
 #include <phonon/videowidget.h>
 
 #include <QImage>
-
+#include <QUrl>
 SnapshotTaker::SnapshotTaker(const QUrl &url, QObject *parent)
     : QObject(parent)
     , m_player(new Phonon::VideoPlayer(Phonon::NoCategory, nullptr))

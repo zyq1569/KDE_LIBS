@@ -62,4 +62,4 @@ void DlgPresentation::screenComboChanged(int which)
     Okular::Settings::setSlidesScreen(which - 2);
 }
 
-#include "moc_dlgpresentation.cpp"
+//#include "moc_dlgpresentation.cpp"

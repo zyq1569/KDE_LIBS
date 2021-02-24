@@ -178,4 +178,4 @@ void AnnotsPropertiesDialog::slotapply()
     button(QDialogButtonBox::Apply)->setEnabled(false);
 }
 
-#include "moc_annotationpropertiesdialog.cpp"
+//#include "moc_annotationpropertiesdialog.cpp"

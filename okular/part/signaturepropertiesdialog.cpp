@@ -129,4 +129,4 @@ void SignaturePropertiesDialog::viewSignedVersion()
     revViewer.viewRevision();
 }
 
-#include "moc_signaturepropertiesdialog.cpp"
+//#include "moc_signaturepropertiesdialog.cpp"

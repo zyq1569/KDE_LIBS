@@ -15,6 +15,7 @@
 #include <QBuffer>
 #include <QDebug>
 #include <QDir>
+#include <QUrl>
 #include <phonon/abstractmediastream.h>
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
@@ -244,4 +245,4 @@ AudioPlayer::State AudioPlayer::state() const
     return d->m_state;
 }
 
-#include "moc_audioplayer.cpp"
+//#include "moc_audioplayer.cpp"

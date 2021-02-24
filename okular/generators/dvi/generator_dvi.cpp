@@ -35,7 +35,7 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <QDebug>
-
+#include <QUrl>
 #ifdef DVI_OPEN_BUSYLOOP
 #include <QThread>
 #endif

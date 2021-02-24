@@ -107,6 +107,6 @@ void OkularLiveConnectExtension::postMessage(const QStringList &args)
 
 }
 
-#include "moc_extensions.cpp"
+//#include "moc_extensions.cpp"
 
 /* kate: replace-tabs on; indent-width 4; */

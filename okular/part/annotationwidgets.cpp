@@ -852,4 +852,4 @@ void CaretAnnotationWidget::applyChanges()
     m_caretAnn->setCaretSymbol(caretSymbolFromIcon(m_pixmapSelector->icon()));
 }
 
-#include "moc_annotationwidgets.cpp"
+//#include "moc_annotationwidgets.cpp"

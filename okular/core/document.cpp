@@ -50,7 +50,7 @@
 #include <QUndoCommand>
 #include <QWindow>
 #include <QtAlgorithms>
-
+#include <QUrl>
 #include <KAuthorized>
 #include <KConfigDialog>
 #include <KFormat>

@@ -763,4 +763,4 @@ void AnnotationActionHandler::deselectAllAnnotationActions()
     }
 }
 
-#include "moc_annotationactionhandler.cpp"
+//#include "moc_annotationactionhandler.cpp"
