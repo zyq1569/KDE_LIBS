@@ -3,14 +3,17 @@
 # ------------------------------------------------------
 
 
-# .
+HEADERS +=  generator_plucker.h \
+            unpluck/config.h \
+            unpluck/image.h \
+            unpluck/qunpluck.h \
+            unpluck/unpluck.h
 
 
 
-SOURCES += ./okularGenerator_plucker_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/plucker/generator_plucker.cpp \
-    ../../../okular/generators/plucker/unpluck/config.cpp \
-    ../../../okular/generators/plucker/unpluck/image.cpp \
-    ../../../okular/generators/plucker/unpluck/qunpluck.cpp \
-    ../../../okular/generators/plucker/unpluck/unpluck.cpp \
-    ../../../okular/generators/plucker/unpluck/util.cpp
+SOURCES +=  generator_plucker.cpp \
+            unpluck/config.cpp \
+            unpluck/image.cpp \
+            unpluck/qunpluck.cpp \
+            unpluck/unpluck.cpp \
+            unpluck/util.cpp

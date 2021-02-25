@@ -3,9 +3,7 @@
 # ------------------------------------------------------
 
 
-# .
 
+HEADERS += generator_tiff.h
 
-
-SOURCES += ./okularGenerator_tiff_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/tiff/generator_tiff.cpp
+SOURCES += generator_tiff.cpp

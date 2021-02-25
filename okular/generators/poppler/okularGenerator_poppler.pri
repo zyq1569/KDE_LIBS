@@ -3,16 +3,22 @@
 # ------------------------------------------------------
 
 
-# .
 
 
+#HEADERS += ./ui_pdfsettingswidget.h \
+#    ./pdfsettings.h
 
-HEADERS += ./ui_pdfsettingswidget.h \
-    ./pdfsettings.h
-SOURCES += ./okularGenerator_poppler_autogen/mocs_compilation.cpp \
-    ../../../okular/generators/poppler/generator_pdf.cpp \
-    ../../../okular/generators/poppler/formfields.cpp \
-    ../../../okular/generators/poppler/annots.cpp \
-    ../../../okular/generators/poppler/pdfsignatureutils.cpp \
-    ./pdfsettings.cpp
-FORMS += ../../../okular/generators/poppler/conf/pdfsettingswidget.ui
+HEADERS +=  generator_pdf.h \
+            formfields.h \
+            annots.h \
+            pdfsignatureutils.h\
+            conf/pdfsettings.h
+
+
+SOURCES +=  generator_pdf.cpp \
+            formfields.cpp \
+            annots.cpp \
+            pdfsignatureutils.cpp\
+            conf/pdfsettings.cpp
+
+FORMS +=  conf/pdfsettingswidget.ui
