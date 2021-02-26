@@ -5,8 +5,8 @@
 SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
 SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
 
-CONFIG += debug_and_release c++17
-
+CONFIG += debug_and_release
+#CONFIG += C++ 11
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
                 $$SDK_INSTALL_PREFIX/KF5/KrossUi \
@@ -45,6 +45,8 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5/ThreadWeaver \
                 $$SDK_INSTALL_PREFIX/KF5/purpose \
                 $$SDK_INSTALL_PREFIX/KF5/purposewidgets \
+                $$SDK_INSTALL_PREFIX/poppler\qt5 \
+                $$SDK_INSTALL_PREFIX/poppler \
                 $$SDK_INSTALL_PREFIX/openjpeg-2.3 \
                 $$SDK_INSTALL_PREFIX/zlib \
                 $$SDK_INSTALL_PREFIX/phonon4qt5 \
@@ -96,13 +98,23 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -lKF5KrossCore \
         -lKF5KrossUi \
         -lKF5Notifications \
+        -llibpoppler \
+        -llibpoppler-cpp \
+        -llibpoppler-qt5 \
+        -llibphonon4qt5 \
         -lphonon4qt5 \
         -lKF5Bookmarks \
         -lKF5ThreadWeaver \
+#        -llibzstd \
+        -llibz \
         -llibKF5JS \
         -llibKF5JSApi \
         -llibKF5PurposeWidgets \
         -llibKF5Purpose \
+        -llibtiff \
+        -llibtiffxx \
+        -llibfxstiff \
+        -llibjpeg \
         -lws2_32 \
         -lnetapi32 \
         -lkernel32 \
