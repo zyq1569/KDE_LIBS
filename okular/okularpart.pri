@@ -63,13 +63,13 @@ HEADERS +=     part/preferencesdialog.h \
                part/revisionviewer.h \
                part/searchlineedit.h \
                part/searchwidget.h \
-               part/sidebar.h \
+#               part/sidebar.h \
                part/side_reviews.h \
                part/snapshottaker.h \
                part/thumbnaillist.h \
                part/toc.h \
                part/tocmodel.h \
-               part/toggleactionmenu.h \
+#!               part/toggleactionmenu.h \
                part/videowidget.h \
                part/layers.h \
                part/signatureguiutils.h \
@@ -130,13 +130,13 @@ SOURCES +=     part/preferencesdialog.cpp \
                part/revisionviewer.cpp \
                part/searchlineedit.cpp \
                part/searchwidget.cpp \
-               part/sidebar.cpp \
+#!               part/sidebar.cpp \
                part/side_reviews.cpp \
                part/snapshottaker.cpp \
                part/thumbnaillist.cpp \
                part/toc.cpp \
                part/tocmodel.cpp \
-               part/toggleactionmenu.cpp \
+#               part/toggleactionmenu.cpp \
                part/videowidget.cpp \
                part/layers.cpp \
                part/signatureguiutils.cpp \

@@ -4,7 +4,7 @@
 
 TEMPLATE = lib
 TARGET = okularpart
-DESTDIR = ../okular/bin
+DESTDIR = bin/
 QT += core xml gui svg widgets dbus printsupport gui texttospeech network
 #network gui svg widgets printsupport concurrent dbus texttospeech
 
@@ -52,12 +52,13 @@ INCLUDEPATH +=  ../ \
 #    ../../../../CraftRoot/include/KF5/purpose
 
 
-
-LIBS += -L$${SDK_LIB_PREFIX} \
-        -lzstd \
-        -llibz \
-        -lokularcore \
-        -lsetupapi
+LIBS +=    -L$${DESTDIR} \
+           -lokularcore
+#LIBS += -L$${DESTDIR} \
+##        -lzstd \
+##        -llibz \
+#        -lokularcore
+#        -lsetupapi
 #        -lD://lib/KF5KIOGui \
 #        -lD://lib/KF5Service \
 #        -lD://lib/KF5Crash \
