@@ -56,7 +56,9 @@ HEADERS +=      core/action.h \
                 core/script/kjs_spell_p.h \
                 core/script/kjs_util_p.h \
                 core/script/kjs_event_p.h \
-                core/script/kjs_ocg_p.h
+                core/script/kjs_ocg_p.h \
+                conf/settings_core.h \
+                conf/settings.h
 
 
 
@@ -110,7 +112,8 @@ SOURCES +=      core/action.cpp \
                 core/script/kjs_util.cpp \
                 core/script/kjs_event.cpp \
                 core/script/kjs_ocg.cpp \
-                conf/settings_core.cpp
+                conf/settings_core.cpp \
+                conf/settings.cpp
 
 
 FORMS +=  part/textdocumentsettings.ui \
