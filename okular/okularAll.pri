@@ -78,6 +78,7 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -lKF5Codecs \
         -lKF5ConfigGui \
         -lKF5ConfigCore \
+        -lKF5NotifyConfig \
         -lKF5Auth \
         -lKF5AuthCore \
         -lKF5Activities \
