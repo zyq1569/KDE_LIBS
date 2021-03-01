@@ -71,7 +71,7 @@ HEADERS +=     part/preferencesdialog.h \
                part/toc.h \
                part/tocmodel.h \
 #!               part/toggleactionmenu.h \
-#               part/toggleactionmenu.h \
+               part/toggleactionmenu.h \
                part/videowidget.h \
                part/layers.h \
                part/signatureguiutils.h \
@@ -150,8 +150,6 @@ SOURCES +=     part/preferencesdialog.cpp \
                part/signaturepanel.cpp \
                conf/settings.cpp \
                part/tts.cpp
-
-
 
 
 FORMS +=  part/dlgaccessibilitybase.ui \
