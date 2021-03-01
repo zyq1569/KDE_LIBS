@@ -20,8 +20,20 @@
 
 #include <core/page.h>
 
-OKULAR_EXPORT_PLUGIN(PluckerGenerator, "libokularGenerator_plucker.json")
+//OKULAR_EXPORT_PLUGIN(PluckerGenerator, "libokularGenerator_plucker.json")
 
+
+PluckerGeneratorFactory::PluckerGeneratorFactory()
+{
+    registerPlugin<PluckerGenerator >();
+}
+
+PluckerGeneratorFactory::~PluckerGeneratorFactory()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void calculateBoundingRect(QTextDocument *document, int startPosition, int endPosition, QRectF &rect)
 {
     const QTextBlock startBlock = document->findBlock(startPosition);
@@ -187,4 +199,4 @@ bool PluckerGenerator::print(QPrinter &)
     return true;
 }
 
-#include "generator_plucker.moc"
+//#include "generator_plucker.moc"

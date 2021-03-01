@@ -12,7 +12,7 @@
 
 #include "okularpart_export.h"
 #include <qwidget.h>
-
+#include <QUrl>
 class QIcon;
 class QListWidgetItem;
 
@@ -36,14 +36,14 @@ public:
 
     void moveSplitter(int sideWidgetSize);
 
-Q_SIGNALS:
+signals:
     void urlsDropped(const QList<QUrl> &urls);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 
-private Q_SLOTS:
+private slots:
     void splitterMoved(int pos, int index);
 
 private:

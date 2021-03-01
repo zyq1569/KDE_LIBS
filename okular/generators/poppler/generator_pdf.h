@@ -44,7 +44,7 @@ class PopplerAnnotationProxy;
  * contents from out OutputDevs when rendering finishes.
  *
  */
-class PDFGenerator : public Okular::Generator, public Okular::ConfigInterface, public Okular::PrintInterface, public Okular::SaveInterface
+class PDFGenerator :  public Okular::Generator, public Okular::ConfigInterface, public Okular::PrintInterface, public Okular::SaveInterface
 {
     Q_OBJECT
     Q_INTERFACES(Okular::Generator)
@@ -149,6 +149,17 @@ private:
     PrintError lastPrintError;
 };
 
+
+
+class PDFGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_poppler.json")
+public:
+  explicit PDFGeneratorFactory();
+  ~PDFGeneratorFactory();
+};
 #endif
 
 /* kate: replace-tabs on; indent-width 4; */

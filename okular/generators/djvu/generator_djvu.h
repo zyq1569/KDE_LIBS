@@ -56,4 +56,15 @@ private:
     Okular::DocumentSynopsis *m_docSyn;
 };
 
+
+
+class DjVuGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_djvu.json")
+public:
+  explicit DjVuGeneratorFactory();
+  ~DjVuGeneratorFactory();
+};
 #endif

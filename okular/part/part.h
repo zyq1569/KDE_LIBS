@@ -93,7 +93,8 @@ class ExportFormat;
  *
  * @since 0.14 (KDE 4.8)
  */
-enum EmbedMode {
+enum EmbedMode
+{
     UnknownEmbedMode,
     NativeShellMode,  // embedded in the native Okular' shell
     PrintPreviewMode, // embedded to show the print preview of a document
@@ -197,7 +198,7 @@ public:
     void setReadWrite(bool readwrite) override;
     bool saveAs(const QUrl &saveUrl) override;
 
-protected Q_SLOTS:
+protected slots:
     // connected to actions
     void openUrlFromDocument(const QUrl &url);
     void openUrlFromBookmarks(const QUrl &url);
@@ -281,7 +282,8 @@ private:
     void resetStartArguments();
     void checkNativeSaveDataLoss(bool *out_wontSaveForms, bool *out_wontSaveAnnotations) const;
 
-    enum SaveAsFlag {
+    enum SaveAsFlag
+    {
         NoSaveAsFlags = 0,      ///< No options
         SaveAsOkularArchive = 1 ///< Save as Okular Archive (.okular) instead of document's native format
     };
@@ -432,8 +434,19 @@ private Q_SLOTS:
     void slotHandleActivatedSourceReference(const QString &absFileName, int line, int col, bool *handled);
 };
 
+
 }
 
+
+class OkularPartFactory : public KPluginFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(KPluginFactory)
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularpart.json")
+public:
+    explicit OkularPartFactory();
+    ~OkularPartFactory();
+};
 #endif
 
 /* kate: replace-tabs on; indent-width 4; */

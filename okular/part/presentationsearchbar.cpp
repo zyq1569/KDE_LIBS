@@ -15,7 +15,8 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qstylepainter.h>
-#include <qtoolbutton.h>
+//#include <qtoolbutton.h>
+#include <QToolButton>
 
 #include <KLocalizedString>
 #include <QIcon>
@@ -26,7 +27,7 @@
 
 class HandleDrag : public QWidget
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     HandleDrag(QWidget *parent = Q_NULLPTR)
@@ -138,4 +139,4 @@ bool PresentationSearchBar::eventFilter(QObject *obj, QEvent *e)
     return false;
 }
 
-#include "presentationsearchbar.moc"
+//#include "presentationsearchbar.moc"

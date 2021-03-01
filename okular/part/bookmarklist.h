@@ -11,14 +11,14 @@
 #define BOOKMARKLIST_H
 
 #include <qwidget.h>
-
+#include <QUrl>
 #include "core/observer.h"
 
 class QAction;
 class QTreeWidget;
 class QTreeWidgetItem;
 class KTreeWidgetSearchLine;
-class QUrl;
+//class QUrl;
 class BookmarkItem;
 class FileItem;
 

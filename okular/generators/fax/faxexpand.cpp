@@ -71,7 +71,8 @@ pagenode::pagenode()
         RunLength = 0;                                                                                                                                                                                                                         \
     } while (0)
 
-const char *StateNames[] = {
+const char *StateNames[] =
+{
     "Null   ",
     "Pass   ",
     "Horiz  ",
@@ -347,7 +348,9 @@ const char *StateNames[] = {
 static void unexpected(const char *what, int LineNum)
 {
     if (verbose)
+    {
         qCCritical(FAX_LOG) << "Line " << LineNum << ": Unexpected state in " << what << endl;
+    }
 }
 
 /* Expand tiff modified huffman data (g3-1d without EOLs) */
@@ -370,7 +373,8 @@ void MHexpand(pagenode *pn, drawfunc df)
     BitsAvail = 0;
     lastx = pn->size.width();
     runs = (pixnum *)malloc(lastx * sizeof(pixnum));
-    for (LineNum = 0; LineNum < pn->rowsperstrip;) {
+    for (LineNum = 0; LineNum < pn->rowsperstrip;)
+    {
 #ifdef DEBUG_FAX
         printf("\nBitAcc=%08lX, BitsAvail = %d\n", BitAcc, BitsAvail);
         printf("-------------------- %d\n", LineNum);
@@ -381,18 +385,30 @@ void MHexpand(pagenode *pn, drawfunc df)
         a0 = 0;
         EOLcnt = 0;
         if (BitsAvail & 7) /* skip to byte boundary */
+        {
             ClrBits(BitsAvail & 7);
+        }
         expand1d();
         if (RunLength)
+        {
             SETVAL(0);
-        if (a0 != lastx) {
+        }
+        if (a0 != lastx)
+        {
             if (verbose)
+            {
                 qCWarning(FAX_LOG) << "Line " << LineNum << ": length is " << a0 << " (expected " << lastx << ")\n";
+            }
             while (a0 > lastx)
+            {
                 a0 -= *--pa;
-            if (a0 < lastx) {
+            }
+            if (a0 < lastx)
+            {
                 if ((pa - runs) & 1)
+                {
                     SETVAL(0);
+                }
                 SETVAL(lastx - a0);
             }
         }
@@ -423,41 +439,55 @@ void g31expand(pagenode *pn, drawfunc df)
     lastx = pn->size.width();
     runs = (pixnum *)malloc(lastx * sizeof(pixnum));
     EOLcnt = 0;
-    for (LineNum = 0; LineNum < pn->rowsperstrip;) {
+    for (LineNum = 0; LineNum < pn->rowsperstrip;)
+    {
 #ifdef DEBUG_FAX
         fprintf(stderr, "\nBitAcc=%08lX, BitsAvail = %d\n", BitAcc, BitsAvail);
         fprintf(stderr, "-------------------- %d\n", LineNum);
         fflush(stderr);
 #endif
         if (EOLcnt == 0)
-            while (!EndOfData(pn)) {
+            while (!EndOfData(pn))
+            {
                 /* skip over garbage after a coding error */
                 NeedBits(11);
                 if (GetBits(11) == 0)
+                {
                     break;
+                }
                 ClrBits(1);
             }
-        for (EOLcnt = 1; !EndOfData(pn); EOLcnt++) {
+        for (EOLcnt = 1; !EndOfData(pn); EOLcnt++)
+        {
             /* we have seen 11 zeros, which implies EOL,
                skip possible fill bits too */
-            while (true) {
+            while (true)
+            {
                 NeedBits(8);
                 if (GetBits(8))
+                {
                     break;
+                }
                 ClrBits(8);
             }
             while (GetBits(1) == 0)
+            {
                 ClrBits(1);
+            }
             ClrBits(1); /* the eol flag */
             NeedBits(11);
             if (GetBits(11))
+            {
                 break;
+            }
             ClrBits(11);
         }
-        if (EOLcnt > 1 && EOLcnt != 6 && verbose) {
+        if (EOLcnt > 1 && EOLcnt != 6 && verbose)
+        {
             qCCritical(FAX_LOG) << "Line " << LineNum << ": bad RTC (" << EOLcnt << " EOLs)\n";
         }
-        if (EOLcnt >= 6 || EndOfData(pn)) {
+        if (EOLcnt >= 6 || EndOfData(pn))
+        {
             free(runs);
             return;
         }
@@ -467,15 +497,25 @@ void g31expand(pagenode *pn, drawfunc df)
         EOLcnt = 0;
         expand1d();
         if (RunLength)
+        {
             SETVAL(0);
-        if (a0 != lastx) {
+        }
+        if (a0 != lastx)
+        {
             if (verbose)
+            {
                 qCWarning(FAX_LOG) << "Line " << LineNum << ": length is " << a0 << " (expected " << lastx << ")\n";
+            }
             while (a0 > lastx)
+            {
                 a0 -= *--pa;
-            if (a0 < lastx) {
+            }
+            if (a0 < lastx)
+            {
                 if ((pa - runs) & 1)
+                {
                     SETVAL(0);
+                }
                 SETVAL(lastx - a0);
             }
         }
@@ -510,52 +550,72 @@ void g32expand(pagenode *pn, drawfunc df)
     run1[0] = lastx;
     run1[1] = 0;
     EOLcnt = 0;
-    for (LineNum = 0; LineNum < pn->rowsperstrip;) {
+    for (LineNum = 0; LineNum < pn->rowsperstrip;)
+    {
 #ifdef DEBUG_FAX
         printf("\nBitAcc=%08lX, BitsAvail = %d\n", BitAcc, BitsAvail);
         printf("-------------------- %d\n", LineNum);
         fflush(stdout);
 #endif
         if (EOLcnt == 0)
-            while (!EndOfData(pn)) {
+            while (!EndOfData(pn))
+            {
                 /* skip over garbage after a coding error */
                 NeedBits(11);
                 if (GetBits(11) == 0)
+                {
                     break;
+                }
                 ClrBits(1);
             }
-        for (EOLcnt = 1; !EndOfData(pn); EOLcnt++) {
+        for (EOLcnt = 1; !EndOfData(pn); EOLcnt++)
+        {
             /* we have seen 11 zeros, which implies EOL,
                skip possible fill bits too */
-            while (true) {
+            while (true)
+            {
                 NeedBits(8);
                 if (GetBits(8))
+                {
                     break;
+                }
                 ClrBits(8);
             }
             while (GetBits(1) == 0)
+            {
                 ClrBits(1);
+            }
             ClrBits(1); /* the eol flag */
             NeedBits(12);
             refline = GetBits(1); /* 1D / 2D flag */
             ClrBits(1);
             if (GetBits(11))
+            {
                 break;
+            }
             ClrBits(11);
         }
         if (EOLcnt > 1 && EOLcnt != 6 && verbose)
+        {
             qCCritical(FAX_LOG) << "Line " << LineNum << ": bad RTC (" << EOLcnt << " EOLs)\n";
-        if (EOLcnt >= 6 || EndOfData(pn)) {
+        }
+        if (EOLcnt >= 6 || EndOfData(pn))
+        {
             free(run0);
             return;
         }
         if (LineNum == 0 && refline == 0 && verbose)
+        {
             qCDebug(FAX_LOG) << "First line is 2-D encoded\n";
+        }
         RunLength = 0;
-        if (LineNum & 1) {
+        if (LineNum & 1)
+        {
             pa = run1;
             pb = run0;
-        } else {
+        }
+        else
+        {
             pa = run0;
             pb = run1;
         }
@@ -564,21 +624,34 @@ void g32expand(pagenode *pn, drawfunc df)
         a0 = 0;
         b1 = *pb++;
 
-        if (refline) {
+        if (refline)
+        {
             expand1d();
-        } else {
+        }
+        else
+        {
             expand2d(EOL2);
         }
         if (RunLength)
+        {
             SETVAL(0);
-        if (a0 != lastx) {
+        }
+        if (a0 != lastx)
+        {
             if (verbose)
+            {
                 qCWarning(FAX_LOG) << "Line " << LineNum << ": length is " << a0 << " (expected " << lastx << ")\n";
+            }
             while (a0 > lastx)
+            {
                 a0 -= *--pa;
-            if (a0 < lastx) {
+            }
+            if (a0 < lastx)
+            {
                 if ((pa - run0) & 1)
+                {
                     SETVAL(0);
+                }
                 SETVAL(lastx - a0);
             }
         }
@@ -626,17 +699,21 @@ void g4expand(pagenode *pn, drawfunc df)
     run1[0] = lastx; /* initial reference line */
     run1[1] = 0;
 
-    for (LineNum = 0; LineNum < pn->rowsperstrip;) {
+    for (LineNum = 0; LineNum < pn->rowsperstrip;)
+    {
 #ifdef DEBUG_FAX
         printf("\nBitAcc=%08lX, BitsAvail = %d\n", BitAcc, BitsAvail);
         printf("-------------------- %d\n", LineNum);
         fflush(stdout);
 #endif
         RunLength = 0;
-        if (LineNum & 1) {
+        if (LineNum & 1)
+        {
             pa = run1;
             pb = run0;
-        } else {
+        }
+        else
+        {
             pa = run0;
             pb = run1;
         }
@@ -644,18 +721,23 @@ void g4expand(pagenode *pn, drawfunc df)
         a0 = 0;
         b1 = *pb++;
         expand2d(EOFB);
-        if (a0 < lastx) {
+        if (a0 < lastx)
+        {
             if ((pa - run0) & 1)
+            {
                 SETVAL(0);
+            }
             SETVAL(lastx - a0);
         }
         SETVAL(0); /* imaginary change at end of line for reference */
         (*df)(thisrun, LineNum++, pn);
         continue;
-    EOFB:
+EOFB:
         NeedBits(13);
         if (GetBits(13) != 0x1001 && verbose)
+        {
             qCCritical(FAX_LOG) << "Bad RTC\n";
+        }
         break;
     }
     free(run0);
@@ -669,7 +751,8 @@ static const unsigned char zerotab[256] = {0x88, 0x07, 0x16, 0x06, 0x25, 0x05, 0
                                            0x70, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x40, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00,
                                            0x50, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x40, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00,
                                            0x60, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x40, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00,
-                                           0x50, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x40, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00};
+                                           0x50, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x40, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00, 0x30, 0x00, 0x10, 0x00, 0x20, 0x00, 0x10, 0x00
+                                          };
 
 #define check(v)                                                                                                                                                                                                                               \
     do {                                                                                                                                                                                                                                       \
@@ -703,17 +786,24 @@ int G3count(pagenode *pn, int twoD)
     int empty = 1;  /* empty line */
     int prezeros, postzeros;
 
-    while (p < end && EOLcnt < 6) {
+    while (p < end && EOLcnt < 6)
+    {
         t16bits bits = *p++;
         check(bits & 255);
-        if (twoD && (prezeros + postzeros == 7)) {
+        if (twoD && (prezeros + postzeros == 7))
+        {
             if (postzeros || ((bits & 0x100) == 0))
+            {
                 zeros--;
+            }
         }
         check(bits >> 8);
-        if (twoD && (prezeros + postzeros == 7)) {
+        if (twoD && (prezeros + postzeros == 7))
+        {
             if (postzeros || ((p < end) && ((*p & 1) == 0)))
+            {
                 zeros--;
+            }
         }
     }
     return lines - EOLcnt; /* don't count trailing EOLs */

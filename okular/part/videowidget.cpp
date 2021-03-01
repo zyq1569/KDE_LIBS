@@ -19,7 +19,8 @@
 #include <qmenu.h>
 #include <qstackedlayout.h>
 #include <qtoolbar.h>
-#include <qtoolbutton.h>
+//#include <qtoolbutton.h>
+#include <QToolButton>
 #include <qwidgetaction.h>
 
 #include <KLocalizedString>
@@ -70,7 +71,9 @@ public:
     ~Private()
     {
         if (player)
+        {
             player->stop();
+        }
     }
 
     enum PlayPauseMode { PlayMode, PauseMode };
@@ -106,11 +109,15 @@ public:
 static QUrl urlFromUrlString(const QString &url, Okular::Document *document)
 {
     QUrl newurl;
-    if (url.startsWith(QLatin1Char('/'))) {
+    if (url.startsWith(QLatin1Char('/')))
+    {
         newurl = QUrl::fromLocalFile(url);
-    } else {
+    }
+    else
+    {
         newurl = QUrl(url);
-        if (newurl.isRelative()) {
+        if (newurl.isRelative())
+        {
             newurl = document->currentDocument().adjusted(QUrl::RemoveFilename);
             newurl.setPath(newurl.path() + url);
         }
@@ -122,23 +129,31 @@ void VideoWidget::Private::load()
 {
     repetitionsLeft = movie->playRepetitions();
     if (loaded)
+    {
         return;
+    }
 
     loaded = true;
 
     player->load(urlFromUrlString(movie->url(), document));
 
-    connect(player->mediaObject(), &Phonon::MediaObject::stateChanged, q, [this](Phonon::State s) { stateChanged(s); });
+    connect(player->mediaObject(), &Phonon::MediaObject::stateChanged, q, [this](Phonon::State s)
+    {
+        stateChanged(s);
+    });
 
     seekSlider->setEnabled(true);
 }
 
 void VideoWidget::Private::setupPlayPauseAction(PlayPauseMode mode)
 {
-    if (mode == PlayMode) {
+    if (mode == PlayMode)
+    {
         playPauseAction->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
         playPauseAction->setText(i18nc("start the movie playback", "Play"));
-    } else if (mode == PauseMode) {
+    }
+    else if (mode == PauseMode)
+    {
         playPauseAction->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-pause")));
         playPauseAction->setText(i18nc("pause the movie playback", "Pause"));
     }
@@ -149,59 +164,77 @@ void VideoWidget::Private::takeSnapshot()
     const QUrl url = urlFromUrlString(movie->url(), document);
     SnapshotTaker *taker = new SnapshotTaker(url, q);
 
-    q->connect(taker, &SnapshotTaker::finished, q, [this](const QImage &image) { setPosterImage(image); });
+    q->connect(taker, &SnapshotTaker::finished, q, [this](const QImage &image)
+    {
+        setPosterImage(image);
+    });
 }
 
 void VideoWidget::Private::videoStopped()
 {
     if (movie->showPosterImage())
+    {
         pageLayout->setCurrentIndex(1);
+    }
     else
+    {
         q->hide();
+    }
 }
 
 void VideoWidget::Private::finished()
 {
-    switch (movie->playMode()) {
-    case Okular::Movie::PlayLimited:
-    case Okular::Movie::PlayOpen:
-        repetitionsLeft -= 1.0;
-        if (repetitionsLeft < 1e-5) { // allow for some calculation error
-            // playback has ended
-            stopAction->setEnabled(false);
-            setupPlayPauseAction(PlayMode);
-            if (movie->playMode() == Okular::Movie::PlayLimited)
-                controlBar->setVisible(false);
-            videoStopped();
-        } else
-            // not done yet, repeat
-            // if repetitionsLeft is less than 1, we are supposed to stop midway, but not even Adobe reader does this
+    switch (movie->playMode())
+    {
+        case Okular::Movie::PlayLimited:
+        case Okular::Movie::PlayOpen:
+            repetitionsLeft -= 1.0;
+            if (repetitionsLeft < 1e-5)   // allow for some calculation error
+            {
+                // playback has ended
+                stopAction->setEnabled(false);
+                setupPlayPauseAction(PlayMode);
+                if (movie->playMode() == Okular::Movie::PlayLimited)
+                {
+                    controlBar->setVisible(false);
+                }
+                videoStopped();
+            }
+            else
+                // not done yet, repeat
+                // if repetitionsLeft is less than 1, we are supposed to stop midway, but not even Adobe reader does this
+            {
+                player->play();
+            }
+            break;
+        case Okular::Movie::PlayRepeat:
+            // repeat the playback
             player->play();
-        break;
-    case Okular::Movie::PlayRepeat:
-        // repeat the playback
-        player->play();
-        break;
-    case Okular::Movie::PlayPalindrome:
-        // FIXME we should play backward, but we cannot
-        player->play();
-        break;
+            break;
+        case Okular::Movie::PlayPalindrome:
+            // FIXME we should play backward, but we cannot
+            player->play();
+            break;
     }
 }
 
 void VideoWidget::Private::playOrPause()
 {
-    if (player->isPlaying()) {
+    if (player->isPlaying())
+    {
         player->pause();
         setupPlayPauseAction(PlayMode);
-    } else {
+    }
+    else
+    {
         q->play();
     }
 }
 
 void VideoWidget::Private::setPosterImage(const QImage &image)
 {
-    if (!image.isNull()) {
+    if (!image.isNull())
+    {
         // cache the snapshot image
         movie->setPosterImage(image);
     }
@@ -212,7 +245,9 @@ void VideoWidget::Private::setPosterImage(const QImage &image)
 void VideoWidget::Private::stateChanged(Phonon::State newState)
 {
     if (newState == Phonon::PlayingState)
+    {
         pageLayout->setCurrentIndex(0);
+    }
 }
 
 VideoWidget::VideoWidget(const Okular::Annotation *annotation, Okular::Movie *movie, Okular::Document *document, QWidget *parent)
@@ -273,16 +308,22 @@ VideoWidget::VideoWidget(const Okular::Annotation *annotation, Okular::Movie *mo
     d->pageLayout->addWidget(playerPage);
     d->pageLayout->addWidget(d->posterImagePage);
 
-    if (movie->showPosterImage()) {
+    if (movie->showPosterImage())
+    {
         d->pageLayout->setCurrentIndex(1);
 
         const QImage posterImage = movie->posterImage();
-        if (posterImage.isNull()) {
+        if (posterImage.isNull())
+        {
             d->takeSnapshot();
-        } else {
+        }
+        else
+        {
             d->setPosterImage(posterImage);
         }
-    } else {
+    }
+    else
+    {
         d->pageLayout->setCurrentIndex(0);
     }
 }
@@ -314,12 +355,14 @@ void VideoWidget::pageInitialized()
 
 void VideoWidget::pageEntered()
 {
-    if (d->movie->showPosterImage()) {
+    if (d->movie->showPosterImage())
+    {
         d->pageLayout->setCurrentIndex(1);
         show();
     }
 
-    if (d->movie->autoPlay()) {
+    if (d->movie->autoPlay())
+    {
         show();
         QMetaObject::invokeMethod(this, "play", Qt::QueuedConnection);
     }
@@ -358,29 +401,37 @@ void VideoWidget::pause()
 
 bool VideoWidget::eventFilter(QObject *object, QEvent *event)
 {
-    if (object == d->player || object == d->posterImagePage) {
-        switch (event->type()) {
-        case QEvent::MouseButtonPress: {
-            QMouseEvent *me = static_cast<QMouseEvent *>(event);
-            if (me->button() == Qt::LeftButton) {
-                if (!d->player->isPlaying()) {
-                    play();
+    if (object == d->player || object == d->posterImagePage)
+    {
+        switch (event->type())
+        {
+            case QEvent::MouseButtonPress:
+            {
+                QMouseEvent *me = static_cast<QMouseEvent *>(event);
+                if (me->button() == Qt::LeftButton)
+                {
+                    if (!d->player->isPlaying())
+                    {
+                        play();
+                    }
+                    event->accept();
                 }
-                event->accept();
+                break;
             }
-            break;
-        }
-        case QEvent::Wheel: {
-            if (object == d->posterImagePage) {
-                QWheelEvent *we = static_cast<QWheelEvent *>(event);
+            case QEvent::Wheel:
+            {
+                if (object == d->posterImagePage)
+                {
+                    QWheelEvent *we = static_cast<QWheelEvent *>(event);
 
-                // forward wheel events to parent widget
-                QWheelEvent *copy = new QWheelEvent(we->pos(), we->globalPos(), we->angleDelta().y(), we->buttons(), we->modifiers(), we->orientation());
-                QCoreApplication::postEvent(parentWidget(), copy);
+                    // forward wheel events to parent widget
+                    QWheelEvent *copy = new QWheelEvent(we->pos(), we->globalPos(), we->angleDelta().y(), we->buttons(), we->modifiers(), we->orientation());
+                    QCoreApplication::postEvent(parentWidget(), copy);
+                }
+                break;
             }
-            break;
-        }
-        default:;
+            default:
+                ;
         }
     }
 
@@ -389,13 +440,15 @@ bool VideoWidget::eventFilter(QObject *object, QEvent *event)
 
 bool VideoWidget::event(QEvent *event)
 {
-    switch (event->type()) {
-    case QEvent::ToolTip:
-        // "eat" the help events (= tooltips), avoid parent widgets receiving them
-        event->accept();
-        return true;
-        break;
-    default:;
+    switch (event->type())
+    {
+        case QEvent::ToolTip:
+            // "eat" the help events (= tooltips), avoid parent widgets receiving them
+            event->accept();
+            return true;
+            break;
+        default:
+            ;
     }
 
     return QWidget::event(event);
@@ -406,10 +459,13 @@ void VideoWidget::resizeEvent(QResizeEvent *event)
     const QSize &s = event->size();
     int usedSpace = d->seekSlider->geometry().left() + d->seekSlider->iconSize().width();
     // try to give the slider at least 30px of space
-    if (s.width() < (usedSpace + 30)) {
+    if (s.width() < (usedSpace + 30))
+    {
         d->seekSliderAction->setVisible(false);
         d->seekSliderMenuAction->setVisible(true);
-    } else {
+    }
+    else
+    {
         d->seekSliderAction->setVisible(true);
         d->seekSliderMenuAction->setVisible(false);
     }

@@ -47,4 +47,14 @@ private:
 
 Q_DECLARE_LOGGING_CATEGORY(OkularTiffDebug)
 
+
+class TIFFGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_tiff.json")
+public:
+  explicit TIFFGeneratorFactory();
+  ~TIFFGeneratorFactory();
+};
 #endif

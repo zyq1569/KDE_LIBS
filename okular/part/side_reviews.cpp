@@ -40,7 +40,7 @@
 
 class TreeView : public QTreeView
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     TreeView(Okular::Document *document, QWidget *parent = Q_NULLPTR)
@@ -306,4 +306,4 @@ void Reviews::saveSearchOptions()
     Okular::Settings::self()->save();
 }
 
-#include "side_reviews.moc"
+//#include "side_reviews.moc"

@@ -21,21 +21,21 @@
 #include <QStandardPaths>
 #include <QTemporaryFile>
 
-#include "fileprinterpreview.h"
+//#include "fileprinterpreview.h"
 
-class RevisionPreview : public Okular::FilePrinterPreview
-{
-    Q_OBJECT
+//class RevisionPreview : public Okular::FilePrinterPreview
+//{
+//    Q_OBJECT
 
-public:
-    explicit RevisionPreview(const QString &revisionFile, QWidget *parent = nullptr);
+//public:
+//    explicit RevisionPreview(const QString &revisionFile, QWidget *parent = nullptr);
 
-private Q_SLOTS:
-    void doSave();
+//private slots:
+//    void doSave();
 
-private:
-    QString m_filename;
-};
+//private:
+//    QString m_filename;
+//};
 
 RevisionPreview::RevisionPreview(const QString &revisionFile, QWidget *parent)
     : FilePrinterPreview(revisionFile, parent)
@@ -83,4 +83,4 @@ void RevisionViewer::viewRevision()
     previewdlg.exec();
 }
 
-#include "revisionviewer.moc"
+//#include "revisionviewer.moc"

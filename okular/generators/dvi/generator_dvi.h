@@ -66,4 +66,14 @@ private:
     QLinkedList<Okular::ObjectRect *> generateDviLinks(const dviPageInfo *pageInfo);
 };
 
+
+class DviGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_dvi.json")
+public:
+  explicit DviGeneratorFactory();
+  ~DviGeneratorFactory();
+};
 #endif

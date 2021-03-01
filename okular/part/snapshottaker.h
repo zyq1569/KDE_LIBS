@@ -13,7 +13,7 @@
 #include <phonon/videoplayer.h>
 
 #include <QObject>
-
+#include <QUrl>
 class QImage;
 
 class SnapshotTaker : public QObject

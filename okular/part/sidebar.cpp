@@ -90,7 +90,9 @@ Sidebar::~Sidebar()
 int Sidebar::addItem(QWidget *widget, const QIcon &icon, const QString &text)
 {
     if (!widget)
+    {
         return -1;
+    }
 
     widget->setParent(d->viewChooserTabs);
     d->viewChooserTabs->addTab(widget, icon, text);
@@ -106,15 +108,18 @@ void Sidebar::setMainWidget(QWidget *widget)
 {
     delete d->sideWidget;
     d->sideWidget = widget;
-    if (d->sideWidget) {
+    if (d->sideWidget)
+    {
         // setting the splitter as parent for the widget automatically plugs it
         // into the splitter, neat!
         d->sideWidget->setParent(d->splitter);
         setFocusProxy(widget);
 
-        if (!d->splitterSizesSet) {
+        if (!d->splitterSizesSet)
+        {
             QList<int> splitterSizes = Okular::Settings::splitterSizes();
-            if (splitterSizes.isEmpty()) {
+            if (splitterSizes.isEmpty())
+            {
                 // the first time use 1/10 for the panel and 9/10 for the pageView
                 splitterSizes.push_back(50);
                 splitterSizes.push_back(500);
@@ -129,7 +134,8 @@ void Sidebar::setBottomWidget(QWidget *widget)
 {
     delete d->bottomWidget;
     d->bottomWidget = widget;
-    if (d->bottomWidget) {
+    if (d->bottomWidget)
+    {
         d->bottomWidget->setParent(this);
         d->vlay->addWidget(d->bottomWidget);
     }
@@ -143,7 +149,9 @@ void Sidebar::setCurrentItem(QWidget *widget)
 QWidget *Sidebar::currentItem() const
 {
     if (d->viewChooserTabs->currentIndex() == -1)
+    {
         return nullptr;
+    }
 
     return d->viewChooserTabs->currentWidget();
 }
@@ -171,7 +179,9 @@ void Sidebar::splitterMoved(int /*pos*/, int index)
 {
     // if the side panel has been resized, save splitter sizes
     if (index == 1)
+    {
         saveSplitterSize();
+    }
 }
 
 void Sidebar::saveSplitterSize() const

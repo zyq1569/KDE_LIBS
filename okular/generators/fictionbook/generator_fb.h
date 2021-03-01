@@ -24,4 +24,14 @@ public:
     void addPages(KConfigDialog *dlg) override;
 };
 
+
+class FictionBookGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_fb.json")
+public:
+  explicit FictionBookGeneratorFactory();
+  ~FictionBookGeneratorFactory();
+};
 #endif

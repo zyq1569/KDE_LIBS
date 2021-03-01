@@ -19,7 +19,7 @@
 #include <QMenu>
 #include <QToolBar>
 #include <QTreeWidget>
-#include <QUrl>
+//#include <QUrl>
 
 #include <KLocalizedString>
 #include <KTitleWidget>
@@ -49,7 +49,9 @@ public:
         m_url.setFragment(QString());
         setText(0, m_bookmark.fullText());
         if (m_viewport.isValid())
+        {
             setData(0, PageItemDelegate::PageRole, QString::number(m_viewport.pageNumber + 1));
+        }
     }
 
     BookmarkItem(const BookmarkItem &) = delete;
@@ -57,16 +59,18 @@ public:
 
     QVariant data(int column, int role) const override
     {
-        switch (role) {
-        case Qt::ToolTipRole:
-            return m_bookmark.fullText();
+        switch (role)
+        {
+            case Qt::ToolTipRole:
+                return m_bookmark.fullText();
         }
         return QTreeWidgetItem::data(column, role);
     }
 
     bool operator<(const QTreeWidgetItem &other) const override
     {
-        if (other.type() == BookmarkItemType) {
+        if (other.type() == BookmarkItemType)
+        {
             const BookmarkItem *cmp = static_cast<const BookmarkItem *>(&other);
             return m_viewport < cmp->m_viewport;
         }
@@ -111,9 +115,10 @@ public:
 
     QVariant data(int column, int role) const override
     {
-        switch (role) {
-        case Qt::ToolTipRole:
-            return i18ncp("%1 is the file name", "%1\n\nOne bookmark", "%1\n\n%2 bookmarks", text(0), childCount());
+        switch (role)
+        {
+            case Qt::ToolTipRole:
+                return i18ncp("%1 is the file name", "%1\n\nOne bookmark", "%1\n\n%2 bookmarks", text(0), childCount());
         }
         return QTreeWidgetItem::data(column, role);
     }
@@ -181,20 +186,27 @@ void BookmarkList::notifySetup(const QVector<Okular::Page *> &pages, int setupFl
 {
     Q_UNUSED(pages);
     if (!(setupFlags & Okular::DocumentObserver::UrlChanged))
+    {
         return;
+    }
 
     // clear contents
     m_searchLine->clear();
 
-    if (m_showBoomarkOnlyAction->isChecked()) {
+    if (m_showBoomarkOnlyAction->isChecked())
+    {
         rebuildTree(m_showBoomarkOnlyAction->isChecked());
-    } else {
+    }
+    else
+    {
         disconnect(m_tree, &QTreeWidget::itemChanged, this, &BookmarkList::slotChanged);
-        if (m_currentDocumentItem && m_currentDocumentItem != m_tree->invisibleRootItem()) {
+        if (m_currentDocumentItem && m_currentDocumentItem != m_tree->invisibleRootItem())
+        {
             m_currentDocumentItem->setIcon(0, QIcon());
         }
         m_currentDocumentItem = itemForUrl(m_document->currentDocument());
-        if (m_currentDocumentItem && m_currentDocumentItem != m_tree->invisibleRootItem()) {
+        if (m_currentDocumentItem && m_currentDocumentItem != m_tree->invisibleRootItem())
+        {
             m_currentDocumentItem->setIcon(0, QIcon::fromTheme(QStringLiteral("bookmarks")));
             m_currentDocumentItem->setExpanded(true);
         }
@@ -211,7 +223,9 @@ void BookmarkList::slotExecuted(QTreeWidgetItem *item)
 {
     BookmarkItem *bmItem = dynamic_cast<BookmarkItem *>(item);
     if (!bmItem || !bmItem->viewport().isValid())
+    {
         return;
+    }
 
     goTo(bmItem);
 }
@@ -219,13 +233,15 @@ void BookmarkList::slotExecuted(QTreeWidgetItem *item)
 void BookmarkList::slotChanged(QTreeWidgetItem *item)
 {
     BookmarkItem *bmItem = dynamic_cast<BookmarkItem *>(item);
-    if (bmItem && bmItem->viewport().isValid()) {
+    if (bmItem && bmItem->viewport().isValid())
+    {
         bmItem->bookmark().setFullText(bmItem->text(0));
         m_document->bookmarkManager()->save();
     }
 
     FileItem *fItem = dynamic_cast<FileItem *>(item);
-    if (fItem) {
+    if (fItem)
+    {
         const QUrl url = fItem->data(0, UrlRole).value<QUrl>();
         m_document->bookmarkManager()->renameBookmark(url, fItem->text(0));
         m_document->bookmarkManager()->save();
@@ -237,16 +253,22 @@ void BookmarkList::slotContextMenu(const QPoint p)
     QTreeWidgetItem *item = m_tree->itemAt(p);
     BookmarkItem *bmItem = item ? dynamic_cast<BookmarkItem *>(item) : nullptr;
     if (bmItem)
+    {
         contextMenuForBookmarkItem(p, bmItem);
+    }
     else if (FileItem *fItem = dynamic_cast<FileItem *>(item))
+    {
         contextMenuForFileItem(p, fItem);
+    }
 }
 
 void BookmarkList::contextMenuForBookmarkItem(const QPoint p, BookmarkItem *bmItem)
 {
     Q_UNUSED(p);
     if (!bmItem || !bmItem->viewport().isValid())
+    {
         return;
+    }
 
     QMenu menu(this);
     QAction *gotobm = menu.addAction(i18n("Go to This Bookmark"));
@@ -254,21 +276,31 @@ void BookmarkList::contextMenuForBookmarkItem(const QPoint p, BookmarkItem *bmIt
     QAction *removebm = menu.addAction(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove Bookmark"));
     QAction *res = menu.exec(QCursor::pos());
     if (!res)
+    {
         return;
+    }
 
     if (res == gotobm)
+    {
         goTo(bmItem);
+    }
     else if (res == editbm)
+    {
         m_tree->editItem(bmItem, 0);
+    }
     else if (res == removebm)
+    {
         m_document->bookmarkManager()->removeBookmark(bmItem->url(), bmItem->bookmark());
+    }
 }
 
 void BookmarkList::contextMenuForFileItem(const QPoint p, FileItem *fItem)
 {
     Q_UNUSED(p);
     if (!fItem)
+    {
         return;
+    }
 
     const QUrl itemurl = fItem->data(0, UrlRole).value<QUrl>();
     const bool thisdoc = itemurl == m_document->currentDocument();
@@ -276,21 +308,31 @@ void BookmarkList::contextMenuForFileItem(const QPoint p, FileItem *fItem)
     QMenu menu(this);
     QAction *open = nullptr;
     if (!thisdoc)
+    {
         open = menu.addAction(i18nc("Opens the selected document", "Open Document"));
+    }
     QAction *editbm = menu.addAction(QIcon::fromTheme(QStringLiteral("edit-rename")), i18n("Rename Bookmark"));
     QAction *removebm = menu.addAction(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove Bookmarks"));
     QAction *res = menu.exec(QCursor::pos());
     if (!res)
+    {
         return;
+    }
 
-    if (res == open) {
+    if (res == open)
+    {
         Okular::GotoAction action(itemurl.toDisplayString(QUrl::PreferLocalFile), Okular::DocumentViewport());
         m_document->processAction(&action);
-    } else if (res == editbm)
+    }
+    else if (res == editbm)
+    {
         m_tree->editItem(fItem, 0);
-    else if (res == removebm) {
+    }
+    else if (res == removebm)
+    {
         KBookmark::List list;
-        for (int i = 0; i < fItem->childCount(); ++i) {
+        for (int i = 0; i < fItem->childCount(); ++i)
+        {
             list.append(static_cast<BookmarkItem *>(fItem->child(i))->bookmark());
         }
         m_document->bookmarkManager()->removeBookmarks(itemurl, list);
@@ -301,14 +343,17 @@ void BookmarkList::slotBookmarksChanged(const QUrl &url)
 {
     // special case here, as m_currentDocumentItem could represent
     // the invisible root item
-    if (url == m_document->currentDocument()) {
+    if (url == m_document->currentDocument())
+    {
         selectiveUrlUpdate(m_document->currentDocument(), m_currentDocumentItem);
         return;
     }
 
     // we are showing the bookmarks for the current document only
     if (m_showBoomarkOnlyAction->isChecked())
+    {
         return;
+    }
 
     QTreeWidgetItem *item = itemForUrl(url);
     selectiveUrlUpdate(url, item);
@@ -318,7 +363,8 @@ QList<QTreeWidgetItem *> createItems(const QUrl &baseurl, const KBookmark::List 
 {
     Q_UNUSED(baseurl)
     QList<QTreeWidgetItem *> ret;
-    for (const KBookmark &bm : bmlist) {
+    for (const KBookmark &bm : bmlist)
+    {
         //        qCDebug(OkularUiDebug).nospace() << "checking '" << tmp << "'";
         //        qCDebug(OkularUiDebug).nospace() << "      vs '" << baseurl << "'";
         // TODO check that bm and baseurl are the same (#ref excluded)
@@ -338,29 +384,39 @@ void BookmarkList::rebuildTree(bool filter)
     m_tree->clear();
 
     const QList<QUrl> urls = m_document->bookmarkManager()->files();
-    if (filter) {
-        if (m_document->isOpened()) {
-            for (const QUrl &url : urls) {
-                if (url == m_document->currentDocument()) {
+    if (filter)
+    {
+        if (m_document->isOpened())
+        {
+            for (const QUrl &url : urls)
+            {
+                if (url == m_document->currentDocument())
+                {
                     m_tree->addTopLevelItems(createItems(url, m_document->bookmarkManager()->bookmarks(url)));
                     m_currentDocumentItem = m_tree->invisibleRootItem();
                     break;
                 }
             }
         }
-    } else {
+    }
+    else
+    {
         QTreeWidgetItem *currenturlitem = nullptr;
-        for (const QUrl &url : urls) {
+        for (const QUrl &url : urls)
+        {
             QList<QTreeWidgetItem *> subitems = createItems(url, m_document->bookmarkManager()->bookmarks(url));
-            if (!subitems.isEmpty()) {
+            if (!subitems.isEmpty())
+            {
                 FileItem *item = new FileItem(url, m_tree, m_document);
                 item->addChildren(subitems);
-                if (!currenturlitem && url == m_document->currentDocument()) {
+                if (!currenturlitem && url == m_document->currentDocument())
+                {
                     currenturlitem = item;
                 }
             }
         }
-        if (currenturlitem) {
+        if (currenturlitem)
+        {
             currenturlitem->setExpanded(true);
             currenturlitem->setIcon(0, QIcon::fromTheme(QStringLiteral("bookmarks")));
             m_tree->scrollToItem(currenturlitem, QAbstractItemView::PositionAtTop);
@@ -375,9 +431,12 @@ void BookmarkList::rebuildTree(bool filter)
 
 void BookmarkList::goTo(BookmarkItem *item)
 {
-    if (item->url() == m_document->currentDocument()) {
+    if (item->url() == m_document->currentDocument())
+    {
         m_document->setViewport(item->viewport(), nullptr, true);
-    } else {
+    }
+    else
+    {
         Okular::GotoAction action(item->url().toDisplayString(QUrl::PreferLocalFile), item->viewport());
         m_document->processAction(&action);
     }
@@ -388,33 +447,46 @@ void BookmarkList::selectiveUrlUpdate(const QUrl &url, QTreeWidgetItem *&item)
     disconnect(m_tree, &QTreeWidget::itemChanged, this, &BookmarkList::slotChanged);
 
     const KBookmark::List urlbookmarks = m_document->bookmarkManager()->bookmarks(url);
-    if (urlbookmarks.isEmpty()) {
-        if (item != m_tree->invisibleRootItem()) {
+    if (urlbookmarks.isEmpty())
+    {
+        if (item != m_tree->invisibleRootItem())
+        {
             m_tree->invisibleRootItem()->removeChild(item);
             item = nullptr;
-        } else if (item) {
-            for (int i = item->childCount(); i >= 0; --i) {
+        }
+        else if (item)
+        {
+            for (int i = item->childCount(); i >= 0; --i)
+            {
                 item->removeChild(item->child(i));
             }
         }
-    } else {
+    }
+    else
+    {
         bool fileitem_created = false;
 
-        if (item) {
-            for (int i = item->childCount() - 1; i >= 0; --i) {
+        if (item)
+        {
+            for (int i = item->childCount() - 1; i >= 0; --i)
+            {
                 item->removeChild(item->child(i));
             }
-        } else {
+        }
+        else
+        {
             item = new FileItem(url, m_tree, m_document);
             fileitem_created = true;
         }
-        if (m_document->isOpened() && url == m_document->currentDocument()) {
+        if (m_document->isOpened() && url == m_document->currentDocument())
+        {
             item->setIcon(0, QIcon::fromTheme(QStringLiteral("bookmarks")));
             item->setExpanded(true);
         }
         item->addChildren(createItems(url, urlbookmarks));
 
-        if (fileitem_created) {
+        if (fileitem_created)
+        {
             // we need to sort also the parent of the new file item,
             // so it can be properly shown in the correct place
             m_tree->invisibleRootItem()->sortChildren(0, Qt::AscendingOrder);
@@ -428,10 +500,12 @@ void BookmarkList::selectiveUrlUpdate(const QUrl &url, QTreeWidgetItem *&item)
 QTreeWidgetItem *BookmarkList::itemForUrl(const QUrl &url) const
 {
     const int count = m_tree->topLevelItemCount();
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < count; ++i)
+    {
         QTreeWidgetItem *item = m_tree->topLevelItem(i);
         const QUrl itemurl = item->data(0, UrlRole).value<QUrl>();
-        if (itemurl.isValid() && itemurl == url) {
+        if (itemurl.isValid() && itemurl == url)
+        {
             return item;
         }
     }

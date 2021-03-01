@@ -18,8 +18,19 @@
 #include <core/document.h>
 #include <core/page.h>
 
-OKULAR_EXPORT_PLUGIN(FaxGenerator, "libokularGenerator_fax.json")
+//OKULAR_EXPORT_PLUGIN(FaxGenerator, "libokularGenerator_fax.json")
 
+
+
+FaxGeneratorFactory::FaxGeneratorFactory()
+{
+    registerPlugin<FaxGenerator >();
+}
+FaxGeneratorFactory::~FaxGeneratorFactory()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////
 FaxGenerator::FaxGenerator(QObject *parent, const QVariantList &args)
     : Generator(parent, args)
 {
@@ -101,4 +112,4 @@ bool FaxGenerator::print(QPrinter &printer)
     return true;
 }
 
-#include "generator_fax.moc"
+//#include "generator_fax.moc"

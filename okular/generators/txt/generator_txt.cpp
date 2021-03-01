@@ -14,8 +14,20 @@
 #include <KConfigDialog>
 #include <KLocalizedString>
 
-OKULAR_EXPORT_PLUGIN(TxtGenerator, "libokularGenerator_txt.json")
+//OKULAR_EXPORT_PLUGIN(TxtGenerator, "libokularGenerator_txt.json")
 
+
+
+TxtGeneratorFactory::TxtGeneratorFactory()
+{
+    registerPlugin<TxtGenerator >();
+}
+TxtGeneratorFactory::~TxtGeneratorFactory()
+{
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 TxtGenerator::TxtGenerator(QObject *parent, const QVariantList &args)
     : Okular::TextDocumentGenerator(new Txt::Converter, QStringLiteral("okular_txt_generator_settings"), parent, args)
 {
@@ -28,4 +40,4 @@ void TxtGenerator::addPages(KConfigDialog *dlg)
     dlg->addPage(widget, generalSettings(), i18n("Txt"), QStringLiteral("text-plain"), i18n("Txt Backend Configuration"));
 }
 
-#include "generator_txt.moc"
+//#include "generator_txt.moc"

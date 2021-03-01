@@ -22,7 +22,7 @@
 
 class ColorAction : public QAction
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     explicit ColorAction(KActionCollection *parent)
@@ -246,4 +246,4 @@ void DrawingToolActions::createToolAction(const QString &text, const QString &to
     connect(action, &QAction::triggered, this, &DrawingToolActions::actionTriggered);
 }
 
-#include "drawingtoolactions.moc"
+//#include "drawingtoolactions.moc"

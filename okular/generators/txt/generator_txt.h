@@ -26,4 +26,14 @@ public:
     void addPages(KConfigDialog *dlg) override;
 };
 
+class TxtGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_txt.json")
+public:
+  explicit TxtGeneratorFactory();
+  ~TxtGeneratorFactory();
+};
+
 #endif

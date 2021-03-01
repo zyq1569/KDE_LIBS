@@ -15,8 +15,8 @@
 
 #include <KActionMenu>
 #include <QSet>
-#include <QToolButton>
-
+//#include <QToolButton>
+//class QToolButton;
 /**
  * @brief A KActionMenu, with allows to set the default action of its toolbar buttons.
  *
@@ -48,7 +48,8 @@ public:
     /**
      * Defines how the menu behaves.
      */
-    enum MenuLogic {
+    enum MenuLogic
+    {
         DefaultLogic = 0x0,
         /**
          * Automatically makes the triggered action the default action, even if in a submenu.
@@ -126,7 +127,8 @@ public slots:
 private:
     QAction *m_defaultAction;
     QAction *m_suggestedDefaultAction;
-    QList<QPointer<QToolButton>> m_buttons;
+//    QList<QPointer<QToolButton>> m_buttons;
+    QList<QToolButton*> m_buttons;
     MenuLogic m_menuLogic;
 
     /**

@@ -60,8 +60,18 @@ static void recurseCreateTOC(QDomDocument &maindoc, const QDomNode &parent, QDom
     }
 }
 
-OKULAR_EXPORT_PLUGIN(DjVuGenerator, "libokularGenerator_djvu.json")
+//OKULAR_EXPORT_PLUGIN(DjVuGenerator, "libokularGenerator_djvu.json")
 
+
+
+DjVuGeneratorFactory::DjVuGeneratorFactory()
+{
+    registerPlugin<DjVuGenerator >();
+}
+DjVuGeneratorFactory::~DjVuGeneratorFactory()
+{
+}
+/////////////////////////////////////////////////////////////////////////
 DjVuGenerator::DjVuGenerator(QObject *parent, const QVariantList &args)
     : Okular::Generator(parent, args)
     , m_docSyn(nullptr)
@@ -393,4 +403,4 @@ Okular::Annotation *DjVuGenerator::convertKDjVuAnnotation(int w, int h, KDjVu::A
     return newann;
 }
 
-#include "generator_djvu.moc"
+//#include "generator_djvu.moc"

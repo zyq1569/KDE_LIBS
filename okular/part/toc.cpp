@@ -71,15 +71,19 @@ TOC::~TOC()
 void TOC::notifySetup(const QVector<Okular::Page *> & /*pages*/, int setupFlags)
 {
     if (!(setupFlags & Okular::DocumentObserver::DocumentChanged))
+    {
         return;
+    }
 
     // clear contents
     m_model->clear();
 
     // request synopsis description (is a dom tree)
     const Okular::DocumentSynopsis *syn = m_document->documentSynopsis();
-    if (!syn) {
-        if (m_document->isOpened()) {
+    if (!syn)
+    {
+        if (m_document->isOpened())
+        {
             // Make sure we clear the reload old model data
             m_model->setOldModelData(nullptr, QVector<QModelIndex>());
         }
@@ -99,7 +103,9 @@ void TOC::notifyCurrentPageChanged(int, int)
 void TOC::prepareForReload()
 {
     if (m_model->isEmpty())
+    {
         return;
+    }
 
     const QVector<QModelIndex> list = expandedNodes();
     TOCModel *m = m_model;
@@ -111,7 +117,9 @@ void TOC::prepareForReload()
 void TOC::rollbackReload()
 {
     if (!m_model->hasOldModelData())
+    {
         return;
+    }
 
     TOCModel *m = m_model;
     m_model = m->clearOldModelData();
@@ -128,12 +136,15 @@ void TOC::finishReload()
 QVector<QModelIndex> TOC::expandedNodes(const QModelIndex &parent) const
 {
     QVector<QModelIndex> list;
-    for (int i = 0; i < m_model->rowCount(parent); i++) {
+    for (int i = 0; i < m_model->rowCount(parent); i++)
+    {
         const QModelIndex index = m_model->index(i, 0, parent);
-        if (m_treeView->isExpanded(index)) {
+        if (m_treeView->isExpanded(index))
+        {
             list << index;
         }
-        if (m_model->hasChildren(index)) {
+        if (m_model->hasChildren(index))
+        {
             list << expandedNodes(index);
         }
     }
@@ -150,10 +161,13 @@ void TOC::reparseConfig()
 void TOC::slotExecuted(const QModelIndex &index)
 {
     if (!index.isValid())
+    {
         return;
+    }
 
     QString url = m_model->urlForIndex(index);
-    if (!url.isEmpty()) {
+    if (!url.isEmpty())
+    {
         Okular::BrowseAction action(QUrl::fromLocalFile(url));
         m_document->processAction(&action);
         return;
@@ -161,10 +175,13 @@ void TOC::slotExecuted(const QModelIndex &index)
 
     QString externalFileName = m_model->externalFileNameForIndex(index);
     Okular::DocumentViewport viewport = m_model->viewportForIndex(index);
-    if (!externalFileName.isEmpty()) {
+    if (!externalFileName.isEmpty())
+    {
         Okular::GotoAction action(externalFileName, viewport);
         m_document->processAction(&action);
-    } else if (viewport.isValid()) {
+    }
+    else if (viewport.isValid())
+    {
         m_document->setViewport(viewport);
     }
 }
@@ -180,7 +197,9 @@ void TOC::contextMenuEvent(QContextMenuEvent *e)
 {
     QModelIndex index = m_treeView->currentIndex();
     if (!index.isValid())
+    {
         return;
+    }
 
     Okular::DocumentViewport viewport = m_model->viewportForIndex(index);
 
@@ -190,13 +209,16 @@ void TOC::contextMenuEvent(QContextMenuEvent *e)
 void TOC::expandRecursively()
 {
     QList<QModelIndex> worklist = {m_treeView->currentIndex()};
-    if (!worklist[0].isValid()) {
+    if (!worklist[0].isValid())
+    {
         return;
     }
-    while (!worklist.isEmpty()) {
+    while (!worklist.isEmpty())
+    {
         QModelIndex index = worklist.takeLast();
         m_treeView->expand(index);
-        for (int i = 0; i < m_model->rowCount(index); i++) {
+        for (int i = 0; i < m_model->rowCount(index); i++)
+        {
             worklist += m_model->index(i, 0, index);
         }
     }
@@ -205,13 +227,16 @@ void TOC::expandRecursively()
 void TOC::collapseRecursively()
 {
     QList<QModelIndex> worklist = {m_treeView->currentIndex()};
-    if (!worklist[0].isValid()) {
+    if (!worklist[0].isValid())
+    {
         return;
     }
-    while (!worklist.isEmpty()) {
+    while (!worklist.isEmpty())
+    {
         QModelIndex index = worklist.takeLast();
         m_treeView->collapse(index);
-        for (int i = 0; i < m_model->rowCount(index); i++) {
+        for (int i = 0; i < m_model->rowCount(index); i++)
+        {
             worklist += m_model->index(i, 0, index);
         }
     }

@@ -40,4 +40,14 @@ private:
     FaxDocument::DocumentType m_type;
 };
 
+
+class FaxGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_fax.json")
+public:
+  explicit FaxGeneratorFactory();
+  ~FaxGeneratorFactory();
+};
 #endif

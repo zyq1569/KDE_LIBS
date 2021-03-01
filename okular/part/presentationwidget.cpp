@@ -114,7 +114,7 @@ struct PresentationFrame {
 // background is not automatically filled
 class PresentationToolBar : public QToolBar
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 public:
     PresentationToolBar(QWidget *parent = Q_NULLPTR)
@@ -2238,4 +2238,4 @@ void PresentationWidget::slotTogglePlayPause()
     }
 }
 
-#include "presentationwidget.moc"
+//#include "presentationwidget.moc"

@@ -40,7 +40,18 @@
 #include <QThread>
 #endif
 
-OKULAR_EXPORT_PLUGIN(DviGenerator, "libokularGenerator_dvi.json")
+//OKULAR_EXPORT_PLUGIN(DviGenerator, "libokularGenerator_dvi.json")
+
+
+
+
+DviGeneratorFactory::DviGeneratorFactory()
+{
+    registerPlugin<DviGenerator >();
+}
+DviGeneratorFactory::~DviGeneratorFactory()
+{
+}
 
 DviGenerator::DviGenerator(QObject *parent, const QVariantList &args)
     : Okular::Generator(parent, args)
@@ -512,4 +523,4 @@ QVariant DviGenerator::metaData(const QString &key, const QVariant &option) cons
 Q_LOGGING_CATEGORY(OkularDviDebug, "org.kde.okular.generators.dvi.core", QtWarningMsg)
 Q_LOGGING_CATEGORY(OkularDviShellDebug, "org.kde.okular.generators.dvi.shell", QtWarningMsg)
 
-#include "generator_dvi.moc"
+//#include "generator_dvi.moc"

@@ -155,8 +155,26 @@ static Okular::Rotation readTiffRotation(TIFF *tiff)
     return ret;
 }
 
-OKULAR_EXPORT_PLUGIN(TIFFGenerator, "libokularGenerator_tiff.json")
+//OKULAR_EXPORT_PLUGIN(TIFFGenerator, "libokularGenerator_tiff.json")
+//class TIFFGeneratorFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_tiff.json")
+//public:
+//    explicit TIFFGeneratorFactory();
+//    ~TIFFGeneratorFactory();
+//};
 
+TIFFGeneratorFactory::TIFFGeneratorFactory()
+{
+    registerPlugin<TIFFGenerator >();
+}
+TIFFGeneratorFactory::~TIFFGeneratorFactory()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////
 TIFFGenerator::TIFFGenerator(QObject *parent, const QVariantList &args)
     : Okular::Generator(parent, args)
     , d(new Private)
@@ -407,4 +425,4 @@ int TIFFGenerator::mapPage(int page) const
 
 Q_LOGGING_CATEGORY(OkularTiffDebug, "org.kde.okular.generators.tiff", QtWarningMsg)
 
-#include "generator_tiff.moc"
+//#include "generator_tiff.moc"

@@ -21,8 +21,27 @@
 
 #include "debug_comicbook.h"
 
-OKULAR_EXPORT_PLUGIN(ComicBookGenerator, "libokularGenerator_comicbook.json")
+//OKULAR_EXPORT_PLUGIN(ComicBookGenerator, "libokularGenerator_comicbook.json")
 
+
+class ComicBookGeneratorFactory : public KPluginFactory
+{
+//    Q_OBJECT
+    Q_INTERFACES(KPluginFactory)
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_comicbook.json")
+public:
+    explicit ComicBookGeneratorFactory();
+    ~ComicBookGeneratorFactory();
+};
+
+ComicBookGeneratorFactory::ComicBookGeneratorFactory()
+{
+    registerPlugin<ComicBookGenerator >();
+}
+ComicBookGeneratorFactory::~ComicBookGeneratorFactory()
+{
+}
+///////////////////////////////////////////////////////////////////////////////////
 ComicBookGenerator::ComicBookGenerator(QObject *parent, const QVariantList &args)
     : Generator(parent, args)
 {
@@ -87,4 +106,4 @@ bool ComicBookGenerator::print(QPrinter &printer)
     return true;
 }
 
-#include "generator_comicbook.moc"
+//#include "generator_comicbook.moc"

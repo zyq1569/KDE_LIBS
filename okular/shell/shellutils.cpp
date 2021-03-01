@@ -36,17 +36,20 @@ FileExistFunc qfileExistFunc()
 QUrl urlFromArg(const QString &_arg, FileExistFunc exist_func, const QString &pageArg)
 {
     QUrl url = QUrl::fromUserInput(_arg, QDir::currentPath(), QUrl::AssumeLocalFile);
-    if (url.isLocalFile()) {
+    if (url.isLocalFile())
+    {
         // make sure something like /tmp/foo#bar.pdf is treated as a path name (default)
         // but something like /tmp/foo.pdf#bar is foo.pdf plus an anchor "bar"
         const QString path = url.path();
         int hashIndex = path.lastIndexOf(QLatin1Char('#'));
-        if (hashIndex != -1 && !exist_func(path)) {
+        if (hashIndex != -1 && !exist_func(path))
+        {
             url.setPath(path.left(hashIndex));
             url.setFragment(path.mid(hashIndex + 1));
         }
     }
-    if (!pageArg.isEmpty()) {
+    if (!pageArg.isEmpty())
+    {
         url.setFragment(pageArg);
     }
     return url;
@@ -74,7 +77,8 @@ bool unserializeOptions(const QString &serializedOptions, bool *presentation, bo
 {
     const QStringList args = serializedOptions.split(QStringLiteral(":"));
 
-    if (args.count() == 7) {
+    if (args.count() == 7)
+    {
         *presentation = args[0] == QLatin1String("1");
         *print = args[1] == QLatin1String("1");
         *print_and_exit = args[2] == QLatin1String("1");

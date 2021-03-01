@@ -13,7 +13,8 @@
 // qt / kde includes
 #include <KLocalizedString>
 #include <QIcon>
-#include <QToolButton>
+//#include <QToolButton>
+#include <QtWidgets>
 #include <kacceleratormanager.h>
 #include <kicontheme.h>
 #include <klineedit.h>
@@ -34,7 +35,7 @@
 // [private widget] a flat qpushbutton that enlights on hover
 class HoverButton : public QToolButton
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
     HoverButton(QWidget *parent);
 };
@@ -556,6 +557,6 @@ HoverButton::HoverButton(QWidget *parent)
     KAcceleratorManager::setNoAccel(this);
 }
 
-#include "minibar.moc"
+//#include "minibar.moc"
 
 /* kate: replace-tabs on; indent-width 4; */

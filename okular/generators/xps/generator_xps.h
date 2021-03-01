@@ -64,7 +64,8 @@ public:
     QVariant getChildData(const QString &name) const;
 };
 
-struct XpsGradient {
+struct XpsGradient
+{
     XpsGradient(double o, const QColor &c)
         : offset(o)
         , color(c)
@@ -82,7 +83,8 @@ struct XpsGradient {
 typedef QTransform XpsMatrixTransform;
 typedef QTransform XpsRenderTransform;
 typedef QBrush XpsFill;
-struct XpsPathFigure {
+struct XpsPathFigure
+{
     XpsPathFigure(const QPainterPath &_path, bool filled)
         : path(_path)
         , isFilled(filled)
@@ -92,7 +94,8 @@ struct XpsPathFigure {
     QPainterPath path;
     bool isFilled;
 };
-struct XpsPathGeometry {
+struct XpsPathGeometry
+{
     XpsPathGeometry()
         : fillRule(Qt::OddEvenFill)
     {
@@ -335,6 +338,19 @@ protected:
 private:
     XpsFile *m_xpsFile;
 };
+
+
+class XpsGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_xps.json")
+public:
+  explicit XpsGeneratorFactory();
+  ~XpsGeneratorFactory();
+};
+
+
 
 Q_DECLARE_LOGGING_CATEGORY(OkularXpsDebug)
 

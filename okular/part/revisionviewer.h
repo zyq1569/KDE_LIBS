@@ -10,6 +10,8 @@
 #ifndef OKULAR_REVISIONVIEWER_H
 #define OKULAR_REVISIONVIEWER_H
 
+
+#include "fileprinterpreview.h"
 #include <QByteArray>
 #include <QObject>
 
@@ -30,4 +32,17 @@ private:
     QByteArray m_revisionData;
 };
 
+class RevisionPreview : public Okular::FilePrinterPreview
+{
+  Q_OBJECT
+
+public:
+  explicit RevisionPreview(const QString &revisionFile, QWidget *parent = nullptr);
+
+private slots:
+  void doSave();
+
+private:
+  QString m_filename;
+};
 #endif
