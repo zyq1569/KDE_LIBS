@@ -12,7 +12,7 @@
 
 #include "global.h"
 #include "okularcore_export.h"
-
+#include <QUrl>
 #include <QString>
 #include <QVariant>
 

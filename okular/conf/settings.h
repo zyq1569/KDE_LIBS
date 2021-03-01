@@ -12,43 +12,44 @@
 
 #include <kuser.h>
 
-namespace Okular {
+namespace Okular
+{
 
 class SettingsPrivate;
 
 class OKULARPART_EXPORT Settings : public SettingsCore
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     class EnumDisplayDocumentNameOrPath
     {
-      public:
-      enum type { Name, Path, COUNT };
+    public:
+        enum type { Name, Path, COUNT };
     };
     class EnumSlidesTransition
     {
-      public:
-      enum type { BlindsHorizontal, BlindsVertical, BoxIn, BoxOut, Dissolve, Fade, GlitterDown, GlitterRight, GlitterRightDown, Random, Replace, SplitHorizontalIn, SplitHorizontalOut, SplitVerticalIn, SplitVerticalOut, WipeDown, WipeRight, WipeLeft, WipeUp, COUNT };
+    public:
+        enum type { BlindsHorizontal, BlindsVertical, BoxIn, BoxOut, Dissolve, Fade, GlitterDown, GlitterRight, GlitterRightDown, Random, Replace, SplitHorizontalIn, SplitHorizontalOut, SplitVerticalIn, SplitVerticalOut, WipeDown, WipeRight, WipeLeft, WipeUp, COUNT };
     };
     class EnumSlidesCursor
     {
-      public:
-      enum type { HiddenDelay, Visible, Hidden, COUNT };
+    public:
+        enum type { HiddenDelay, Visible, Hidden, COUNT };
     };
     class EnumViewMode
     {
-      public:
-      enum type { Single, Facing, FacingFirstCentered, Summary, COUNT };
+    public:
+        enum type { Single, Facing, FacingFirstCentered, Summary, COUNT };
     };
     class EnumTrimMode
     {
-      public:
-      enum type { None, Margins, Selection, COUNT };
+    public:
+        enum type { None, Margins, Selection, COUNT };
     };
     class EnumMouseMode
     {
-      public:
-      enum type { Browse, Zoom, RectSelect, TextSelect, TableSelect, Magnifier, TrimSelect, COUNT };
+    public:
+        enum type { Browse, Zoom, RectSelect, TextSelect, TableSelect, Magnifier, TrimSelect, COUNT };
     };
 
     static Settings *self();
@@ -1209,25 +1210,26 @@ class OKULARPART_EXPORT Settings : public SettingsCore
     bool isIdentityAuthorImmutable();
 
 
-    enum {
-      signalBuiltinAnnotationToolsChanged = 0x1,
-      signalQuickAnnotationToolsChanged = 0x2
+    enum
+    {
+        signalBuiltinAnnotationToolsChanged = 0x1,
+        signalQuickAnnotationToolsChanged = 0x2
     };
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void builtinAnnotationToolsChanged();
 
     void quickAnnotationToolsChanged();
 
-  private:
+private:
     void itemChanged(quint64 flags);
 
-  protected:
+protected:
     Settings(KSharedConfig::Ptr config);
     friend class SettingsHelper;
 
     bool usrSave() override;
-  private:
+private:
     SettingsPrivate *d;
 };
 

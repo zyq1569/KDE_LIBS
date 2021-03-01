@@ -52,7 +52,8 @@ class Scripter;
 class View;
 }
 
-struct GeneratorInfo {
+struct GeneratorInfo
+{
     explicit GeneratorInfo(Okular::Generator *g, const KPluginMetaData &data)
         : generator(g)
         , metadata(data)
@@ -75,29 +76,31 @@ namespace Okular
 {
 class OKULARCORE_EXPORT BackendConfigDialog : public KConfigDialog
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
-    BackendConfigDialog(QWidget *parent, const QString &name, KCoreConfigSkeleton *config)
-        : KConfigDialog(parent, name, config)
-    {
-    }
+    BackendConfigDialog(QWidget *parent, const QString &name, KCoreConfigSkeleton *config);
+//        : KConfigDialog(parent, name, config)
+//    {
+//    }
 
-    KPageWidget *thePageWidget()
-    {
-        return pageWidget();
-    }
+    KPageWidget *thePageWidget();
+//    {
+//        return pageWidget();
+//    }
 };
 
 class FontExtractionThread;
 
-struct DoContinueDirectionMatchSearchStruct {
+struct DoContinueDirectionMatchSearchStruct
+{
     QSet<int> *pagesToNotify;
     RegularAreaRect *match;
     int currentPage;
     int searchID;
 };
 
-enum LoadDocumentInfoFlag {
+enum LoadDocumentInfoFlag
+{
     LoadNone = 0,
     LoadPageInfo = 1,    // Load annotations and forms
     LoadGeneralInfo = 2, // History, rotation, ...

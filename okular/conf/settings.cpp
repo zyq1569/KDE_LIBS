@@ -12,11 +12,12 @@
 
 using namespace Okular;
 
-namespace Okular {
+namespace Okular
+{
 
 class SettingsPrivate
 {
-  public:
+public:
 
     // Dlg Performance
     bool enableCompositing;
@@ -180,13 +181,17 @@ class SettingsPrivate
 
 
 }
-namespace Okular {
+namespace Okular
+{
 
 class SettingsHelper
 {
-  public:
+public:
     SettingsHelper() : q(nullptr) {}
-    ~SettingsHelper() { delete q; }
+    ~SettingsHelper()
+    {
+        delete q;
+    }
     SettingsHelper(const SettingsHelper&) = delete;
     SettingsHelper& operator=(const SettingsHelper&) = delete;
     Settings *q;
@@ -196,546 +201,551 @@ class SettingsHelper
 Q_GLOBAL_STATIC(SettingsHelper, s_globalSettings)
 Settings *Settings::self()
 {
-  if (!s_globalSettings()->q)
-     qFatal("you need to call Settings::instance before using");
-  return s_globalSettings()->q;
+    if (!s_globalSettings()->q)
+    {
+        qFatal("you need to call Settings::instance before using");
+    }
+    return s_globalSettings()->q;
 }
 
 void Settings::instance(const QString& cfgfilename)
 {
-  if (s_globalSettings()->q) {
-     qDebug() << "Settings::instance called after the first use - ignoring";
-     return;
-  }
-  new Settings(KSharedConfig::openConfig(cfgfilename));
-  s_globalSettings()->q->read();
+    if (s_globalSettings()->q)
+    {
+        qDebug() << "Settings::instance called after the first use - ignoring";
+        return;
+    }
+    new Settings(KSharedConfig::openConfig(cfgfilename));
+    s_globalSettings()->q->read();
 }
 
 void Settings::instance(KSharedConfig::Ptr config)
 {
-  if (s_globalSettings()->q) {
-     qDebug() << "Settings::instance called after the first use - ignoring";
-     return;
-  }
-  new Settings(std::move(config));
-  s_globalSettings()->q->read();
+    if (s_globalSettings()->q)
+    {
+        qDebug() << "Settings::instance called after the first use - ignoring";
+        return;
+    }
+    new Settings(std::move(config));
+    s_globalSettings()->q->read();
 }
 
-Settings::Settings( KSharedConfig::Ptr config )
-  : SettingsCore( std::move( config ) )
+Settings::Settings( KSharedConfig::Ptr config ):SettingsCore( std::move( config ) )
 {
-  d = new SettingsPrivate;
-  d->settingsChanged = 0;
-  Q_ASSERT(!s_globalSettings()->q);
-  s_globalSettings()->q = this;
-  KConfigCompilerSignallingItem::NotifyFunction notifyFunction = static_cast<KConfigCompilerSignallingItem::NotifyFunction>(&Settings::itemChanged);
+    d = new SettingsPrivate;
+    d->settingsChanged = 0;
+    Q_ASSERT(!s_globalSettings()->q);
+    s_globalSettings()->q = this;
+    KConfigCompilerSignallingItem::NotifyFunction notifyFunction = static_cast<KConfigCompilerSignallingItem::NotifyFunction>(&Settings::itemChanged);
 
-  setCurrentGroup( QStringLiteral( "Dlg Performance" ) );
+    setCurrentGroup( QStringLiteral( "Dlg Performance" ) );
 
-  d->itemEnableCompositing = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "EnableCompositing" ), d->enableCompositing, true );
-  addItem( d->itemEnableCompositing, QStringLiteral( "EnableCompositing" ) );
+    d->itemEnableCompositing = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "EnableCompositing" ), d->enableCompositing, true );
+    addItem( d->itemEnableCompositing, QStringLiteral( "EnableCompositing" ) );
 
-  setCurrentGroup( QStringLiteral( "Debugging Options" ) );
+    setCurrentGroup( QStringLiteral( "Debugging Options" ) );
 
-  d->itemDebugDrawBoundaries = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "DebugDrawBoundaries" ), d->debugDrawBoundaries, false );
-  addItem( d->itemDebugDrawBoundaries, QStringLiteral( "DebugDrawBoundaries" ) );
-  d->itemDebugDrawAnnotationRect = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "DebugDrawAnnotationRect" ), d->debugDrawAnnotationRect, false );
-  addItem( d->itemDebugDrawAnnotationRect, QStringLiteral( "DebugDrawAnnotationRect" ) );
+    d->itemDebugDrawBoundaries = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "DebugDrawBoundaries" ), d->debugDrawBoundaries, false );
+    addItem( d->itemDebugDrawBoundaries, QStringLiteral( "DebugDrawBoundaries" ) );
+    d->itemDebugDrawAnnotationRect = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "DebugDrawAnnotationRect" ), d->debugDrawAnnotationRect, false );
+    addItem( d->itemDebugDrawAnnotationRect, QStringLiteral( "DebugDrawAnnotationRect" ) );
 
-  setCurrentGroup( QStringLiteral( "Contents" ) );
+    setCurrentGroup( QStringLiteral( "Contents" ) );
 
-  d->itemContentsSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ContentsSearchCaseSensitive" ), d->contentsSearchCaseSensitive, false );
-  addItem( d->itemContentsSearchCaseSensitive, QStringLiteral( "ContentsSearchCaseSensitive" ) );
-  d->itemContentsSearchRegularExpression = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ContentsSearchRegularExpression" ), d->contentsSearchRegularExpression, false );
-  addItem( d->itemContentsSearchRegularExpression, QStringLiteral( "ContentsSearchRegularExpression" ) );
+    d->itemContentsSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ContentsSearchCaseSensitive" ), d->contentsSearchCaseSensitive, false );
+    addItem( d->itemContentsSearchCaseSensitive, QStringLiteral( "ContentsSearchCaseSensitive" ) );
+    d->itemContentsSearchRegularExpression = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ContentsSearchRegularExpression" ), d->contentsSearchRegularExpression, false );
+    addItem( d->itemContentsSearchRegularExpression, QStringLiteral( "ContentsSearchRegularExpression" ) );
 
-  setCurrentGroup( QStringLiteral( "Layers" ) );
+    setCurrentGroup( QStringLiteral( "Layers" ) );
 
-  d->itemLayersSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "LayersSearchCaseSensitive" ), d->layersSearchCaseSensitive, false );
-  addItem( d->itemLayersSearchCaseSensitive, QStringLiteral( "LayersSearchCaseSensitive" ) );
-  d->itemLayersSearchRegularExpression = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "LayersSearchRegularExpression" ), d->layersSearchRegularExpression, false );
-  addItem( d->itemLayersSearchRegularExpression, QStringLiteral( "LayersSearchRegularExpression" ) );
+    d->itemLayersSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "LayersSearchCaseSensitive" ), d->layersSearchCaseSensitive, false );
+    addItem( d->itemLayersSearchCaseSensitive, QStringLiteral( "LayersSearchCaseSensitive" ) );
+    d->itemLayersSearchRegularExpression = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "LayersSearchRegularExpression" ), d->layersSearchRegularExpression, false );
+    addItem( d->itemLayersSearchRegularExpression, QStringLiteral( "LayersSearchRegularExpression" ) );
 
-  setCurrentGroup( QStringLiteral( "Reviews" ) );
+    setCurrentGroup( QStringLiteral( "Reviews" ) );
 
-  d->itemReviewsSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ReviewsSearchCaseSensitive" ), d->reviewsSearchCaseSensitive, false );
-  addItem( d->itemReviewsSearchCaseSensitive, QStringLiteral( "ReviewsSearchCaseSensitive" ) );
-  d->itemReviewsSearchRegularExpression = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ReviewsSearchRegularExpression" ), d->reviewsSearchRegularExpression, false );
-  addItem( d->itemReviewsSearchRegularExpression, QStringLiteral( "ReviewsSearchRegularExpression" ) );
+    d->itemReviewsSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ReviewsSearchCaseSensitive" ), d->reviewsSearchCaseSensitive, false );
+    addItem( d->itemReviewsSearchCaseSensitive, QStringLiteral( "ReviewsSearchCaseSensitive" ) );
+    d->itemReviewsSearchRegularExpression = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ReviewsSearchRegularExpression" ), d->reviewsSearchRegularExpression, false );
+    addItem( d->itemReviewsSearchRegularExpression, QStringLiteral( "ReviewsSearchRegularExpression" ) );
 
-      QStringList drawingTools;
-      // load the default tool list from the 'xml tools definition' file
-      QFile infoDrawingFile( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "okular/drawingtools.xml") );
-      if ( infoDrawingFile.exists() && infoDrawingFile.open( QIODevice::ReadOnly ) )
-      {
-          QDomDocument doc;
-          if ( doc.setContent( &infoDrawingFile ) )
-          {
-              const QDomElement toolsDefinition = doc.elementsByTagName("drawingTools").item( 0 ).toElement();
-               // create the annotationTools list from the XML dom tree
-              QDomNode toolDescription = toolsDefinition.firstChild();
-              while ( toolDescription.isElement() )
-              {
-                  const QDomElement toolElement = toolDescription.toElement();
-                  if ( toolElement.tagName() == "tool" )
-                  {
-                      QDomDocument temp;
-                      temp.appendChild( temp.importNode( toolElement, true) );
-                      // add each <tool>...</tool> as XML string
-                      drawingTools << temp.toString(-1);
-                  }
-                  toolDescription = toolDescription.nextSibling();
-              }
-          }
-          else
-          {
-              qWarning() << "DrawingTools XML file seems to be damaged";
-          }
-      }
-      else
-      {
-          qWarning() << "Unable to open DrawingTools XML definition";
-      }
-    
-  d->itemDrawingTools = new SettingsCore::ItemStringList( currentGroup(), QStringLiteral( "DrawingTools" ), d->drawingTools, drawingTools );
-  addItem( d->itemDrawingTools, QStringLiteral( "DrawingTools" ) );
+    QStringList drawingTools;
+    // load the default tool list from the 'xml tools definition' file
+    QFile infoDrawingFile( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "okular/drawingtools.xml") );
+    if ( infoDrawingFile.exists() && infoDrawingFile.open( QIODevice::ReadOnly ) )
+    {
+        QDomDocument doc;
+        if ( doc.setContent( &infoDrawingFile ) )
+        {
+            const QDomElement toolsDefinition = doc.elementsByTagName("drawingTools").item( 0 ).toElement();
+            // create the annotationTools list from the XML dom tree
+            QDomNode toolDescription = toolsDefinition.firstChild();
+            while ( toolDescription.isElement() )
+            {
+                const QDomElement toolElement = toolDescription.toElement();
+                if ( toolElement.tagName() == "tool" )
+                {
+                    QDomDocument temp;
+                    temp.appendChild( temp.importNode( toolElement, true) );
+                    // add each <tool>...</tool> as XML string
+                    drawingTools << temp.toString(-1);
+                }
+                toolDescription = toolDescription.nextSibling();
+            }
+        }
+        else
+        {
+            qWarning() << "DrawingTools XML file seems to be damaged";
+        }
+    }
+    else
+    {
+        qWarning() << "Unable to open DrawingTools XML definition";
+    }
 
-      QStringList builtinAnnotationTools;
-      // load the default tool list from the 'xml tools definition' file
-      QFile infoFile( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "okular/tools.xml") );
-      if ( infoFile.exists() && infoFile.open( QIODevice::ReadOnly ) )
-      {
-          QDomDocument doc;
-          if ( doc.setContent( &infoFile ) )
-          {
-              QDomElement toolsDefinition = doc.elementsByTagName("annotatingTools").item( 0 ).toElement();
-               // create the builtinAnnotationTools list from the XML dom tree
-              QDomNode toolDescription = toolsDefinition.firstChild();
-              while ( toolDescription.isElement() )
-              {
-                  QDomElement toolElement = toolDescription.toElement();
-                  if ( toolElement.tagName() == "tool" )
-                  {
-                      QDomDocument temp;
-                      temp.appendChild( temp.importNode( toolElement, true) );
-                      // add each <tool>...</tool> as XML string
-                      builtinAnnotationTools << temp.toString(-1);
-                  }
-                  toolDescription = toolDescription.nextSibling();
-              }
-          }
-          else
-          {
-              qWarning() << "AnnotatingTools XML file seems to be damaged";
-          }
-      }
-      else
-      {
-          qWarning() << "Unable to open AnnotatingTools XML definition";
-      }
-    
-  SettingsCore::ItemStringList  *innerItemBuiltinAnnotationTools;
-  innerItemBuiltinAnnotationTools = new SettingsCore::ItemStringList( currentGroup(), QStringLiteral( "BuiltinAnnotationTools" ), d->builtinAnnotationTools, builtinAnnotationTools );
-  d->itemBuiltinAnnotationTools = new KConfigCompilerSignallingItem(innerItemBuiltinAnnotationTools, this, notifyFunction, signalBuiltinAnnotationToolsChanged);
-  addItem( d->itemBuiltinAnnotationTools, QStringLiteral( "BuiltinAnnotationTools" ) );
+    d->itemDrawingTools = new SettingsCore::ItemStringList( currentGroup(), QStringLiteral( "DrawingTools" ), d->drawingTools, drawingTools );
+    addItem( d->itemDrawingTools, QStringLiteral( "DrawingTools" ) );
 
-      QStringList quickAnnotationTools;
-      // load the default tool list from the 'xml tools definition' file
-      QFile quickAnnFile( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "okular/toolsQuick.xml") );
-      if ( quickAnnFile.exists() && quickAnnFile.open( QIODevice::ReadOnly ) )
-      {
-          QDomDocument doc;
-          if ( doc.setContent( &quickAnnFile ) )
-          {
-              QDomElement toolsDefinition = doc.elementsByTagName("quickAnnotatingTools").item( 0 ).toElement();
-               // create the quickAnnotationTools list from the XML dom tree
-              QDomNode toolDescription = toolsDefinition.firstChild();
-              while ( toolDescription.isElement() )
-              {
-                  QDomElement toolElement = toolDescription.toElement();
-                  if ( toolElement.tagName() == "tool" )
-                  {
-                      QDomDocument temp;
-                      temp.appendChild( temp.importNode( toolElement, true) );
-                      // add each <tool>...</tool> as XML string
-                      quickAnnotationTools << temp.toString(-1);
-                  }
-                  toolDescription = toolDescription.nextSibling();
-              }
-          }
-          else
-          {
-              qWarning() << "QuickAnnotatingTools XML file seems to be damaged";
-          }
-      }
-      else
-      {
-          qWarning() << "Unable to open QuickAnnotatingTools XML definition";
-      }
-    
-  SettingsCore::ItemStringList  *innerItemQuickAnnotationTools;
-  innerItemQuickAnnotationTools = new SettingsCore::ItemStringList( currentGroup(), QStringLiteral( "QuickAnnotationTools" ), d->quickAnnotationTools, quickAnnotationTools );
-  d->itemQuickAnnotationTools = new KConfigCompilerSignallingItem(innerItemQuickAnnotationTools, this, notifyFunction, signalQuickAnnotationToolsChanged);
-  addItem( d->itemQuickAnnotationTools, QStringLiteral( "QuickAnnotationTools" ) );
-  d->itemAnnotationContinuousMode = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "AnnotationContinuousMode" ), d->annotationContinuousMode, true );
-  addItem( d->itemAnnotationContinuousMode, QStringLiteral( "AnnotationContinuousMode" ) );
+    QStringList builtinAnnotationTools;
+    // load the default tool list from the 'xml tools definition' file
+    QFile infoFile( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "okular/tools.xml") );
+    if ( infoFile.exists() && infoFile.open( QIODevice::ReadOnly ) )
+    {
+        QDomDocument doc;
+        if ( doc.setContent( &infoFile ) )
+        {
+            QDomElement toolsDefinition = doc.elementsByTagName("annotatingTools").item( 0 ).toElement();
+            // create the builtinAnnotationTools list from the XML dom tree
+            QDomNode toolDescription = toolsDefinition.firstChild();
+            while ( toolDescription.isElement() )
+            {
+                QDomElement toolElement = toolDescription.toElement();
+                if ( toolElement.tagName() == "tool" )
+                {
+                    QDomDocument temp;
+                    temp.appendChild( temp.importNode( toolElement, true) );
+                    // add each <tool>...</tool> as XML string
+                    builtinAnnotationTools << temp.toString(-1);
+                }
+                toolDescription = toolDescription.nextSibling();
+            }
+        }
+        else
+        {
+            qWarning() << "AnnotatingTools XML file seems to be damaged";
+        }
+    }
+    else
+    {
+        qWarning() << "Unable to open AnnotatingTools XML definition";
+    }
 
-  setCurrentGroup( QStringLiteral( "Zoom" ) );
+    SettingsCore::ItemStringList  *innerItemBuiltinAnnotationTools;
+    innerItemBuiltinAnnotationTools = new SettingsCore::ItemStringList( currentGroup(), QStringLiteral( "BuiltinAnnotationTools" ), d->builtinAnnotationTools, builtinAnnotationTools );
+    d->itemBuiltinAnnotationTools = new KConfigCompilerSignallingItem(innerItemBuiltinAnnotationTools, this, notifyFunction, signalBuiltinAnnotationToolsChanged);
+    addItem( d->itemBuiltinAnnotationTools, QStringLiteral( "BuiltinAnnotationTools" ) );
 
-  d->itemZoomMode = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "ZoomMode" ), d->zoomMode, 1 );
-  d->itemZoomMode->setMaxValue(3);
-  addItem( d->itemZoomMode, QStringLiteral( "ZoomMode" ) );
+    QStringList quickAnnotationTools;
+    // load the default tool list from the 'xml tools definition' file
+    QFile quickAnnFile( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "okular/toolsQuick.xml") );
+    if ( quickAnnFile.exists() && quickAnnFile.open( QIODevice::ReadOnly ) )
+    {
+        QDomDocument doc;
+        if ( doc.setContent( &quickAnnFile ) )
+        {
+            QDomElement toolsDefinition = doc.elementsByTagName("quickAnnotatingTools").item( 0 ).toElement();
+            // create the quickAnnotationTools list from the XML dom tree
+            QDomNode toolDescription = toolsDefinition.firstChild();
+            while ( toolDescription.isElement() )
+            {
+                QDomElement toolElement = toolDescription.toElement();
+                if ( toolElement.tagName() == "tool" )
+                {
+                    QDomDocument temp;
+                    temp.appendChild( temp.importNode( toolElement, true) );
+                    // add each <tool>...</tool> as XML string
+                    quickAnnotationTools << temp.toString(-1);
+                }
+                toolDescription = toolDescription.nextSibling();
+            }
+        }
+        else
+        {
+            qWarning() << "QuickAnnotatingTools XML file seems to be damaged";
+        }
+    }
+    else
+    {
+        qWarning() << "Unable to open QuickAnnotatingTools XML definition";
+    }
 
-  setCurrentGroup( QStringLiteral( "General" ) );
+    SettingsCore::ItemStringList  *innerItemQuickAnnotationTools;
+    innerItemQuickAnnotationTools = new SettingsCore::ItemStringList( currentGroup(), QStringLiteral( "QuickAnnotationTools" ), d->quickAnnotationTools, quickAnnotationTools );
+    d->itemQuickAnnotationTools = new KConfigCompilerSignallingItem(innerItemQuickAnnotationTools, this, notifyFunction, signalQuickAnnotationToolsChanged);
+    addItem( d->itemQuickAnnotationTools, QStringLiteral( "QuickAnnotationTools" ) );
+    d->itemAnnotationContinuousMode = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "AnnotationContinuousMode" ), d->annotationContinuousMode, true );
+    addItem( d->itemAnnotationContinuousMode, QStringLiteral( "AnnotationContinuousMode" ) );
 
-  d->itemShellOpenFileInTabs = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShellOpenFileInTabs" ), d->shellOpenFileInTabs, false );
-  addItem( d->itemShellOpenFileInTabs, QStringLiteral( "ShellOpenFileInTabs" ) );
-  d->itemSwitchToTabIfOpen = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SwitchToTabIfOpen" ), d->switchToTabIfOpen, false );
-  addItem( d->itemSwitchToTabIfOpen, QStringLiteral( "SwitchToTabIfOpen" ) );
-  d->itemShowOSD = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowOSD" ), d->showOSD, true );
-  addItem( d->itemShowOSD, QStringLiteral( "ShowOSD" ) );
-  d->itemDisplayDocumentTitle = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "DisplayDocumentTitle" ), d->displayDocumentTitle, true );
-  addItem( d->itemDisplayDocumentTitle, QStringLiteral( "DisplayDocumentTitle" ) );
-  d->itemRtlReadingDirection = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "rtlReadingDirection" ), d->rtlReadingDirection, false );
-  addItem( d->itemRtlReadingDirection, QStringLiteral( "rtlReadingDirection" ) );
-  QList<SettingsCore::ItemEnum::Choice> valuesDisplayDocumentNameOrPath;
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Name");
-    valuesDisplayDocumentNameOrPath.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Path");
-    valuesDisplayDocumentNameOrPath.append( choice );
-  }
-  d->itemDisplayDocumentNameOrPath = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "DisplayDocumentNameOrPath" ), d->displayDocumentNameOrPath, valuesDisplayDocumentNameOrPath, EnumDisplayDocumentNameOrPath::Name );
-  addItem( d->itemDisplayDocumentNameOrPath, QStringLiteral( "DisplayDocumentNameOrPath" ) );
-  d->itemUseTTS = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "UseTTS" ), d->useTTS );
-  addItem( d->itemUseTTS, QStringLiteral( "UseTTS" ) );
-  d->itemTtsEngine = new SettingsCore::ItemString( currentGroup(), QStringLiteral( "ttsEngine" ), d->ttsEngine, QStringLiteral( "speechd" ) );
-  addItem( d->itemTtsEngine, QStringLiteral( "ttsEngine" ) );
-  d->itemWatchFile = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "WatchFile" ), d->watchFile, true );
-  addItem( d->itemWatchFile, QStringLiteral( "WatchFile" ) );
+    setCurrentGroup( QStringLiteral( "Zoom" ) );
 
-  setCurrentGroup( QStringLiteral( "Dlg Presentation" ) );
+    d->itemZoomMode = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "ZoomMode" ), d->zoomMode, 1 );
+    d->itemZoomMode->setMaxValue(3);
+    addItem( d->itemZoomMode, QStringLiteral( "ZoomMode" ) );
 
-  d->itemSlidesBackgroundColor = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "SlidesBackgroundColor" ), d->slidesBackgroundColor, Qt::black );
-  addItem( d->itemSlidesBackgroundColor, QStringLiteral( "SlidesBackgroundColor" ) );
-  QList<SettingsCore::ItemEnum::Choice> valuesSlidesTransition;
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("BlindsHorizontal");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("BlindsVertical");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("BoxIn");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("BoxOut");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Dissolve");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Fade");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("GlitterDown");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("GlitterRight");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("GlitterRightDown");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Random");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Replace");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("SplitHorizontalIn");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("SplitHorizontalOut");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("SplitVerticalIn");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("SplitVerticalOut");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("WipeDown");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("WipeRight");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("WipeLeft");
-    valuesSlidesTransition.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("WipeUp");
-    valuesSlidesTransition.append( choice );
-  }
-  d->itemSlidesTransition = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "SlidesTransition" ), d->slidesTransition, valuesSlidesTransition, EnumSlidesTransition::Replace );
-  addItem( d->itemSlidesTransition, QStringLiteral( "SlidesTransition" ) );
-  QList<SettingsCore::ItemEnum::Choice> valuesSlidesCursor;
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("HiddenDelay");
-    valuesSlidesCursor.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Visible");
-    valuesSlidesCursor.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Hidden");
-    valuesSlidesCursor.append( choice );
-  }
-  d->itemSlidesCursor = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "SlidesCursor" ), d->slidesCursor, valuesSlidesCursor, EnumSlidesCursor::HiddenDelay );
-  addItem( d->itemSlidesCursor, QStringLiteral( "SlidesCursor" ) );
-  d->itemSlidesShowProgress = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SlidesShowProgress" ), d->slidesShowProgress, true );
-  addItem( d->itemSlidesShowProgress, QStringLiteral( "SlidesShowProgress" ) );
-  d->itemSlidesShowSummary = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SlidesShowSummary" ), d->slidesShowSummary, false );
-  addItem( d->itemSlidesShowSummary, QStringLiteral( "SlidesShowSummary" ) );
-  d->itemSlidesTransitionsEnabled = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SlidesTransitionsEnabled" ), d->slidesTransitionsEnabled, true );
-  addItem( d->itemSlidesTransitionsEnabled, QStringLiteral( "SlidesTransitionsEnabled" ) );
-  d->itemSlidesScreen = new SettingsCore::ItemInt( currentGroup(), QStringLiteral( "SlidesScreen" ), d->slidesScreen, -2 );
-  d->itemSlidesScreen->setMinValue(-2);
-  d->itemSlidesScreen->setMaxValue(20);
-  addItem( d->itemSlidesScreen, QStringLiteral( "SlidesScreen" ) );
+    setCurrentGroup( QStringLiteral( "General" ) );
 
-  setCurrentGroup( QStringLiteral( "Main View" ) );
+    d->itemShellOpenFileInTabs = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShellOpenFileInTabs" ), d->shellOpenFileInTabs, false );
+    addItem( d->itemShellOpenFileInTabs, QStringLiteral( "ShellOpenFileInTabs" ) );
+    d->itemSwitchToTabIfOpen = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SwitchToTabIfOpen" ), d->switchToTabIfOpen, false );
+    addItem( d->itemSwitchToTabIfOpen, QStringLiteral( "SwitchToTabIfOpen" ) );
+    d->itemShowOSD = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowOSD" ), d->showOSD, true );
+    addItem( d->itemShowOSD, QStringLiteral( "ShowOSD" ) );
+    d->itemDisplayDocumentTitle = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "DisplayDocumentTitle" ), d->displayDocumentTitle, true );
+    addItem( d->itemDisplayDocumentTitle, QStringLiteral( "DisplayDocumentTitle" ) );
+    d->itemRtlReadingDirection = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "rtlReadingDirection" ), d->rtlReadingDirection, false );
+    addItem( d->itemRtlReadingDirection, QStringLiteral( "rtlReadingDirection" ) );
+    QList<SettingsCore::ItemEnum::Choice> valuesDisplayDocumentNameOrPath;
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Name");
+        valuesDisplayDocumentNameOrPath.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Path");
+        valuesDisplayDocumentNameOrPath.append( choice );
+    }
+    d->itemDisplayDocumentNameOrPath = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "DisplayDocumentNameOrPath" ), d->displayDocumentNameOrPath, valuesDisplayDocumentNameOrPath, EnumDisplayDocumentNameOrPath::Name );
+    addItem( d->itemDisplayDocumentNameOrPath, QStringLiteral( "DisplayDocumentNameOrPath" ) );
+    d->itemUseTTS = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "UseTTS" ), d->useTTS );
+    addItem( d->itemUseTTS, QStringLiteral( "UseTTS" ) );
+    d->itemTtsEngine = new SettingsCore::ItemString( currentGroup(), QStringLiteral( "ttsEngine" ), d->ttsEngine, QStringLiteral( "speechd" ) );
+    addItem( d->itemTtsEngine, QStringLiteral( "ttsEngine" ) );
+    d->itemWatchFile = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "WatchFile" ), d->watchFile, true );
+    addItem( d->itemWatchFile, QStringLiteral( "WatchFile" ) );
 
-  d->itemShowLeftPanel = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowLeftPanel" ), d->showLeftPanel, true );
-  addItem( d->itemShowLeftPanel, QStringLiteral( "ShowLeftPanel" ) );
-  QList<int> defaultSplitterSizes;
+    setCurrentGroup( QStringLiteral( "Dlg Presentation" ) );
 
-  d->itemSplitterSizes = new SettingsCore::ItemIntList( currentGroup(), QStringLiteral( "SplitterSizes" ), d->splitterSizes, defaultSplitterSizes );
-  addItem( d->itemSplitterSizes, QStringLiteral( "SplitterSizes" ) );
-  d->itemShowBottomBar = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowBottomBar" ), d->showBottomBar, false );
-  addItem( d->itemShowBottomBar, QStringLiteral( "ShowBottomBar" ) );
+    d->itemSlidesBackgroundColor = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "SlidesBackgroundColor" ), d->slidesBackgroundColor, Qt::black );
+    addItem( d->itemSlidesBackgroundColor, QStringLiteral( "SlidesBackgroundColor" ) );
+    QList<SettingsCore::ItemEnum::Choice> valuesSlidesTransition;
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("BlindsHorizontal");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("BlindsVertical");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("BoxIn");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("BoxOut");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Dissolve");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Fade");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("GlitterDown");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("GlitterRight");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("GlitterRightDown");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Random");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Replace");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("SplitHorizontalIn");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("SplitHorizontalOut");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("SplitVerticalIn");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("SplitVerticalOut");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("WipeDown");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("WipeRight");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("WipeLeft");
+        valuesSlidesTransition.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("WipeUp");
+        valuesSlidesTransition.append( choice );
+    }
+    d->itemSlidesTransition = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "SlidesTransition" ), d->slidesTransition, valuesSlidesTransition, EnumSlidesTransition::Replace );
+    addItem( d->itemSlidesTransition, QStringLiteral( "SlidesTransition" ) );
+    QList<SettingsCore::ItemEnum::Choice> valuesSlidesCursor;
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("HiddenDelay");
+        valuesSlidesCursor.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Visible");
+        valuesSlidesCursor.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Hidden");
+        valuesSlidesCursor.append( choice );
+    }
+    d->itemSlidesCursor = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "SlidesCursor" ), d->slidesCursor, valuesSlidesCursor, EnumSlidesCursor::HiddenDelay );
+    addItem( d->itemSlidesCursor, QStringLiteral( "SlidesCursor" ) );
+    d->itemSlidesShowProgress = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SlidesShowProgress" ), d->slidesShowProgress, true );
+    addItem( d->itemSlidesShowProgress, QStringLiteral( "SlidesShowProgress" ) );
+    d->itemSlidesShowSummary = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SlidesShowSummary" ), d->slidesShowSummary, false );
+    addItem( d->itemSlidesShowSummary, QStringLiteral( "SlidesShowSummary" ) );
+    d->itemSlidesTransitionsEnabled = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SlidesTransitionsEnabled" ), d->slidesTransitionsEnabled, true );
+    addItem( d->itemSlidesTransitionsEnabled, QStringLiteral( "SlidesTransitionsEnabled" ) );
+    d->itemSlidesScreen = new SettingsCore::ItemInt( currentGroup(), QStringLiteral( "SlidesScreen" ), d->slidesScreen, -2 );
+    d->itemSlidesScreen->setMinValue(-2);
+    d->itemSlidesScreen->setMaxValue(20);
+    addItem( d->itemSlidesScreen, QStringLiteral( "SlidesScreen" ) );
 
-  setCurrentGroup( QStringLiteral( "Nav Panel" ) );
+    setCurrentGroup( QStringLiteral( "Main View" ) );
 
-  d->itemCurrentPageOnly = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "CurrentPageOnly" ), d->currentPageOnly, false );
-  addItem( d->itemCurrentPageOnly, QStringLiteral( "CurrentPageOnly" ) );
-  d->itemGroupByAuthor = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "GroupByAuthor" ), d->groupByAuthor, true );
-  addItem( d->itemGroupByAuthor, QStringLiteral( "GroupByAuthor" ) );
-  d->itemGroupByPage = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "GroupByPage" ), d->groupByPage, true );
-  addItem( d->itemGroupByPage, QStringLiteral( "GroupByPage" ) );
-  d->itemFilterBookmarks = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "FilterBookmarks" ), d->filterBookmarks, false );
-  addItem( d->itemFilterBookmarks, QStringLiteral( "FilterBookmarks" ) );
-  d->itemSyncThumbnailsViewport = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SyncThumbnailsViewport" ), d->syncThumbnailsViewport, true );
-  addItem( d->itemSyncThumbnailsViewport, QStringLiteral( "SyncThumbnailsViewport" ) );
-  d->itemTocPageColumn = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "TocPageColumn" ), d->tocPageColumn, true );
-  addItem( d->itemTocPageColumn, QStringLiteral( "TocPageColumn" ) );
-  d->itemSidebarShowText = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SidebarShowText" ), d->sidebarShowText, true );
-  addItem( d->itemSidebarShowText, QStringLiteral( "SidebarShowText" ) );
-  d->itemSidebarIconSize = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "SidebarIconSize" ), d->sidebarIconSize, 48 );
-  addItem( d->itemSidebarIconSize, QStringLiteral( "SidebarIconSize" ) );
+    d->itemShowLeftPanel = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowLeftPanel" ), d->showLeftPanel, true );
+    addItem( d->itemShowLeftPanel, QStringLiteral( "ShowLeftPanel" ) );
+    QList<int> defaultSplitterSizes;
 
-  setCurrentGroup( QStringLiteral( "PageView" ) );
+    d->itemSplitterSizes = new SettingsCore::ItemIntList( currentGroup(), QStringLiteral( "SplitterSizes" ), d->splitterSizes, defaultSplitterSizes );
+    addItem( d->itemSplitterSizes, QStringLiteral( "SplitterSizes" ) );
+    d->itemShowBottomBar = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowBottomBar" ), d->showBottomBar, false );
+    addItem( d->itemShowBottomBar, QStringLiteral( "ShowBottomBar" ) );
 
-  d->itemEditToolBarPlacement = new SettingsCore::ItemInt( currentGroup(), QStringLiteral( "EditToolBarPlacement" ), d->editToolBarPlacement, 0 );
-  addItem( d->itemEditToolBarPlacement, QStringLiteral( "EditToolBarPlacement" ) );
-  d->itemSmoothScrolling = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SmoothScrolling" ), d->smoothScrolling, true );
-  addItem( d->itemSmoothScrolling, QStringLiteral( "SmoothScrolling" ) );
-  d->itemShowScrollBars = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowScrollBars" ), d->showScrollBars, true );
-  addItem( d->itemShowScrollBars, QStringLiteral( "ShowScrollBars" ) );
-  d->itemScrollOverlap = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "ScrollOverlap" ), d->scrollOverlap, 0 );
-  d->itemScrollOverlap->setMinValue(0);
-  d->itemScrollOverlap->setMaxValue(50);
-  addItem( d->itemScrollOverlap, QStringLiteral( "ScrollOverlap" ) );
-  d->itemViewColumns = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "ViewColumns" ), d->viewColumns, 3 );
-  d->itemViewColumns->setMinValue(1);
-  d->itemViewColumns->setMaxValue(8);
-  addItem( d->itemViewColumns, QStringLiteral( "ViewColumns" ) );
-  d->itemTrimMargins = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "TrimMargins" ), d->trimMargins, false );
-  addItem( d->itemTrimMargins, QStringLiteral( "TrimMargins" ) );
-  d->itemViewContinuous = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ViewContinuous" ), d->viewContinuous, true );
-  addItem( d->itemViewContinuous, QStringLiteral( "ViewContinuous" ) );
-  QList<SettingsCore::ItemEnum::Choice> valuesViewMode;
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Single");
-    valuesViewMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Facing");
-    valuesViewMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("FacingFirstCentered");
-    valuesViewMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Summary");
-    valuesViewMode.append( choice );
-  }
-  d->itemViewMode = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "ViewMode" ), d->viewMode, valuesViewMode, EnumViewMode::Single );
-  addItem( d->itemViewMode, QStringLiteral( "ViewMode" ) );
-  QList<SettingsCore::ItemEnum::Choice> valuesTrimMode;
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("None");
-    valuesTrimMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Margins");
-    valuesTrimMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Selection");
-    valuesTrimMode.append( choice );
-  }
-  d->itemTrimMode = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "TrimMode" ), d->trimMode, valuesTrimMode, EnumTrimMode::None );
-  addItem( d->itemTrimMode, QStringLiteral( "TrimMode" ) );
-  QList<SettingsCore::ItemEnum::Choice> valuesMouseMode;
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Browse");
-    valuesMouseMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Zoom");
-    valuesMouseMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("RectSelect");
-    valuesMouseMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("TextSelect");
-    valuesMouseMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("TableSelect");
-    valuesMouseMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Magnifier");
-    valuesMouseMode.append( choice );
-  }
-  {
-    SettingsCore::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("TrimSelect");
-    valuesMouseMode.append( choice );
-  }
-  d->itemMouseMode = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "MouseMode" ), d->mouseMode, valuesMouseMode, EnumMouseMode::Browse );
-  addItem( d->itemMouseMode, QStringLiteral( "MouseMode" ) );
-  d->itemShowSourceLocationsGraphically = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowSourceLocationsGraphically" ), d->showSourceLocationsGraphically, false );
-  addItem( d->itemShowSourceLocationsGraphically, QStringLiteral( "ShowSourceLocationsGraphically" ) );
-  d->itemUseCustomBackgroundColor = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "UseCustomBackgroundColor" ), d->useCustomBackgroundColor, false );
-  addItem( d->itemUseCustomBackgroundColor, QStringLiteral( "UseCustomBackgroundColor" ) );
-  d->itemBackgroundColor = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "BackgroundColor" ), d->backgroundColor );
-  addItem( d->itemBackgroundColor, QStringLiteral( "BackgroundColor" ) );
+    setCurrentGroup( QStringLiteral( "Nav Panel" ) );
 
-  setCurrentGroup( QStringLiteral( "Search" ) );
+    d->itemCurrentPageOnly = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "CurrentPageOnly" ), d->currentPageOnly, false );
+    addItem( d->itemCurrentPageOnly, QStringLiteral( "CurrentPageOnly" ) );
+    d->itemGroupByAuthor = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "GroupByAuthor" ), d->groupByAuthor, true );
+    addItem( d->itemGroupByAuthor, QStringLiteral( "GroupByAuthor" ) );
+    d->itemGroupByPage = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "GroupByPage" ), d->groupByPage, true );
+    addItem( d->itemGroupByPage, QStringLiteral( "GroupByPage" ) );
+    d->itemFilterBookmarks = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "FilterBookmarks" ), d->filterBookmarks, false );
+    addItem( d->itemFilterBookmarks, QStringLiteral( "FilterBookmarks" ) );
+    d->itemSyncThumbnailsViewport = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SyncThumbnailsViewport" ), d->syncThumbnailsViewport, true );
+    addItem( d->itemSyncThumbnailsViewport, QStringLiteral( "SyncThumbnailsViewport" ) );
+    d->itemTocPageColumn = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "TocPageColumn" ), d->tocPageColumn, true );
+    addItem( d->itemTocPageColumn, QStringLiteral( "TocPageColumn" ) );
+    d->itemSidebarShowText = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SidebarShowText" ), d->sidebarShowText, true );
+    addItem( d->itemSidebarShowText, QStringLiteral( "SidebarShowText" ) );
+    d->itemSidebarIconSize = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "SidebarIconSize" ), d->sidebarIconSize, 48 );
+    addItem( d->itemSidebarIconSize, QStringLiteral( "SidebarIconSize" ) );
 
-  d->itemSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SearchCaseSensitive" ), d->searchCaseSensitive, false );
-  addItem( d->itemSearchCaseSensitive, QStringLiteral( "SearchCaseSensitive" ) );
-  d->itemSearchFromCurrentPage = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SearchFromCurrentPage" ), d->searchFromCurrentPage, true );
-  addItem( d->itemSearchFromCurrentPage, QStringLiteral( "SearchFromCurrentPage" ) );
-  d->itemFindAsYouType = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "FindAsYouType" ), d->findAsYouType, true );
-  addItem( d->itemFindAsYouType, QStringLiteral( "FindAsYouType" ) );
+    setCurrentGroup( QStringLiteral( "PageView" ) );
 
-  setCurrentGroup( QStringLiteral( "Dlg Accessibility" ) );
+    d->itemEditToolBarPlacement = new SettingsCore::ItemInt( currentGroup(), QStringLiteral( "EditToolBarPlacement" ), d->editToolBarPlacement, 0 );
+    addItem( d->itemEditToolBarPlacement, QStringLiteral( "EditToolBarPlacement" ) );
+    d->itemSmoothScrolling = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SmoothScrolling" ), d->smoothScrolling, true );
+    addItem( d->itemSmoothScrolling, QStringLiteral( "SmoothScrolling" ) );
+    d->itemShowScrollBars = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowScrollBars" ), d->showScrollBars, true );
+    addItem( d->itemShowScrollBars, QStringLiteral( "ShowScrollBars" ) );
+    d->itemScrollOverlap = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "ScrollOverlap" ), d->scrollOverlap, 0 );
+    d->itemScrollOverlap->setMinValue(0);
+    d->itemScrollOverlap->setMaxValue(50);
+    addItem( d->itemScrollOverlap, QStringLiteral( "ScrollOverlap" ) );
+    d->itemViewColumns = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "ViewColumns" ), d->viewColumns, 3 );
+    d->itemViewColumns->setMinValue(1);
+    d->itemViewColumns->setMaxValue(8);
+    addItem( d->itemViewColumns, QStringLiteral( "ViewColumns" ) );
+    d->itemTrimMargins = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "TrimMargins" ), d->trimMargins, false );
+    addItem( d->itemTrimMargins, QStringLiteral( "TrimMargins" ) );
+    d->itemViewContinuous = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ViewContinuous" ), d->viewContinuous, true );
+    addItem( d->itemViewContinuous, QStringLiteral( "ViewContinuous" ) );
+    QList<SettingsCore::ItemEnum::Choice> valuesViewMode;
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Single");
+        valuesViewMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Facing");
+        valuesViewMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("FacingFirstCentered");
+        valuesViewMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Summary");
+        valuesViewMode.append( choice );
+    }
+    d->itemViewMode = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "ViewMode" ), d->viewMode, valuesViewMode, EnumViewMode::Single );
+    addItem( d->itemViewMode, QStringLiteral( "ViewMode" ) );
+    QList<SettingsCore::ItemEnum::Choice> valuesTrimMode;
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("None");
+        valuesTrimMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Margins");
+        valuesTrimMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Selection");
+        valuesTrimMode.append( choice );
+    }
+    d->itemTrimMode = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "TrimMode" ), d->trimMode, valuesTrimMode, EnumTrimMode::None );
+    addItem( d->itemTrimMode, QStringLiteral( "TrimMode" ) );
+    QList<SettingsCore::ItemEnum::Choice> valuesMouseMode;
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Browse");
+        valuesMouseMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Zoom");
+        valuesMouseMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("RectSelect");
+        valuesMouseMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("TextSelect");
+        valuesMouseMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("TableSelect");
+        valuesMouseMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Magnifier");
+        valuesMouseMode.append( choice );
+    }
+    {
+        SettingsCore::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("TrimSelect");
+        valuesMouseMode.append( choice );
+    }
+    d->itemMouseMode = new SettingsCore::ItemEnum( currentGroup(), QStringLiteral( "MouseMode" ), d->mouseMode, valuesMouseMode, EnumMouseMode::Browse );
+    addItem( d->itemMouseMode, QStringLiteral( "MouseMode" ) );
+    d->itemShowSourceLocationsGraphically = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "ShowSourceLocationsGraphically" ), d->showSourceLocationsGraphically, false );
+    addItem( d->itemShowSourceLocationsGraphically, QStringLiteral( "ShowSourceLocationsGraphically" ) );
+    d->itemUseCustomBackgroundColor = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "UseCustomBackgroundColor" ), d->useCustomBackgroundColor, false );
+    addItem( d->itemUseCustomBackgroundColor, QStringLiteral( "UseCustomBackgroundColor" ) );
+    d->itemBackgroundColor = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "BackgroundColor" ), d->backgroundColor );
+    addItem( d->itemBackgroundColor, QStringLiteral( "BackgroundColor" ) );
 
-  d->itemHighlightImages = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "HighlightImages" ), d->highlightImages, false );
-  addItem( d->itemHighlightImages, QStringLiteral( "HighlightImages" ) );
-  d->itemHighlightLinks = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "HighlightLinks" ), d->highlightLinks, false );
-  addItem( d->itemHighlightLinks, QStringLiteral( "HighlightLinks" ) );
-  d->itemRecolorForeground = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "RecolorForeground" ), d->recolorForeground, 0x600000 );
-  addItem( d->itemRecolorForeground, QStringLiteral( "RecolorForeground" ) );
-  d->itemRecolorBackground = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "RecolorBackground" ), d->recolorBackground, 0xF0F0F0 );
-  addItem( d->itemRecolorBackground, QStringLiteral( "RecolorBackground" ) );
-  d->itemBWThreshold = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "BWThreshold" ), d->bWThreshold, 127 );
-  d->itemBWThreshold->setMinValue(2);
-  d->itemBWThreshold->setMaxValue(253);
-  addItem( d->itemBWThreshold, QStringLiteral( "BWThreshold" ) );
-  d->itemBWContrast = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "BWContrast" ), d->bWContrast, 2 );
-  d->itemBWContrast->setMinValue(2);
-  d->itemBWContrast->setMaxValue(6);
-  addItem( d->itemBWContrast, QStringLiteral( "BWContrast" ) );
+    setCurrentGroup( QStringLiteral( "Search" ) );
 
-  setCurrentGroup( QStringLiteral( "Identity" ) );
+    d->itemSearchCaseSensitive = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SearchCaseSensitive" ), d->searchCaseSensitive, false );
+    addItem( d->itemSearchCaseSensitive, QStringLiteral( "SearchCaseSensitive" ) );
+    d->itemSearchFromCurrentPage = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "SearchFromCurrentPage" ), d->searchFromCurrentPage, true );
+    addItem( d->itemSearchFromCurrentPage, QStringLiteral( "SearchFromCurrentPage" ) );
+    d->itemFindAsYouType = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "FindAsYouType" ), d->findAsYouType, true );
+    addItem( d->itemFindAsYouType, QStringLiteral( "FindAsYouType" ) );
+
+    setCurrentGroup( QStringLiteral( "Dlg Accessibility" ) );
+
+    d->itemHighlightImages = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "HighlightImages" ), d->highlightImages, false );
+    addItem( d->itemHighlightImages, QStringLiteral( "HighlightImages" ) );
+    d->itemHighlightLinks = new SettingsCore::ItemBool( currentGroup(), QStringLiteral( "HighlightLinks" ), d->highlightLinks, false );
+    addItem( d->itemHighlightLinks, QStringLiteral( "HighlightLinks" ) );
+    d->itemRecolorForeground = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "RecolorForeground" ), d->recolorForeground, 0x600000 );
+    addItem( d->itemRecolorForeground, QStringLiteral( "RecolorForeground" ) );
+    d->itemRecolorBackground = new SettingsCore::ItemColor( currentGroup(), QStringLiteral( "RecolorBackground" ), d->recolorBackground, 0xF0F0F0 );
+    addItem( d->itemRecolorBackground, QStringLiteral( "RecolorBackground" ) );
+    d->itemBWThreshold = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "BWThreshold" ), d->bWThreshold, 127 );
+    d->itemBWThreshold->setMinValue(2);
+    d->itemBWThreshold->setMaxValue(253);
+    addItem( d->itemBWThreshold, QStringLiteral( "BWThreshold" ) );
+    d->itemBWContrast = new SettingsCore::ItemUInt( currentGroup(), QStringLiteral( "BWContrast" ), d->bWContrast, 2 );
+    d->itemBWContrast->setMinValue(2);
+    d->itemBWContrast->setMaxValue(6);
+    addItem( d->itemBWContrast, QStringLiteral( "BWContrast" ) );
+
+    setCurrentGroup( QStringLiteral( "Identity" ) );
 
 
-      KUser currentUser;
-      QString userString = currentUser.property( KUser::FullName ).toString();
-      if ( userString.isEmpty() )
-      {
+    KUser currentUser;
+    QString userString = currentUser.property( KUser::FullName ).toString();
+    if ( userString.isEmpty() )
+    {
         userString = currentUser.loginName();
-      }
-    
-  d->itemIdentityAuthor = new SettingsCore::ItemString( currentGroup(), QStringLiteral( "IdentityAuthor" ), d->identityAuthor, userString );
-  addItem( d->itemIdentityAuthor, QStringLiteral( "IdentityAuthor" ) );
+    }
+
+    d->itemIdentityAuthor = new SettingsCore::ItemString( currentGroup(), QStringLiteral( "IdentityAuthor" ), d->identityAuthor, userString );
+    addItem( d->itemIdentityAuthor, QStringLiteral( "IdentityAuthor" ) );
 }
 
 void Settings::setEnableCompositing( bool v )
 {
     if (!self()->Settings::isEnableCompositingImmutable())
-      self()->d->enableCompositing = v;
+    {
+        self()->d->enableCompositing = v;
+    }
 }
 
 bool Settings::enableCompositing()
 {
-  return self()->d->enableCompositing;
+    return self()->d->enableCompositing;
 }
 
 bool  Settings::isEnableCompositingImmutable()
@@ -747,12 +757,14 @@ bool  Settings::isEnableCompositingImmutable()
 void Settings::setDebugDrawBoundaries( bool v )
 {
     if (!self()->Settings::isDebugDrawBoundariesImmutable())
-      self()->d->debugDrawBoundaries = v;
+    {
+        self()->d->debugDrawBoundaries = v;
+    }
 }
 
 bool Settings::debugDrawBoundaries()
 {
-  return self()->d->debugDrawBoundaries;
+    return self()->d->debugDrawBoundaries;
 }
 
 bool  Settings::isDebugDrawBoundariesImmutable()
@@ -764,12 +776,14 @@ bool  Settings::isDebugDrawBoundariesImmutable()
 void Settings::setDebugDrawAnnotationRect( bool v )
 {
     if (!self()->Settings::isDebugDrawAnnotationRectImmutable())
-      self()->d->debugDrawAnnotationRect = v;
+    {
+        self()->d->debugDrawAnnotationRect = v;
+    }
 }
 
 bool Settings::debugDrawAnnotationRect()
 {
-  return self()->d->debugDrawAnnotationRect;
+    return self()->d->debugDrawAnnotationRect;
 }
 
 bool  Settings::isDebugDrawAnnotationRectImmutable()
@@ -781,12 +795,14 @@ bool  Settings::isDebugDrawAnnotationRectImmutable()
 void Settings::setContentsSearchCaseSensitive( bool v )
 {
     if (!self()->Settings::isContentsSearchCaseSensitiveImmutable())
-      self()->d->contentsSearchCaseSensitive = v;
+    {
+        self()->d->contentsSearchCaseSensitive = v;
+    }
 }
 
 bool Settings::contentsSearchCaseSensitive()
 {
-  return self()->d->contentsSearchCaseSensitive;
+    return self()->d->contentsSearchCaseSensitive;
 }
 
 bool  Settings::isContentsSearchCaseSensitiveImmutable()
@@ -798,12 +814,14 @@ bool  Settings::isContentsSearchCaseSensitiveImmutable()
 void Settings::setContentsSearchRegularExpression( bool v )
 {
     if (!self()->Settings::isContentsSearchRegularExpressionImmutable())
-      self()->d->contentsSearchRegularExpression = v;
+    {
+        self()->d->contentsSearchRegularExpression = v;
+    }
 }
 
 bool Settings::contentsSearchRegularExpression()
 {
-  return self()->d->contentsSearchRegularExpression;
+    return self()->d->contentsSearchRegularExpression;
 }
 
 bool  Settings::isContentsSearchRegularExpressionImmutable()
@@ -815,12 +833,14 @@ bool  Settings::isContentsSearchRegularExpressionImmutable()
 void Settings::setLayersSearchCaseSensitive( bool v )
 {
     if (!self()->Settings::isLayersSearchCaseSensitiveImmutable())
-      self()->d->layersSearchCaseSensitive = v;
+    {
+        self()->d->layersSearchCaseSensitive = v;
+    }
 }
 
 bool Settings::layersSearchCaseSensitive()
 {
-  return self()->d->layersSearchCaseSensitive;
+    return self()->d->layersSearchCaseSensitive;
 }
 
 bool  Settings::isLayersSearchCaseSensitiveImmutable()
@@ -832,12 +852,14 @@ bool  Settings::isLayersSearchCaseSensitiveImmutable()
 void Settings::setLayersSearchRegularExpression( bool v )
 {
     if (!self()->Settings::isLayersSearchRegularExpressionImmutable())
-      self()->d->layersSearchRegularExpression = v;
+    {
+        self()->d->layersSearchRegularExpression = v;
+    }
 }
 
 bool Settings::layersSearchRegularExpression()
 {
-  return self()->d->layersSearchRegularExpression;
+    return self()->d->layersSearchRegularExpression;
 }
 
 bool  Settings::isLayersSearchRegularExpressionImmutable()
@@ -849,12 +871,14 @@ bool  Settings::isLayersSearchRegularExpressionImmutable()
 void Settings::setReviewsSearchCaseSensitive( bool v )
 {
     if (!self()->Settings::isReviewsSearchCaseSensitiveImmutable())
-      self()->d->reviewsSearchCaseSensitive = v;
+    {
+        self()->d->reviewsSearchCaseSensitive = v;
+    }
 }
 
 bool Settings::reviewsSearchCaseSensitive()
 {
-  return self()->d->reviewsSearchCaseSensitive;
+    return self()->d->reviewsSearchCaseSensitive;
 }
 
 bool  Settings::isReviewsSearchCaseSensitiveImmutable()
@@ -866,12 +890,14 @@ bool  Settings::isReviewsSearchCaseSensitiveImmutable()
 void Settings::setReviewsSearchRegularExpression( bool v )
 {
     if (!self()->Settings::isReviewsSearchRegularExpressionImmutable())
-      self()->d->reviewsSearchRegularExpression = v;
+    {
+        self()->d->reviewsSearchRegularExpression = v;
+    }
 }
 
 bool Settings::reviewsSearchRegularExpression()
 {
-  return self()->d->reviewsSearchRegularExpression;
+    return self()->d->reviewsSearchRegularExpression;
 }
 
 bool  Settings::isReviewsSearchRegularExpressionImmutable()
@@ -883,12 +909,14 @@ bool  Settings::isReviewsSearchRegularExpressionImmutable()
 void Settings::setDrawingTools( const QStringList & v )
 {
     if (!self()->Settings::isDrawingToolsImmutable())
-      self()->d->drawingTools = v;
+    {
+        self()->d->drawingTools = v;
+    }
 }
 
 QStringList Settings::drawingTools()
 {
-  return self()->d->drawingTools;
+    return self()->d->drawingTools;
 }
 
 bool  Settings::isDrawingToolsImmutable()
@@ -899,15 +927,16 @@ bool  Settings::isDrawingToolsImmutable()
 
 void Settings::setBuiltinAnnotationTools( const QStringList & v )
 {
-    if (v != self()->d->builtinAnnotationTools && !self()->Settings::isBuiltinAnnotationToolsImmutable()) {
-      self()->d->builtinAnnotationTools = v;
-      self()->d->settingsChanged |= signalBuiltinAnnotationToolsChanged;
+    if (v != self()->d->builtinAnnotationTools && !self()->Settings::isBuiltinAnnotationToolsImmutable())
+    {
+        self()->d->builtinAnnotationTools = v;
+        self()->d->settingsChanged |= signalBuiltinAnnotationToolsChanged;
     }
 }
 
 QStringList Settings::builtinAnnotationTools()
 {
-  return self()->d->builtinAnnotationTools;
+    return self()->d->builtinAnnotationTools;
 }
 
 bool  Settings::isBuiltinAnnotationToolsImmutable()
@@ -918,15 +947,16 @@ bool  Settings::isBuiltinAnnotationToolsImmutable()
 
 void Settings::setQuickAnnotationTools( const QStringList & v )
 {
-    if (v != self()->d->quickAnnotationTools && !self()->Settings::isQuickAnnotationToolsImmutable()) {
-      self()->d->quickAnnotationTools = v;
-      self()->d->settingsChanged |= signalQuickAnnotationToolsChanged;
+    if (v != self()->d->quickAnnotationTools && !self()->Settings::isQuickAnnotationToolsImmutable())
+    {
+        self()->d->quickAnnotationTools = v;
+        self()->d->settingsChanged |= signalQuickAnnotationToolsChanged;
     }
 }
 
 QStringList Settings::quickAnnotationTools()
 {
-  return self()->d->quickAnnotationTools;
+    return self()->d->quickAnnotationTools;
 }
 
 bool  Settings::isQuickAnnotationToolsImmutable()
@@ -938,12 +968,14 @@ bool  Settings::isQuickAnnotationToolsImmutable()
 void Settings::setAnnotationContinuousMode( bool v )
 {
     if (!self()->Settings::isAnnotationContinuousModeImmutable())
-      self()->d->annotationContinuousMode = v;
+    {
+        self()->d->annotationContinuousMode = v;
+    }
 }
 
 bool Settings::annotationContinuousMode()
 {
-  return self()->d->annotationContinuousMode;
+    return self()->d->annotationContinuousMode;
 }
 
 bool  Settings::isAnnotationContinuousModeImmutable()
@@ -957,17 +989,19 @@ void Settings::setZoomMode( uint v )
 
     if (v > 3)
     {
-      qDebug() << "setZoomMode: value " << v << " is greater than the maximum value of 3";
-      v = 3;
+        qDebug() << "setZoomMode: value " << v << " is greater than the maximum value of 3";
+        v = 3;
     }
 
     if (!self()->Settings::isZoomModeImmutable())
-      self()->d->zoomMode = v;
+    {
+        self()->d->zoomMode = v;
+    }
 }
 
 uint Settings::zoomMode()
 {
-  return self()->d->zoomMode;
+    return self()->d->zoomMode;
 }
 
 bool  Settings::isZoomModeImmutable()
@@ -979,12 +1013,14 @@ bool  Settings::isZoomModeImmutable()
 void Settings::setShellOpenFileInTabs( bool v )
 {
     if (!self()->Settings::isShellOpenFileInTabsImmutable())
-      self()->d->shellOpenFileInTabs = v;
+    {
+        self()->d->shellOpenFileInTabs = v;
+    }
 }
 
 bool Settings::shellOpenFileInTabs()
 {
-  return self()->d->shellOpenFileInTabs;
+    return self()->d->shellOpenFileInTabs;
 }
 
 bool  Settings::isShellOpenFileInTabsImmutable()
@@ -996,12 +1032,14 @@ bool  Settings::isShellOpenFileInTabsImmutable()
 void Settings::setSwitchToTabIfOpen( bool v )
 {
     if (!self()->Settings::isSwitchToTabIfOpenImmutable())
-      self()->d->switchToTabIfOpen = v;
+    {
+        self()->d->switchToTabIfOpen = v;
+    }
 }
 
 bool Settings::switchToTabIfOpen()
 {
-  return self()->d->switchToTabIfOpen;
+    return self()->d->switchToTabIfOpen;
 }
 
 bool  Settings::isSwitchToTabIfOpenImmutable()
@@ -1013,12 +1051,14 @@ bool  Settings::isSwitchToTabIfOpenImmutable()
 void Settings::setShowOSD( bool v )
 {
     if (!self()->Settings::isShowOSDImmutable())
-      self()->d->showOSD = v;
+    {
+        self()->d->showOSD = v;
+    }
 }
 
 bool Settings::showOSD()
 {
-  return self()->d->showOSD;
+    return self()->d->showOSD;
 }
 
 bool  Settings::isShowOSDImmutable()
@@ -1030,12 +1070,14 @@ bool  Settings::isShowOSDImmutable()
 void Settings::setDisplayDocumentTitle( bool v )
 {
     if (!self()->Settings::isDisplayDocumentTitleImmutable())
-      self()->d->displayDocumentTitle = v;
+    {
+        self()->d->displayDocumentTitle = v;
+    }
 }
 
 bool Settings::displayDocumentTitle()
 {
-  return self()->d->displayDocumentTitle;
+    return self()->d->displayDocumentTitle;
 }
 
 bool  Settings::isDisplayDocumentTitleImmutable()
@@ -1047,12 +1089,14 @@ bool  Settings::isDisplayDocumentTitleImmutable()
 void Settings::setRtlReadingDirection( bool v )
 {
     if (!self()->Settings::isRtlReadingDirectionImmutable())
-      self()->d->rtlReadingDirection = v;
+    {
+        self()->d->rtlReadingDirection = v;
+    }
 }
 
 bool Settings::rtlReadingDirection()
 {
-  return self()->d->rtlReadingDirection;
+    return self()->d->rtlReadingDirection;
 }
 
 bool  Settings::isRtlReadingDirectionImmutable()
@@ -1064,12 +1108,14 @@ bool  Settings::isRtlReadingDirectionImmutable()
 void Settings::setDisplayDocumentNameOrPath( int v )
 {
     if (!self()->Settings::isDisplayDocumentNameOrPathImmutable())
-      self()->d->displayDocumentNameOrPath = v;
+    {
+        self()->d->displayDocumentNameOrPath = v;
+    }
 }
 
 int Settings::displayDocumentNameOrPath()
 {
-  return self()->d->displayDocumentNameOrPath;
+    return self()->d->displayDocumentNameOrPath;
 }
 
 bool  Settings::isDisplayDocumentNameOrPathImmutable()
@@ -1081,12 +1127,14 @@ bool  Settings::isDisplayDocumentNameOrPathImmutable()
 void Settings::setUseTTS( bool v )
 {
     if (!self()->Settings::isUseTTSImmutable())
-      self()->d->useTTS = v;
+    {
+        self()->d->useTTS = v;
+    }
 }
 
 bool Settings::useTTS()
 {
-  return self()->d->useTTS;
+    return self()->d->useTTS;
 }
 
 bool  Settings::isUseTTSImmutable()
@@ -1098,12 +1146,14 @@ bool  Settings::isUseTTSImmutable()
 void Settings::setTtsEngine( const QString & v )
 {
     if (!self()->Settings::isTtsEngineImmutable())
-      self()->d->ttsEngine = v;
+    {
+        self()->d->ttsEngine = v;
+    }
 }
 
 QString Settings::ttsEngine()
 {
-  return self()->d->ttsEngine;
+    return self()->d->ttsEngine;
 }
 
 bool  Settings::isTtsEngineImmutable()
@@ -1115,12 +1165,14 @@ bool  Settings::isTtsEngineImmutable()
 void Settings::setWatchFile( bool v )
 {
     if (!self()->Settings::isWatchFileImmutable())
-      self()->d->watchFile = v;
+    {
+        self()->d->watchFile = v;
+    }
 }
 
 bool Settings::watchFile()
 {
-  return self()->d->watchFile;
+    return self()->d->watchFile;
 }
 
 bool  Settings::isWatchFileImmutable()
@@ -1132,12 +1184,14 @@ bool  Settings::isWatchFileImmutable()
 void Settings::setSlidesBackgroundColor( const QColor & v )
 {
     if (!self()->Settings::isSlidesBackgroundColorImmutable())
-      self()->d->slidesBackgroundColor = v;
+    {
+        self()->d->slidesBackgroundColor = v;
+    }
 }
 
 QColor Settings::slidesBackgroundColor()
 {
-  return self()->d->slidesBackgroundColor;
+    return self()->d->slidesBackgroundColor;
 }
 
 bool  Settings::isSlidesBackgroundColorImmutable()
@@ -1149,12 +1203,14 @@ bool  Settings::isSlidesBackgroundColorImmutable()
 void Settings::setSlidesTransition( int v )
 {
     if (!self()->Settings::isSlidesTransitionImmutable())
-      self()->d->slidesTransition = v;
+    {
+        self()->d->slidesTransition = v;
+    }
 }
 
 int Settings::slidesTransition()
 {
-  return self()->d->slidesTransition;
+    return self()->d->slidesTransition;
 }
 
 bool  Settings::isSlidesTransitionImmutable()
@@ -1166,12 +1222,14 @@ bool  Settings::isSlidesTransitionImmutable()
 void Settings::setSlidesCursor( int v )
 {
     if (!self()->Settings::isSlidesCursorImmutable())
-      self()->d->slidesCursor = v;
+    {
+        self()->d->slidesCursor = v;
+    }
 }
 
 int Settings::slidesCursor()
 {
-  return self()->d->slidesCursor;
+    return self()->d->slidesCursor;
 }
 
 bool  Settings::isSlidesCursorImmutable()
@@ -1183,12 +1241,14 @@ bool  Settings::isSlidesCursorImmutable()
 void Settings::setSlidesShowProgress( bool v )
 {
     if (!self()->Settings::isSlidesShowProgressImmutable())
-      self()->d->slidesShowProgress = v;
+    {
+        self()->d->slidesShowProgress = v;
+    }
 }
 
 bool Settings::slidesShowProgress()
 {
-  return self()->d->slidesShowProgress;
+    return self()->d->slidesShowProgress;
 }
 
 bool  Settings::isSlidesShowProgressImmutable()
@@ -1200,12 +1260,14 @@ bool  Settings::isSlidesShowProgressImmutable()
 void Settings::setSlidesShowSummary( bool v )
 {
     if (!self()->Settings::isSlidesShowSummaryImmutable())
-      self()->d->slidesShowSummary = v;
+    {
+        self()->d->slidesShowSummary = v;
+    }
 }
 
 bool Settings::slidesShowSummary()
 {
-  return self()->d->slidesShowSummary;
+    return self()->d->slidesShowSummary;
 }
 
 bool  Settings::isSlidesShowSummaryImmutable()
@@ -1217,12 +1279,14 @@ bool  Settings::isSlidesShowSummaryImmutable()
 void Settings::setSlidesTransitionsEnabled( bool v )
 {
     if (!self()->Settings::isSlidesTransitionsEnabledImmutable())
-      self()->d->slidesTransitionsEnabled = v;
+    {
+        self()->d->slidesTransitionsEnabled = v;
+    }
 }
 
 bool Settings::slidesTransitionsEnabled()
 {
-  return self()->d->slidesTransitionsEnabled;
+    return self()->d->slidesTransitionsEnabled;
 }
 
 bool  Settings::isSlidesTransitionsEnabledImmutable()
@@ -1235,23 +1299,25 @@ void Settings::setSlidesScreen( int v )
 {
     if (v < -2)
     {
-      qDebug() << "setSlidesScreen: value " << v << " is less than the minimum value of -2";
-      v = -2;
+        qDebug() << "setSlidesScreen: value " << v << " is less than the minimum value of -2";
+        v = -2;
     }
 
     if (v > 20)
     {
-      qDebug() << "setSlidesScreen: value " << v << " is greater than the maximum value of 20";
-      v = 20;
+        qDebug() << "setSlidesScreen: value " << v << " is greater than the maximum value of 20";
+        v = 20;
     }
 
     if (!self()->Settings::isSlidesScreenImmutable())
-      self()->d->slidesScreen = v;
+    {
+        self()->d->slidesScreen = v;
+    }
 }
 
 int Settings::slidesScreen()
 {
-  return self()->d->slidesScreen;
+    return self()->d->slidesScreen;
 }
 
 bool  Settings::isSlidesScreenImmutable()
@@ -1263,12 +1329,14 @@ bool  Settings::isSlidesScreenImmutable()
 void Settings::setShowLeftPanel( bool v )
 {
     if (!self()->Settings::isShowLeftPanelImmutable())
-      self()->d->showLeftPanel = v;
+    {
+        self()->d->showLeftPanel = v;
+    }
 }
 
 bool Settings::showLeftPanel()
 {
-  return self()->d->showLeftPanel;
+    return self()->d->showLeftPanel;
 }
 
 bool  Settings::isShowLeftPanelImmutable()
@@ -1280,12 +1348,14 @@ bool  Settings::isShowLeftPanelImmutable()
 void Settings::setSplitterSizes( const QList<int> & v )
 {
     if (!self()->Settings::isSplitterSizesImmutable())
-      self()->d->splitterSizes = v;
+    {
+        self()->d->splitterSizes = v;
+    }
 }
 
 QList<int> Settings::splitterSizes()
 {
-  return self()->d->splitterSizes;
+    return self()->d->splitterSizes;
 }
 
 bool  Settings::isSplitterSizesImmutable()
@@ -1297,12 +1367,14 @@ bool  Settings::isSplitterSizesImmutable()
 void Settings::setShowBottomBar( bool v )
 {
     if (!self()->Settings::isShowBottomBarImmutable())
-      self()->d->showBottomBar = v;
+    {
+        self()->d->showBottomBar = v;
+    }
 }
 
 bool Settings::showBottomBar()
 {
-  return self()->d->showBottomBar;
+    return self()->d->showBottomBar;
 }
 
 bool  Settings::isShowBottomBarImmutable()
@@ -1314,12 +1386,14 @@ bool  Settings::isShowBottomBarImmutable()
 void Settings::setCurrentPageOnly( bool v )
 {
     if (!self()->Settings::isCurrentPageOnlyImmutable())
-      self()->d->currentPageOnly = v;
+    {
+        self()->d->currentPageOnly = v;
+    }
 }
 
 bool Settings::currentPageOnly()
 {
-  return self()->d->currentPageOnly;
+    return self()->d->currentPageOnly;
 }
 
 bool  Settings::isCurrentPageOnlyImmutable()
@@ -1331,12 +1405,14 @@ bool  Settings::isCurrentPageOnlyImmutable()
 void Settings::setGroupByAuthor( bool v )
 {
     if (!self()->Settings::isGroupByAuthorImmutable())
-      self()->d->groupByAuthor = v;
+    {
+        self()->d->groupByAuthor = v;
+    }
 }
 
 bool Settings::groupByAuthor()
 {
-  return self()->d->groupByAuthor;
+    return self()->d->groupByAuthor;
 }
 
 bool  Settings::isGroupByAuthorImmutable()
@@ -1348,12 +1424,14 @@ bool  Settings::isGroupByAuthorImmutable()
 void Settings::setGroupByPage( bool v )
 {
     if (!self()->Settings::isGroupByPageImmutable())
-      self()->d->groupByPage = v;
+    {
+        self()->d->groupByPage = v;
+    }
 }
 
 bool Settings::groupByPage()
 {
-  return self()->d->groupByPage;
+    return self()->d->groupByPage;
 }
 
 bool  Settings::isGroupByPageImmutable()
@@ -1365,12 +1443,14 @@ bool  Settings::isGroupByPageImmutable()
 void Settings::setFilterBookmarks( bool v )
 {
     if (!self()->Settings::isFilterBookmarksImmutable())
-      self()->d->filterBookmarks = v;
+    {
+        self()->d->filterBookmarks = v;
+    }
 }
 
 bool Settings::filterBookmarks()
 {
-  return self()->d->filterBookmarks;
+    return self()->d->filterBookmarks;
 }
 
 bool  Settings::isFilterBookmarksImmutable()
@@ -1382,12 +1462,14 @@ bool  Settings::isFilterBookmarksImmutable()
 void Settings::setSyncThumbnailsViewport( bool v )
 {
     if (!self()->Settings::isSyncThumbnailsViewportImmutable())
-      self()->d->syncThumbnailsViewport = v;
+    {
+        self()->d->syncThumbnailsViewport = v;
+    }
 }
 
 bool Settings::syncThumbnailsViewport()
 {
-  return self()->d->syncThumbnailsViewport;
+    return self()->d->syncThumbnailsViewport;
 }
 
 bool  Settings::isSyncThumbnailsViewportImmutable()
@@ -1399,12 +1481,14 @@ bool  Settings::isSyncThumbnailsViewportImmutable()
 void Settings::setTocPageColumn( bool v )
 {
     if (!self()->Settings::isTocPageColumnImmutable())
-      self()->d->tocPageColumn = v;
+    {
+        self()->d->tocPageColumn = v;
+    }
 }
 
 bool Settings::tocPageColumn()
 {
-  return self()->d->tocPageColumn;
+    return self()->d->tocPageColumn;
 }
 
 bool  Settings::isTocPageColumnImmutable()
@@ -1416,12 +1500,14 @@ bool  Settings::isTocPageColumnImmutable()
 void Settings::setSidebarShowText( bool v )
 {
     if (!self()->Settings::isSidebarShowTextImmutable())
-      self()->d->sidebarShowText = v;
+    {
+        self()->d->sidebarShowText = v;
+    }
 }
 
 bool Settings::sidebarShowText()
 {
-  return self()->d->sidebarShowText;
+    return self()->d->sidebarShowText;
 }
 
 bool  Settings::isSidebarShowTextImmutable()
@@ -1433,12 +1519,14 @@ bool  Settings::isSidebarShowTextImmutable()
 void Settings::setSidebarIconSize( uint v )
 {
     if (!self()->Settings::isSidebarIconSizeImmutable())
-      self()->d->sidebarIconSize = v;
+    {
+        self()->d->sidebarIconSize = v;
+    }
 }
 
 uint Settings::sidebarIconSize()
 {
-  return self()->d->sidebarIconSize;
+    return self()->d->sidebarIconSize;
 }
 
 bool  Settings::isSidebarIconSizeImmutable()
@@ -1450,12 +1538,14 @@ bool  Settings::isSidebarIconSizeImmutable()
 void Settings::setEditToolBarPlacement( int v )
 {
     if (!self()->Settings::isEditToolBarPlacementImmutable())
-      self()->d->editToolBarPlacement = v;
+    {
+        self()->d->editToolBarPlacement = v;
+    }
 }
 
 int Settings::editToolBarPlacement()
 {
-  return self()->d->editToolBarPlacement;
+    return self()->d->editToolBarPlacement;
 }
 
 bool  Settings::isEditToolBarPlacementImmutable()
@@ -1467,12 +1557,14 @@ bool  Settings::isEditToolBarPlacementImmutable()
 void Settings::setSmoothScrolling( bool v )
 {
     if (!self()->Settings::isSmoothScrollingImmutable())
-      self()->d->smoothScrolling = v;
+    {
+        self()->d->smoothScrolling = v;
+    }
 }
 
 bool Settings::smoothScrolling()
 {
-  return self()->d->smoothScrolling;
+    return self()->d->smoothScrolling;
 }
 
 bool  Settings::isSmoothScrollingImmutable()
@@ -1484,12 +1576,14 @@ bool  Settings::isSmoothScrollingImmutable()
 void Settings::setShowScrollBars( bool v )
 {
     if (!self()->Settings::isShowScrollBarsImmutable())
-      self()->d->showScrollBars = v;
+    {
+        self()->d->showScrollBars = v;
+    }
 }
 
 bool Settings::showScrollBars()
 {
-  return self()->d->showScrollBars;
+    return self()->d->showScrollBars;
 }
 
 bool  Settings::isShowScrollBarsImmutable()
@@ -1503,17 +1597,19 @@ void Settings::setScrollOverlap( uint v )
 
     if (v > 50)
     {
-      qDebug() << "setScrollOverlap: value " << v << " is greater than the maximum value of 50";
-      v = 50;
+        qDebug() << "setScrollOverlap: value " << v << " is greater than the maximum value of 50";
+        v = 50;
     }
 
     if (!self()->Settings::isScrollOverlapImmutable())
-      self()->d->scrollOverlap = v;
+    {
+        self()->d->scrollOverlap = v;
+    }
 }
 
 uint Settings::scrollOverlap()
 {
-  return self()->d->scrollOverlap;
+    return self()->d->scrollOverlap;
 }
 
 bool  Settings::isScrollOverlapImmutable()
@@ -1526,23 +1622,25 @@ void Settings::setViewColumns( uint v )
 {
     if (v < 1)
     {
-      qDebug() << "setViewColumns: value " << v << " is less than the minimum value of 1";
-      v = 1;
+        qDebug() << "setViewColumns: value " << v << " is less than the minimum value of 1";
+        v = 1;
     }
 
     if (v > 8)
     {
-      qDebug() << "setViewColumns: value " << v << " is greater than the maximum value of 8";
-      v = 8;
+        qDebug() << "setViewColumns: value " << v << " is greater than the maximum value of 8";
+        v = 8;
     }
 
     if (!self()->Settings::isViewColumnsImmutable())
-      self()->d->viewColumns = v;
+    {
+        self()->d->viewColumns = v;
+    }
 }
 
 uint Settings::viewColumns()
 {
-  return self()->d->viewColumns;
+    return self()->d->viewColumns;
 }
 
 bool  Settings::isViewColumnsImmutable()
@@ -1554,12 +1652,14 @@ bool  Settings::isViewColumnsImmutable()
 void Settings::setTrimMargins( bool v )
 {
     if (!self()->Settings::isTrimMarginsImmutable())
-      self()->d->trimMargins = v;
+    {
+        self()->d->trimMargins = v;
+    }
 }
 
 bool Settings::trimMargins()
 {
-  return self()->d->trimMargins;
+    return self()->d->trimMargins;
 }
 
 bool  Settings::isTrimMarginsImmutable()
@@ -1571,12 +1671,14 @@ bool  Settings::isTrimMarginsImmutable()
 void Settings::setViewContinuous( bool v )
 {
     if (!self()->Settings::isViewContinuousImmutable())
-      self()->d->viewContinuous = v;
+    {
+        self()->d->viewContinuous = v;
+    }
 }
 
 bool Settings::viewContinuous()
 {
-  return self()->d->viewContinuous;
+    return self()->d->viewContinuous;
 }
 
 bool  Settings::isViewContinuousImmutable()
@@ -1588,12 +1690,14 @@ bool  Settings::isViewContinuousImmutable()
 void Settings::setViewMode( int v )
 {
     if (!self()->Settings::isViewModeImmutable())
-      self()->d->viewMode = v;
+    {
+        self()->d->viewMode = v;
+    }
 }
 
 int Settings::viewMode()
 {
-  return self()->d->viewMode;
+    return self()->d->viewMode;
 }
 
 bool  Settings::isViewModeImmutable()
@@ -1605,12 +1709,14 @@ bool  Settings::isViewModeImmutable()
 void Settings::setTrimMode( int v )
 {
     if (!self()->Settings::isTrimModeImmutable())
-      self()->d->trimMode = v;
+    {
+        self()->d->trimMode = v;
+    }
 }
 
 int Settings::trimMode()
 {
-  return self()->d->trimMode;
+    return self()->d->trimMode;
 }
 
 bool  Settings::isTrimModeImmutable()
@@ -1622,12 +1728,14 @@ bool  Settings::isTrimModeImmutable()
 void Settings::setMouseMode( int v )
 {
     if (!self()->Settings::isMouseModeImmutable())
-      self()->d->mouseMode = v;
+    {
+        self()->d->mouseMode = v;
+    }
 }
 
 int Settings::mouseMode()
 {
-  return self()->d->mouseMode;
+    return self()->d->mouseMode;
 }
 
 bool  Settings::isMouseModeImmutable()
@@ -1639,12 +1747,14 @@ bool  Settings::isMouseModeImmutable()
 void Settings::setShowSourceLocationsGraphically( bool v )
 {
     if (!self()->Settings::isShowSourceLocationsGraphicallyImmutable())
-      self()->d->showSourceLocationsGraphically = v;
+    {
+        self()->d->showSourceLocationsGraphically = v;
+    }
 }
 
 bool Settings::showSourceLocationsGraphically()
 {
-  return self()->d->showSourceLocationsGraphically;
+    return self()->d->showSourceLocationsGraphically;
 }
 
 bool  Settings::isShowSourceLocationsGraphicallyImmutable()
@@ -1656,12 +1766,14 @@ bool  Settings::isShowSourceLocationsGraphicallyImmutable()
 void Settings::setUseCustomBackgroundColor( bool v )
 {
     if (!self()->Settings::isUseCustomBackgroundColorImmutable())
-      self()->d->useCustomBackgroundColor = v;
+    {
+        self()->d->useCustomBackgroundColor = v;
+    }
 }
 
 bool Settings::useCustomBackgroundColor()
 {
-  return self()->d->useCustomBackgroundColor;
+    return self()->d->useCustomBackgroundColor;
 }
 
 bool  Settings::isUseCustomBackgroundColorImmutable()
@@ -1673,12 +1785,14 @@ bool  Settings::isUseCustomBackgroundColorImmutable()
 void Settings::setBackgroundColor( const QColor & v )
 {
     if (!self()->Settings::isBackgroundColorImmutable())
-      self()->d->backgroundColor = v;
+    {
+        self()->d->backgroundColor = v;
+    }
 }
 
 QColor Settings::backgroundColor()
 {
-  return self()->d->backgroundColor;
+    return self()->d->backgroundColor;
 }
 
 bool  Settings::isBackgroundColorImmutable()
@@ -1690,12 +1804,14 @@ bool  Settings::isBackgroundColorImmutable()
 void Settings::setSearchCaseSensitive( bool v )
 {
     if (!self()->Settings::isSearchCaseSensitiveImmutable())
-      self()->d->searchCaseSensitive = v;
+    {
+        self()->d->searchCaseSensitive = v;
+    }
 }
 
 bool Settings::searchCaseSensitive()
 {
-  return self()->d->searchCaseSensitive;
+    return self()->d->searchCaseSensitive;
 }
 
 bool  Settings::isSearchCaseSensitiveImmutable()
@@ -1707,12 +1823,14 @@ bool  Settings::isSearchCaseSensitiveImmutable()
 void Settings::setSearchFromCurrentPage( bool v )
 {
     if (!self()->Settings::isSearchFromCurrentPageImmutable())
-      self()->d->searchFromCurrentPage = v;
+    {
+        self()->d->searchFromCurrentPage = v;
+    }
 }
 
 bool Settings::searchFromCurrentPage()
 {
-  return self()->d->searchFromCurrentPage;
+    return self()->d->searchFromCurrentPage;
 }
 
 bool  Settings::isSearchFromCurrentPageImmutable()
@@ -1724,12 +1842,14 @@ bool  Settings::isSearchFromCurrentPageImmutable()
 void Settings::setFindAsYouType( bool v )
 {
     if (!self()->Settings::isFindAsYouTypeImmutable())
-      self()->d->findAsYouType = v;
+    {
+        self()->d->findAsYouType = v;
+    }
 }
 
 bool Settings::findAsYouType()
 {
-  return self()->d->findAsYouType;
+    return self()->d->findAsYouType;
 }
 
 bool  Settings::isFindAsYouTypeImmutable()
@@ -1741,12 +1861,14 @@ bool  Settings::isFindAsYouTypeImmutable()
 void Settings::setHighlightImages( bool v )
 {
     if (!self()->Settings::isHighlightImagesImmutable())
-      self()->d->highlightImages = v;
+    {
+        self()->d->highlightImages = v;
+    }
 }
 
 bool Settings::highlightImages()
 {
-  return self()->d->highlightImages;
+    return self()->d->highlightImages;
 }
 
 bool  Settings::isHighlightImagesImmutable()
@@ -1758,12 +1880,14 @@ bool  Settings::isHighlightImagesImmutable()
 void Settings::setHighlightLinks( bool v )
 {
     if (!self()->Settings::isHighlightLinksImmutable())
-      self()->d->highlightLinks = v;
+    {
+        self()->d->highlightLinks = v;
+    }
 }
 
 bool Settings::highlightLinks()
 {
-  return self()->d->highlightLinks;
+    return self()->d->highlightLinks;
 }
 
 bool  Settings::isHighlightLinksImmutable()
@@ -1775,12 +1899,14 @@ bool  Settings::isHighlightLinksImmutable()
 void Settings::setRecolorForeground( const QColor & v )
 {
     if (!self()->Settings::isRecolorForegroundImmutable())
-      self()->d->recolorForeground = v;
+    {
+        self()->d->recolorForeground = v;
+    }
 }
 
 QColor Settings::recolorForeground()
 {
-  return self()->d->recolorForeground;
+    return self()->d->recolorForeground;
 }
 
 bool  Settings::isRecolorForegroundImmutable()
@@ -1792,12 +1918,14 @@ bool  Settings::isRecolorForegroundImmutable()
 void Settings::setRecolorBackground( const QColor & v )
 {
     if (!self()->Settings::isRecolorBackgroundImmutable())
-      self()->d->recolorBackground = v;
+    {
+        self()->d->recolorBackground = v;
+    }
 }
 
 QColor Settings::recolorBackground()
 {
-  return self()->d->recolorBackground;
+    return self()->d->recolorBackground;
 }
 
 bool  Settings::isRecolorBackgroundImmutable()
@@ -1810,23 +1938,25 @@ void Settings::setBWThreshold( uint v )
 {
     if (v < 2)
     {
-      qDebug() << "setBWThreshold: value " << v << " is less than the minimum value of 2";
-      v = 2;
+        qDebug() << "setBWThreshold: value " << v << " is less than the minimum value of 2";
+        v = 2;
     }
 
     if (v > 253)
     {
-      qDebug() << "setBWThreshold: value " << v << " is greater than the maximum value of 253";
-      v = 253;
+        qDebug() << "setBWThreshold: value " << v << " is greater than the maximum value of 253";
+        v = 253;
     }
 
     if (!self()->Settings::isBWThresholdImmutable())
-      self()->d->bWThreshold = v;
+    {
+        self()->d->bWThreshold = v;
+    }
 }
 
 uint Settings::bWThreshold()
 {
-  return self()->d->bWThreshold;
+    return self()->d->bWThreshold;
 }
 
 bool  Settings::isBWThresholdImmutable()
@@ -1839,23 +1969,25 @@ void Settings::setBWContrast( uint v )
 {
     if (v < 2)
     {
-      qDebug() << "setBWContrast: value " << v << " is less than the minimum value of 2";
-      v = 2;
+        qDebug() << "setBWContrast: value " << v << " is less than the minimum value of 2";
+        v = 2;
     }
 
     if (v > 6)
     {
-      qDebug() << "setBWContrast: value " << v << " is greater than the maximum value of 6";
-      v = 6;
+        qDebug() << "setBWContrast: value " << v << " is greater than the maximum value of 6";
+        v = 6;
     }
 
     if (!self()->Settings::isBWContrastImmutable())
-      self()->d->bWContrast = v;
+    {
+        self()->d->bWContrast = v;
+    }
 }
 
 uint Settings::bWContrast()
 {
-  return self()->d->bWContrast;
+    return self()->d->bWContrast;
 }
 
 bool  Settings::isBWContrastImmutable()
@@ -1867,12 +1999,14 @@ bool  Settings::isBWContrastImmutable()
 void Settings::setIdentityAuthor( const QString & v )
 {
     if (!self()->Settings::isIdentityAuthorImmutable())
-      self()->d->identityAuthor = v;
+    {
+        self()->d->identityAuthor = v;
+    }
 }
 
 QString Settings::identityAuthor()
 {
-  return self()->d->identityAuthor;
+    return self()->d->identityAuthor;
 }
 
 bool  Settings::isIdentityAuthorImmutable()
@@ -1883,27 +2017,35 @@ bool  Settings::isIdentityAuthorImmutable()
 
 Settings::~Settings()
 {
-  delete d;
-  s_globalSettings()->q = nullptr;
+    delete d;
+    s_globalSettings()->q = nullptr;
 }
 
 bool Settings::usrSave()
 {
-  const bool res = SettingsCore::usrSave();
-  if (!res) return false;
+    const bool res = SettingsCore::usrSave();
+    if (!res)
+    {
+        return false;
+    }
 
-  if ( d->settingsChanged & signalBuiltinAnnotationToolsChanged )
-    Q_EMIT builtinAnnotationToolsChanged();
-  if ( d->settingsChanged & signalQuickAnnotationToolsChanged )
-    Q_EMIT quickAnnotationToolsChanged();
-  d->settingsChanged = 0;
-  return true;
+    if ( d->settingsChanged & signalBuiltinAnnotationToolsChanged )
+    {
+        Q_EMIT builtinAnnotationToolsChanged();
+    }
+    if ( d->settingsChanged & signalQuickAnnotationToolsChanged )
+    {
+        Q_EMIT quickAnnotationToolsChanged();
+    }
+    d->settingsChanged = 0;
+    return true;
 }
 
-void Settings::itemChanged(quint64 flags) {
-  d->settingsChanged |= flags;
+void Settings::itemChanged(quint64 flags)
+{
+    d->settingsChanged |= flags;
 
 }
 
-#include "settings.moc"
+//#include "settings.moc"
 

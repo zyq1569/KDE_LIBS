@@ -10,11 +10,12 @@
 
 using namespace Okular;
 
-namespace Okular {
+namespace Okular
+{
 
 class SettingsCorePrivate
 {
-  public:
+public:
 
     // Core Performance
     int memoryLevel;
@@ -61,13 +62,17 @@ class SettingsCorePrivate
 
 
 }
-namespace Okular {
+namespace Okular
+{
 
 class SettingsCoreHelper
 {
-  public:
+public:
     SettingsCoreHelper() : q(nullptr) {}
-    ~SettingsCoreHelper() { delete q; }
+    ~SettingsCoreHelper()
+    {
+        delete q;
+    }
     SettingsCoreHelper(const SettingsCoreHelper&) = delete;
     SettingsCoreHelper& operator=(const SettingsCoreHelper&) = delete;
     SettingsCore *q;
@@ -77,250 +82,256 @@ class SettingsCoreHelper
 Q_GLOBAL_STATIC(SettingsCoreHelper, s_globalSettingsCore)
 SettingsCore *SettingsCore::self()
 {
-  if (!s_globalSettingsCore()->q)
-     qFatal("you need to call SettingsCore::instance before using");
-  return s_globalSettingsCore()->q;
+    if (!s_globalSettingsCore()->q)
+    {
+        qFatal("you need to call SettingsCore::instance before using");
+    }
+    return s_globalSettingsCore()->q;
 }
 
 void SettingsCore::instance(const QString& cfgfilename)
 {
-  if (s_globalSettingsCore()->q) {
-     qDebug() << "SettingsCore::instance called after the first use - ignoring";
-     return;
-  }
-  new SettingsCore(KSharedConfig::openConfig(cfgfilename));
-  s_globalSettingsCore()->q->read();
+    if (s_globalSettingsCore()->q)
+    {
+        qDebug() << "SettingsCore::instance called after the first use - ignoring";
+        return;
+    }
+    new SettingsCore(KSharedConfig::openConfig(cfgfilename));
+    s_globalSettingsCore()->q->read();
 }
 
 void SettingsCore::instance(KSharedConfig::Ptr config)
 {
-  if (s_globalSettingsCore()->q) {
-     qDebug() << "SettingsCore::instance called after the first use - ignoring";
-     return;
-  }
-  new SettingsCore(std::move(config));
-  s_globalSettingsCore()->q->read();
+    if (s_globalSettingsCore()->q)
+    {
+        qDebug() << "SettingsCore::instance called after the first use - ignoring";
+        return;
+    }
+    new SettingsCore(std::move(config));
+    s_globalSettingsCore()->q->read();
 }
 
 SettingsCore::SettingsCore( KSharedConfig::Ptr config )
-  : KConfigSkeleton( std::move( config ) )
+    : KConfigSkeleton( std::move( config ) )
 {
-  d = new SettingsCorePrivate;
-  Q_ASSERT(!s_globalSettingsCore()->q);
-  s_globalSettingsCore()->q = this;
-  setCurrentGroup( QStringLiteral( "Core Performance" ) );
+    d = new SettingsCorePrivate;
+    Q_ASSERT(!s_globalSettingsCore()->q);
+    s_globalSettingsCore()->q = this;
+    setCurrentGroup( QStringLiteral( "Core Performance" ) );
 
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesMemoryLevel;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Low");
-    valuesMemoryLevel.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Normal");
-    valuesMemoryLevel.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Aggressive");
-    valuesMemoryLevel.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Greedy");
-    valuesMemoryLevel.append( choice );
-  }
-  d->itemMemoryLevel = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "MemoryLevel" ), d->memoryLevel, valuesMemoryLevel, EnumMemoryLevel::Normal );
-  addItem( d->itemMemoryLevel, QStringLiteral( "MemoryLevel" ) );
-  d->itemEnableThreading = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "EnableThreading" ), d->enableThreading, true );
-  addItem( d->itemEnableThreading, QStringLiteral( "EnableThreading" ) );
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesTextAntialias;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Disabled");
-    valuesTextAntialias.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Enabled");
-    valuesTextAntialias.append( choice );
-  }
-  d->itemTextAntialias = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "TextAntialias" ), d->textAntialias, valuesTextAntialias, EnumTextAntialias::Enabled );
-  addItem( d->itemTextAntialias, QStringLiteral( "TextAntialias" ) );
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesGraphicsAntialias;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Disabled");
-    valuesGraphicsAntialias.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Enabled");
-    valuesGraphicsAntialias.append( choice );
-  }
-  d->itemGraphicsAntialias = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "GraphicsAntialias" ), d->graphicsAntialias, valuesGraphicsAntialias, EnumGraphicsAntialias::Enabled );
-  addItem( d->itemGraphicsAntialias, QStringLiteral( "GraphicsAntialias" ) );
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesTextHinting;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Disabled");
-    valuesTextHinting.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Enabled");
-    valuesTextHinting.append( choice );
-  }
-  d->itemTextHinting = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "TextHinting" ), d->textHinting, valuesTextHinting, EnumTextHinting::Disabled );
-  addItem( d->itemTextHinting, QStringLiteral( "TextHinting" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesMemoryLevel;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Low");
+        valuesMemoryLevel.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Normal");
+        valuesMemoryLevel.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Aggressive");
+        valuesMemoryLevel.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Greedy");
+        valuesMemoryLevel.append( choice );
+    }
+    d->itemMemoryLevel = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "MemoryLevel" ), d->memoryLevel, valuesMemoryLevel, EnumMemoryLevel::Normal );
+    addItem( d->itemMemoryLevel, QStringLiteral( "MemoryLevel" ) );
+    d->itemEnableThreading = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "EnableThreading" ), d->enableThreading, true );
+    addItem( d->itemEnableThreading, QStringLiteral( "EnableThreading" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesTextAntialias;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Disabled");
+        valuesTextAntialias.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Enabled");
+        valuesTextAntialias.append( choice );
+    }
+    d->itemTextAntialias = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "TextAntialias" ), d->textAntialias, valuesTextAntialias, EnumTextAntialias::Enabled );
+    addItem( d->itemTextAntialias, QStringLiteral( "TextAntialias" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesGraphicsAntialias;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Disabled");
+        valuesGraphicsAntialias.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Enabled");
+        valuesGraphicsAntialias.append( choice );
+    }
+    d->itemGraphicsAntialias = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "GraphicsAntialias" ), d->graphicsAntialias, valuesGraphicsAntialias, EnumGraphicsAntialias::Enabled );
+    addItem( d->itemGraphicsAntialias, QStringLiteral( "GraphicsAntialias" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesTextHinting;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Disabled");
+        valuesTextHinting.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Enabled");
+        valuesTextHinting.append( choice );
+    }
+    d->itemTextHinting = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "TextHinting" ), d->textHinting, valuesTextHinting, EnumTextHinting::Disabled );
+    addItem( d->itemTextHinting, QStringLiteral( "TextHinting" ) );
 
-  setCurrentGroup( QStringLiteral( "Document" ) );
+    setCurrentGroup( QStringLiteral( "Document" ) );
 
-  d->itemPaperColor = new KConfigSkeleton::ItemColor( currentGroup(), QStringLiteral( "PaperColor" ), d->paperColor, Qt::white );
-  addItem( d->itemPaperColor, QStringLiteral( "PaperColor" ) );
-  d->itemChangeColors = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "ChangeColors" ), d->changeColors, false );
-  addItem( d->itemChangeColors, QStringLiteral( "ChangeColors" ) );
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesRenderMode;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Inverted");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Paper");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Recolor");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("BlackWhite");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("InvertLightness");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("InvertLuma");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("InvertLumaSymmetric");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("HueShiftPositive");
-    valuesRenderMode.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("HueShiftNegative");
-    valuesRenderMode.append( choice );
-  }
-  d->itemRenderMode = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "RenderMode" ), d->renderMode, valuesRenderMode, EnumRenderMode::Inverted );
-  addItem( d->itemRenderMode, QStringLiteral( "RenderMode" ) );
+    d->itemPaperColor = new KConfigSkeleton::ItemColor( currentGroup(), QStringLiteral( "PaperColor" ), d->paperColor, Qt::white );
+    addItem( d->itemPaperColor, QStringLiteral( "PaperColor" ) );
+    d->itemChangeColors = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "ChangeColors" ), d->changeColors, false );
+    addItem( d->itemChangeColors, QStringLiteral( "ChangeColors" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesRenderMode;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Inverted");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Paper");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Recolor");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("BlackWhite");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("InvertLightness");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("InvertLuma");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("InvertLumaSymmetric");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("HueShiftPositive");
+        valuesRenderMode.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("HueShiftNegative");
+        valuesRenderMode.append( choice );
+    }
+    d->itemRenderMode = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "RenderMode" ), d->renderMode, valuesRenderMode, EnumRenderMode::Inverted );
+    addItem( d->itemRenderMode, QStringLiteral( "RenderMode" ) );
 
-  setCurrentGroup( QStringLiteral( "Core General" ) );
+    setCurrentGroup( QStringLiteral( "Core General" ) );
 
-  d->itemObeyDRM = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "ObeyDRM" ), d->obeyDRM, true );
-  addItem( d->itemObeyDRM, QStringLiteral( "ObeyDRM" ) );
-  d->itemChooseGenerators = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "ChooseGenerators" ), d->chooseGenerators, false );
-  addItem( d->itemChooseGenerators, QStringLiteral( "ChooseGenerators" ) );
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesExternalEditor;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Custom");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Kate");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Kile");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Scite");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Emacsclient");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Lyxclient");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Texstudio");
-    valuesExternalEditor.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Texifyidea");
-    valuesExternalEditor.append( choice );
-  }
-  d->itemExternalEditor = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "ExternalEditor" ), d->externalEditor, valuesExternalEditor, EnumExternalEditor::Kate );
-  addItem( d->itemExternalEditor, QStringLiteral( "ExternalEditor" ) );
-  d->itemExternalEditorCommand = new KConfigSkeleton::ItemString( currentGroup(), QStringLiteral( "ExternalEditorCommand" ), d->externalEditorCommand, QStringLiteral( "kate --line %l --column %c" ) );
-  addItem( d->itemExternalEditorCommand, QStringLiteral( "ExternalEditorCommand" ) );
+    d->itemObeyDRM = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "ObeyDRM" ), d->obeyDRM, true );
+    addItem( d->itemObeyDRM, QStringLiteral( "ObeyDRM" ) );
+    d->itemChooseGenerators = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "ChooseGenerators" ), d->chooseGenerators, false );
+    addItem( d->itemChooseGenerators, QStringLiteral( "ChooseGenerators" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesExternalEditor;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Custom");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Kate");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Kile");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Scite");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Emacsclient");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Lyxclient");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Texstudio");
+        valuesExternalEditor.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Texifyidea");
+        valuesExternalEditor.append( choice );
+    }
+    d->itemExternalEditor = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "ExternalEditor" ), d->externalEditor, valuesExternalEditor, EnumExternalEditor::Kate );
+    addItem( d->itemExternalEditor, QStringLiteral( "ExternalEditor" ) );
+    d->itemExternalEditorCommand = new KConfigSkeleton::ItemString( currentGroup(), QStringLiteral( "ExternalEditorCommand" ), d->externalEditorCommand, QStringLiteral( "kate --line %l --column %c" ) );
+    addItem( d->itemExternalEditorCommand, QStringLiteral( "ExternalEditorCommand" ) );
 
-  setCurrentGroup( QStringLiteral( "Core Presentation" ) );
+    setCurrentGroup( QStringLiteral( "Core Presentation" ) );
 
-  d->itemSlidesAdvance = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "SlidesAdvance" ), d->slidesAdvance, false );
-  addItem( d->itemSlidesAdvance, QStringLiteral( "SlidesAdvance" ) );
-  d->itemSlidesAdvanceTime = new KConfigSkeleton::ItemUInt( currentGroup(), QStringLiteral( "SlidesAdvanceTime" ), d->slidesAdvanceTime, 5 );
-  d->itemSlidesAdvanceTime->setMinValue(1);
-  d->itemSlidesAdvanceTime->setMaxValue(3600);
-  addItem( d->itemSlidesAdvanceTime, QStringLiteral( "SlidesAdvanceTime" ) );
-  d->itemSlidesLoop = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "SlidesLoop" ), d->slidesLoop, false );
-  addItem( d->itemSlidesLoop, QStringLiteral( "SlidesLoop" ) );
-  QList<KConfigSkeleton::ItemEnum::Choice> valuesSlidesTapNavigation;
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("ForwardBackward");
-    valuesSlidesTapNavigation.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Forward");
-    valuesSlidesTapNavigation.append( choice );
-  }
-  {
-    KConfigSkeleton::ItemEnum::Choice choice;
-    choice.name = QStringLiteral("Disabled");
-    valuesSlidesTapNavigation.append( choice );
-  }
-  d->itemSlidesTapNavigation = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "SlidesTapNavigation" ), d->slidesTapNavigation, valuesSlidesTapNavigation, EnumSlidesTapNavigation::Forward );
-  addItem( d->itemSlidesTapNavigation, QStringLiteral( "SlidesTapNavigation" ) );
+    d->itemSlidesAdvance = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "SlidesAdvance" ), d->slidesAdvance, false );
+    addItem( d->itemSlidesAdvance, QStringLiteral( "SlidesAdvance" ) );
+    d->itemSlidesAdvanceTime = new KConfigSkeleton::ItemUInt( currentGroup(), QStringLiteral( "SlidesAdvanceTime" ), d->slidesAdvanceTime, 5 );
+    d->itemSlidesAdvanceTime->setMinValue(1);
+    d->itemSlidesAdvanceTime->setMaxValue(3600);
+    addItem( d->itemSlidesAdvanceTime, QStringLiteral( "SlidesAdvanceTime" ) );
+    d->itemSlidesLoop = new KConfigSkeleton::ItemBool( currentGroup(), QStringLiteral( "SlidesLoop" ), d->slidesLoop, false );
+    addItem( d->itemSlidesLoop, QStringLiteral( "SlidesLoop" ) );
+    QList<KConfigSkeleton::ItemEnum::Choice> valuesSlidesTapNavigation;
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("ForwardBackward");
+        valuesSlidesTapNavigation.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Forward");
+        valuesSlidesTapNavigation.append( choice );
+    }
+    {
+        KConfigSkeleton::ItemEnum::Choice choice;
+        choice.name = QStringLiteral("Disabled");
+        valuesSlidesTapNavigation.append( choice );
+    }
+    d->itemSlidesTapNavigation = new KConfigSkeleton::ItemEnum( currentGroup(), QStringLiteral( "SlidesTapNavigation" ), d->slidesTapNavigation, valuesSlidesTapNavigation, EnumSlidesTapNavigation::Forward );
+    addItem( d->itemSlidesTapNavigation, QStringLiteral( "SlidesTapNavigation" ) );
 }
 
 void SettingsCore::setMemoryLevel( int v )
 {
     if (!self()->SettingsCore::isMemoryLevelImmutable())
-      self()->d->memoryLevel = v;
+    {
+        self()->d->memoryLevel = v;
+    }
 }
 
 int SettingsCore::memoryLevel()
 {
-  return self()->d->memoryLevel;
+    return self()->d->memoryLevel;
 }
 
 bool  SettingsCore::isMemoryLevelImmutable()
@@ -332,12 +343,14 @@ bool  SettingsCore::isMemoryLevelImmutable()
 void SettingsCore::setEnableThreading( bool v )
 {
     if (!self()->SettingsCore::isEnableThreadingImmutable())
-      self()->d->enableThreading = v;
+    {
+        self()->d->enableThreading = v;
+    }
 }
 
 bool SettingsCore::enableThreading()
 {
-  return self()->d->enableThreading;
+    return self()->d->enableThreading;
 }
 
 bool  SettingsCore::isEnableThreadingImmutable()
@@ -349,12 +362,14 @@ bool  SettingsCore::isEnableThreadingImmutable()
 void SettingsCore::setTextAntialias( int v )
 {
     if (!self()->SettingsCore::isTextAntialiasImmutable())
-      self()->d->textAntialias = v;
+    {
+        self()->d->textAntialias = v;
+    }
 }
 
 int SettingsCore::textAntialias()
 {
-  return self()->d->textAntialias;
+    return self()->d->textAntialias;
 }
 
 bool  SettingsCore::isTextAntialiasImmutable()
@@ -366,12 +381,14 @@ bool  SettingsCore::isTextAntialiasImmutable()
 void SettingsCore::setGraphicsAntialias( int v )
 {
     if (!self()->SettingsCore::isGraphicsAntialiasImmutable())
-      self()->d->graphicsAntialias = v;
+    {
+        self()->d->graphicsAntialias = v;
+    }
 }
 
 int SettingsCore::graphicsAntialias()
 {
-  return self()->d->graphicsAntialias;
+    return self()->d->graphicsAntialias;
 }
 
 bool  SettingsCore::isGraphicsAntialiasImmutable()
@@ -383,12 +400,14 @@ bool  SettingsCore::isGraphicsAntialiasImmutable()
 void SettingsCore::setTextHinting( int v )
 {
     if (!self()->SettingsCore::isTextHintingImmutable())
-      self()->d->textHinting = v;
+    {
+        self()->d->textHinting = v;
+    }
 }
 
 int SettingsCore::textHinting()
 {
-  return self()->d->textHinting;
+    return self()->d->textHinting;
 }
 
 bool  SettingsCore::isTextHintingImmutable()
@@ -400,12 +419,14 @@ bool  SettingsCore::isTextHintingImmutable()
 void SettingsCore::setPaperColor( const QColor & v )
 {
     if (!self()->SettingsCore::isPaperColorImmutable())
-      self()->d->paperColor = v;
+    {
+        self()->d->paperColor = v;
+    }
 }
 
 QColor SettingsCore::paperColor()
 {
-  return self()->d->paperColor;
+    return self()->d->paperColor;
 }
 
 bool  SettingsCore::isPaperColorImmutable()
@@ -417,12 +438,14 @@ bool  SettingsCore::isPaperColorImmutable()
 void SettingsCore::setChangeColors( bool v )
 {
     if (!self()->SettingsCore::isChangeColorsImmutable())
-      self()->d->changeColors = v;
+    {
+        self()->d->changeColors = v;
+    }
 }
 
 bool SettingsCore::changeColors()
 {
-  return self()->d->changeColors;
+    return self()->d->changeColors;
 }
 
 bool  SettingsCore::isChangeColorsImmutable()
@@ -434,12 +457,14 @@ bool  SettingsCore::isChangeColorsImmutable()
 void SettingsCore::setRenderMode( int v )
 {
     if (!self()->SettingsCore::isRenderModeImmutable())
-      self()->d->renderMode = v;
+    {
+        self()->d->renderMode = v;
+    }
 }
 
 int SettingsCore::renderMode()
 {
-  return self()->d->renderMode;
+    return self()->d->renderMode;
 }
 
 bool  SettingsCore::isRenderModeImmutable()
@@ -451,12 +476,14 @@ bool  SettingsCore::isRenderModeImmutable()
 void SettingsCore::setObeyDRM( bool v )
 {
     if (!self()->SettingsCore::isObeyDRMImmutable())
-      self()->d->obeyDRM = v;
+    {
+        self()->d->obeyDRM = v;
+    }
 }
 
 bool SettingsCore::obeyDRM()
 {
-  return self()->d->obeyDRM;
+    return self()->d->obeyDRM;
 }
 
 bool  SettingsCore::isObeyDRMImmutable()
@@ -468,12 +495,14 @@ bool  SettingsCore::isObeyDRMImmutable()
 void SettingsCore::setChooseGenerators( bool v )
 {
     if (!self()->SettingsCore::isChooseGeneratorsImmutable())
-      self()->d->chooseGenerators = v;
+    {
+        self()->d->chooseGenerators = v;
+    }
 }
 
 bool SettingsCore::chooseGenerators()
 {
-  return self()->d->chooseGenerators;
+    return self()->d->chooseGenerators;
 }
 
 bool  SettingsCore::isChooseGeneratorsImmutable()
@@ -485,12 +514,14 @@ bool  SettingsCore::isChooseGeneratorsImmutable()
 void SettingsCore::setExternalEditor( int v )
 {
     if (!self()->SettingsCore::isExternalEditorImmutable())
-      self()->d->externalEditor = v;
+    {
+        self()->d->externalEditor = v;
+    }
 }
 
 int SettingsCore::externalEditor()
 {
-  return self()->d->externalEditor;
+    return self()->d->externalEditor;
 }
 
 bool  SettingsCore::isExternalEditorImmutable()
@@ -502,12 +533,14 @@ bool  SettingsCore::isExternalEditorImmutable()
 void SettingsCore::setExternalEditorCommand( const QString & v )
 {
     if (!self()->SettingsCore::isExternalEditorCommandImmutable())
-      self()->d->externalEditorCommand = v;
+    {
+        self()->d->externalEditorCommand = v;
+    }
 }
 
 QString SettingsCore::externalEditorCommand()
 {
-  return self()->d->externalEditorCommand;
+    return self()->d->externalEditorCommand;
 }
 
 bool  SettingsCore::isExternalEditorCommandImmutable()
@@ -519,12 +552,14 @@ bool  SettingsCore::isExternalEditorCommandImmutable()
 void SettingsCore::setSlidesAdvance( bool v )
 {
     if (!self()->SettingsCore::isSlidesAdvanceImmutable())
-      self()->d->slidesAdvance = v;
+    {
+        self()->d->slidesAdvance = v;
+    }
 }
 
 bool SettingsCore::slidesAdvance()
 {
-  return self()->d->slidesAdvance;
+    return self()->d->slidesAdvance;
 }
 
 bool  SettingsCore::isSlidesAdvanceImmutable()
@@ -537,23 +572,25 @@ void SettingsCore::setSlidesAdvanceTime( uint v )
 {
     if (v < 1)
     {
-      qDebug() << "setSlidesAdvanceTime: value " << v << " is less than the minimum value of 1";
-      v = 1;
+        qDebug() << "setSlidesAdvanceTime: value " << v << " is less than the minimum value of 1";
+        v = 1;
     }
 
     if (v > 3600)
     {
-      qDebug() << "setSlidesAdvanceTime: value " << v << " is greater than the maximum value of 3600";
-      v = 3600;
+        qDebug() << "setSlidesAdvanceTime: value " << v << " is greater than the maximum value of 3600";
+        v = 3600;
     }
 
     if (!self()->SettingsCore::isSlidesAdvanceTimeImmutable())
-      self()->d->slidesAdvanceTime = v;
+    {
+        self()->d->slidesAdvanceTime = v;
+    }
 }
 
 uint SettingsCore::slidesAdvanceTime()
 {
-  return self()->d->slidesAdvanceTime;
+    return self()->d->slidesAdvanceTime;
 }
 
 bool  SettingsCore::isSlidesAdvanceTimeImmutable()
@@ -565,12 +602,14 @@ bool  SettingsCore::isSlidesAdvanceTimeImmutable()
 void SettingsCore::setSlidesLoop( bool v )
 {
     if (!self()->SettingsCore::isSlidesLoopImmutable())
-      self()->d->slidesLoop = v;
+    {
+        self()->d->slidesLoop = v;
+    }
 }
 
 bool SettingsCore::slidesLoop()
 {
-  return self()->d->slidesLoop;
+    return self()->d->slidesLoop;
 }
 
 bool  SettingsCore::isSlidesLoopImmutable()
@@ -582,12 +621,14 @@ bool  SettingsCore::isSlidesLoopImmutable()
 void SettingsCore::setSlidesTapNavigation( int v )
 {
     if (!self()->SettingsCore::isSlidesTapNavigationImmutable())
-      self()->d->slidesTapNavigation = v;
+    {
+        self()->d->slidesTapNavigation = v;
+    }
 }
 
 int SettingsCore::slidesTapNavigation()
 {
-  return self()->d->slidesTapNavigation;
+    return self()->d->slidesTapNavigation;
 }
 
 bool  SettingsCore::isSlidesTapNavigationImmutable()
@@ -598,7 +639,7 @@ bool  SettingsCore::isSlidesTapNavigationImmutable()
 
 SettingsCore::~SettingsCore()
 {
-  delete d;
-  s_globalSettingsCore()->q = nullptr;
+    delete d;
+    s_globalSettingsCore()->q = nullptr;
 }
 
