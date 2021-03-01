@@ -4,7 +4,8 @@
 
 TEMPLATE = lib
 TARGET = okularGenerator_comicbook
-DESTDIR = ../../bin
+LIBDIR  = ../../bin/
+DESTDIR = ../../bin/okular/generators
 QT += core xml network gui widgets printsupport concurrent dbus
 #CONFIG += debug
 
@@ -17,7 +18,7 @@ INCLUDEPATH +=  ../ \
                 ../../core
 
 
-LIBS +=    -L$${DESTDIR} \
+LIBS +=     -L$${LIBDIR} \
             -lokularcore \
             -lokular_comicbook
 
