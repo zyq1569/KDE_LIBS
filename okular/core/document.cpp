@@ -14,7 +14,7 @@
 #include "document.h"
 #include "document_p.h"
 #include "documentcommands_p.h"
-
+#include "global.h"
 #include <limits.h>
 #include <memory>
 #ifdef Q_OS_WIN
@@ -6422,247 +6422,247 @@ DocumentInfo::DocumentInfo()
 DocumentInfo::DocumentInfo(const DocumentInfo &info)
     : d(new DocumentInfoPrivate())
 {
-  *this = info;
+    *this = info;
 }
 
 DocumentInfo &DocumentInfo::operator=(const DocumentInfo &info)
 {
-  if (this != &info)
-  {
-    d->values = info.d->values;
-    d->titles = info.d->titles;
-  }
-  return *this;
+    if (this != &info)
+    {
+        d->values = info.d->values;
+        d->titles = info.d->titles;
+    }
+    return *this;
 }
 
 DocumentInfo::~DocumentInfo()
 {
-  delete d;
+    delete d;
 }
 
 void DocumentInfo::set(const QString &key, const QString &value, const QString &title)
 {
-  d->values[key] = value;
-  d->titles[key] = title;
+    d->values[key] = value;
+    d->titles[key] = title;
 }
 
 void DocumentInfo::set(Key key, const QString &value)
 {
-  d->values[getKeyString(key)] = value;
+    d->values[getKeyString(key)] = value;
 }
 
 QStringList DocumentInfo::keys() const
 {
-  return d->values.keys();
+    return d->values.keys();
 }
 
 QString DocumentInfo::get(Key key) const
 {
-  return get(getKeyString(key));
+    return get(getKeyString(key));
 }
 
 QString DocumentInfo::get(const QString &key) const
 {
-  return d->values[key];
+    return d->values[key];
 }
 
 QString DocumentInfo::getKeyString(Key key) // const
 {
-  switch (key)
-  {
-  case Title:
-    return QStringLiteral("title");
-    break;
-  case Subject:
-    return QStringLiteral("subject");
-    break;
-  case Description:
-    return QStringLiteral("description");
-    break;
-  case Author:
-    return QStringLiteral("author");
-    break;
-  case Creator:
-    return QStringLiteral("creator");
-    break;
-  case Producer:
-    return QStringLiteral("producer");
-    break;
-  case Copyright:
-    return QStringLiteral("copyright");
-    break;
-  case Pages:
-    return QStringLiteral("pages");
-    break;
-  case CreationDate:
-    return QStringLiteral("creationDate");
-    break;
-  case ModificationDate:
-    return QStringLiteral("modificationDate");
-    break;
-  case MimeType:
-    return QStringLiteral("mimeType");
-    break;
-  case Category:
-    return QStringLiteral("category");
-    break;
-  case Keywords:
-    return QStringLiteral("keywords");
-    break;
-  case FilePath:
-    return QStringLiteral("filePath");
-    break;
-  case DocumentSize:
-    return QStringLiteral("documentSize");
-    break;
-  case PagesSize:
-    return QStringLiteral("pageSize");
-    break;
-  default:
-    qCWarning(OkularCoreDebug) << "Unknown" << key;
-    return QString();
-    break;
-  }
+    switch (key)
+    {
+        case Title:
+            return QStringLiteral("title");
+            break;
+        case Subject:
+            return QStringLiteral("subject");
+            break;
+        case Description:
+            return QStringLiteral("description");
+            break;
+        case Author:
+            return QStringLiteral("author");
+            break;
+        case Creator:
+            return QStringLiteral("creator");
+            break;
+        case Producer:
+            return QStringLiteral("producer");
+            break;
+        case Copyright:
+            return QStringLiteral("copyright");
+            break;
+        case Pages:
+            return QStringLiteral("pages");
+            break;
+        case CreationDate:
+            return QStringLiteral("creationDate");
+            break;
+        case ModificationDate:
+            return QStringLiteral("modificationDate");
+            break;
+        case MimeType:
+            return QStringLiteral("mimeType");
+            break;
+        case Category:
+            return QStringLiteral("category");
+            break;
+        case Keywords:
+            return QStringLiteral("keywords");
+            break;
+        case FilePath:
+            return QStringLiteral("filePath");
+            break;
+        case DocumentSize:
+            return QStringLiteral("documentSize");
+            break;
+        case PagesSize:
+            return QStringLiteral("pageSize");
+            break;
+        default:
+            qCWarning(OkularCoreDebug) << "Unknown" << key;
+            return QString();
+            break;
+    }
 }
 
 DocumentInfo::Key DocumentInfo::getKeyFromString(const QString &key) // const
 {
-  if (key == QLatin1String("title"))
-  {
-    return Title;
-  }
-  else if (key == QLatin1String("subject"))
-  {
-    return Subject;
-  }
-  else if (key == QLatin1String("description"))
-  {
-    return Description;
-  }
-  else if (key == QLatin1String("author"))
-  {
-    return Author;
-  }
-  else if (key == QLatin1String("creator"))
-  {
-    return Creator;
-  }
-  else if (key == QLatin1String("producer"))
-  {
-    return Producer;
-  }
-  else if (key == QLatin1String("copyright"))
-  {
-    return Copyright;
-  }
-  else if (key == QLatin1String("pages"))
-  {
-    return Pages;
-  }
-  else if (key == QLatin1String("creationDate"))
-  {
-    return CreationDate;
-  }
-  else if (key == QLatin1String("modificationDate"))
-  {
-    return ModificationDate;
-  }
-  else if (key == QLatin1String("mimeType"))
-  {
-    return MimeType;
-  }
-  else if (key == QLatin1String("category"))
-  {
-    return Category;
-  }
-  else if (key == QLatin1String("keywords"))
-  {
-    return Keywords;
-  }
-  else if (key == QLatin1String("filePath"))
-  {
-    return FilePath;
-  }
-  else if (key == QLatin1String("documentSize"))
-  {
-    return DocumentSize;
-  }
-  else if (key == QLatin1String("pageSize"))
-  {
-    return PagesSize;
-  }
-  else
-  {
-    return Invalid;
-  }
+    if (key == QLatin1String("title"))
+    {
+        return Title;
+    }
+    else if (key == QLatin1String("subject"))
+    {
+        return Subject;
+    }
+    else if (key == QLatin1String("description"))
+    {
+        return Description;
+    }
+    else if (key == QLatin1String("author"))
+    {
+        return Author;
+    }
+    else if (key == QLatin1String("creator"))
+    {
+        return Creator;
+    }
+    else if (key == QLatin1String("producer"))
+    {
+        return Producer;
+    }
+    else if (key == QLatin1String("copyright"))
+    {
+        return Copyright;
+    }
+    else if (key == QLatin1String("pages"))
+    {
+        return Pages;
+    }
+    else if (key == QLatin1String("creationDate"))
+    {
+        return CreationDate;
+    }
+    else if (key == QLatin1String("modificationDate"))
+    {
+        return ModificationDate;
+    }
+    else if (key == QLatin1String("mimeType"))
+    {
+        return MimeType;
+    }
+    else if (key == QLatin1String("category"))
+    {
+        return Category;
+    }
+    else if (key == QLatin1String("keywords"))
+    {
+        return Keywords;
+    }
+    else if (key == QLatin1String("filePath"))
+    {
+        return FilePath;
+    }
+    else if (key == QLatin1String("documentSize"))
+    {
+        return DocumentSize;
+    }
+    else if (key == QLatin1String("pageSize"))
+    {
+        return PagesSize;
+    }
+    else
+    {
+        return Invalid;
+    }
 }
 
 QString DocumentInfo::getKeyTitle(Key key) // const
 {
-  switch (key)
-  {
-  case Title:
-    return i18n("Title");
-    break;
-  case Subject:
-    return i18n("Subject");
-    break;
-  case Description:
-    return i18n("Description");
-    break;
-  case Author:
-    return i18n("Author");
-    break;
-  case Creator:
-    return i18n("Creator");
-    break;
-  case Producer:
-    return i18n("Producer");
-    break;
-  case Copyright:
-    return i18n("Copyright");
-    break;
-  case Pages:
-    return i18n("Pages");
-    break;
-  case CreationDate:
-    return i18n("Created");
-    break;
-  case ModificationDate:
-    return i18n("Modified");
-    break;
-  case MimeType:
-    return i18n("Mime Type");
-    break;
-  case Category:
-    return i18n("Category");
-    break;
-  case Keywords:
-    return i18n("Keywords");
-    break;
-  case FilePath:
-    return i18n("File Path");
-    break;
-  case DocumentSize:
-    return i18n("File Size");
-    break;
-  case PagesSize:
-    return i18n("Page Size");
-    break;
-  default:
-    return QString();
-    break;
-  }
+    switch (key)
+    {
+        case Title:
+            return i18n("Title");
+            break;
+        case Subject:
+            return i18n("Subject");
+            break;
+        case Description:
+            return i18n("Description");
+            break;
+        case Author:
+            return i18n("Author");
+            break;
+        case Creator:
+            return i18n("Creator");
+            break;
+        case Producer:
+            return i18n("Producer");
+            break;
+        case Copyright:
+            return i18n("Copyright");
+            break;
+        case Pages:
+            return i18n("Pages");
+            break;
+        case CreationDate:
+            return i18n("Created");
+            break;
+        case ModificationDate:
+            return i18n("Modified");
+            break;
+        case MimeType:
+            return i18n("Mime Type");
+            break;
+        case Category:
+            return i18n("Category");
+            break;
+        case Keywords:
+            return i18n("Keywords");
+            break;
+        case FilePath:
+            return i18n("File Path");
+            break;
+        case DocumentSize:
+            return i18n("File Size");
+            break;
+        case PagesSize:
+            return i18n("Page Size");
+            break;
+        default:
+            return QString();
+            break;
+    }
 }
 
 QString DocumentInfo::getKeyTitle(const QString &key) const
 {
-  QString title = getKeyTitle(getKeyFromString(key));
-  if (title.isEmpty())
-  {
-    title = d->titles[key];
-  }
-  return title;
+    QString title = getKeyTitle(getKeyFromString(key));
+    if (title.isEmpty())
+    {
+        title = d->titles[key];
+    }
+    return title;
 }
 
 /** DocumentSynopsis **/
@@ -6670,7 +6670,7 @@ QString DocumentInfo::getKeyTitle(const QString &key) const
 DocumentSynopsis::DocumentSynopsis()
     : QDomDocument(QStringLiteral("DocumentSynopsis"))
 {
-  // void implementation, only subclassed for naming
+    // void implementation, only subclassed for naming
 }
 
 DocumentSynopsis::DocumentSynopsis(const QDomDocument &document)
@@ -6690,7 +6690,7 @@ EmbeddedFile::~EmbeddedFile()
 
 VisiblePageRect::VisiblePageRect(int page, const NormalizedRect &rectangle)
     : pageNumber(page)
-      , rect(rectangle)
+    , rect(rectangle)
 {
 }
 
