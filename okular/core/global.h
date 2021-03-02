@@ -23,7 +23,8 @@ namespace Okular
 /**
  * Describes the DRM capabilities.
  */
-enum Permission {
+enum Permission
+{
     AllowModify = 1,    ///< Allows to modify the document
     AllowCopy = 2,      ///< Allows to copy the document
     AllowPrint = 4,     ///< Allows to print the document
@@ -35,7 +36,8 @@ Q_DECLARE_FLAGS(Permissions, Permission)
 /**
  * Describes the direction of searching.
  */
-enum SearchDirection {
+enum SearchDirection
+{
     FromTop,       ///< Searching from top of the page, next result is to be found, there was no earlier search result.
     FromBottom,    ///< Searching from bottom of the page, next result is to be found, there was no earlier search result.
     NextResult,    ///< Searching for the next result on the page, earlier result should be located so we search from the last result not from the beginning of the page.
@@ -45,7 +47,8 @@ enum SearchDirection {
 /**
  * A rotation.
  */
-enum Rotation {
+enum Rotation
+{
     Rotation0 = 0,   ///< Not rotated.
     Rotation90 = 1,  ///< Rotated 90 degrees clockwise.
     Rotation180 = 2, ///< Rotated 180 degrees clockwise.
@@ -55,7 +58,8 @@ enum Rotation {
 /**
  * Describes the type of generation of objects
  */
-enum GenerationType {
+enum GenerationType
+{
     Synchronous, ///< Will create the object in a synchronous way
     Asynchronous ///< Will create the object in an asynchronous way
 };
@@ -63,7 +67,8 @@ enum GenerationType {
 /**
  * The side(s) to be considered when merging areas.
  */
-enum MergeSide {
+enum MergeSide
+{
     MergeRight = 0,  ///< Merge only if the right side of the first area intersect.
     MergeBottom = 1, ///< Merge only if the bottom side of the first area intersect.
     MergeLeft = 2,   ///< Merge only if the left side of the first area intersect.
@@ -74,7 +79,8 @@ enum MergeSide {
 /**
  * Describes the possible script types.
  */
-enum ScriptType {
+enum ScriptType
+{
     JavaScript = 0 ///< JavaScript code
 };
 

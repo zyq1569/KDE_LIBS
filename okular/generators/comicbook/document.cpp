@@ -36,11 +36,15 @@ using namespace ComicBook;
 static void imagesInArchive(const QString &prefix, const KArchiveDirectory *dir, QStringList *entries)
 {
     const QStringList entryList = dir->entries();
-    for (const QString &file : entryList) {
+    for (const QString &file : entryList)
+    {
         const KArchiveEntry *e = dir->entry(file);
-        if (e->isDirectory()) {
+        if (e->isDirectory())
+        {
             imagesInArchive(prefix + file + QLatin1Char('/'), static_cast<const KArchiveDirectory *>(e), entries);
-        } else if (e->isFile()) {
+        }
+        else if (e->isFile())
+        {
             entries->append(prefix + file);
         }
     }
@@ -67,39 +71,51 @@ bool Document::open(const QString &fileName)
     /**
      * We have a zip archive
      */
-    if (mime.inherits(QStringLiteral("application/x-cbz")) || mime.inherits(QStringLiteral("application/zip"))) {
+    if (mime.inherits(QStringLiteral("application/x-cbz")) || mime.inherits(QStringLiteral("application/zip")))
+    {
         mArchive = new KZip(fileName);
 
-        if (!processArchive()) {
+        if (!processArchive())
+        {
             return false;
         }
         /**
          * We have a TAR archive
          */
-    } else if (mime.inherits(QStringLiteral("application/x-cbt")) || mime.inherits(QStringLiteral("application/x-gzip")) || mime.inherits(QStringLiteral("application/x-tar")) || mime.inherits(QStringLiteral("application/x-bzip"))) {
+    }
+    else if (mime.inherits(QStringLiteral("application/x-cbt")) || mime.inherits(QStringLiteral("application/x-gzip")) || mime.inherits(QStringLiteral("application/x-tar")) || mime.inherits(QStringLiteral("application/x-bzip")))
+    {
         mArchive = new KTar(fileName);
 
-        if (!processArchive()) {
+        if (!processArchive())
+        {
             return false;
         }
 #ifdef WITH_K7ZIP
         /**
          * We have a 7z archive
          */
-    } else if (mime.inherits(QStringLiteral("application/x-cb7")) || mime.inherits(QStringLiteral("application/x-7z-compressed"))) {
+    }
+    else if (mime.inherits(QStringLiteral("application/x-cb7")) || mime.inherits(QStringLiteral("application/x-7z-compressed")))
+    {
         mArchive = new K7Zip(fileName);
 
-        if (!processArchive()) {
+        if (!processArchive())
+        {
             return false;
         }
 #endif
-    } else if (mime.inherits(QStringLiteral("application/x-cbr")) || mime.inherits(QStringLiteral("application/x-rar")) || mime.inherits(QStringLiteral("application/vnd.rar"))) {
-        if (!Unrar::isAvailable()) {
+    }
+    else if (mime.inherits(QStringLiteral("application/x-cbr")) || mime.inherits(QStringLiteral("application/x-rar")) || mime.inherits(QStringLiteral("application/vnd.rar")))
+    {
+        if (!Unrar::isAvailable())
+        {
             mLastErrorString = i18n("Cannot open document, neither unrar nor unarchiver were found.");
             return false;
         }
 
-        if (!Unrar::isSuitableVersionAvailable()) {
+        if (!Unrar::isSuitableVersionAvailable())
+        {
             mLastErrorString = i18n("The version of unrar on your system is not suitable for opening comicbooks.");
             return false;
         }
@@ -109,7 +125,8 @@ bool Document::open(const QString &fileName)
          */
         mUnrar = new Unrar();
 
-        if (!mUnrar->open(fileName)) {
+        if (!mUnrar->open(fileName))
+        {
             delete mUnrar;
             mUnrar = nullptr;
 
@@ -117,10 +134,13 @@ bool Document::open(const QString &fileName)
         }
 
         mEntries = mUnrar->list();
-    } else if (mime.inherits(QStringLiteral("inode/directory"))) {
+    }
+    else if (mime.inherits(QStringLiteral("inode/directory")))
+    {
         mDirectory = new Directory();
 
-        if (!mDirectory->open(fileName)) {
+        if (!mDirectory->open(fileName))
+        {
             delete mDirectory;
             mDirectory = nullptr;
 
@@ -128,7 +148,9 @@ bool Document::open(const QString &fileName)
         }
 
         mEntries = mDirectory->list();
-    } else {
+    }
+    else
+    {
         mLastErrorString = i18n("Unknown ComicBook format.");
         return false;
     }
@@ -141,7 +163,9 @@ void Document::close()
     mLastErrorString.clear();
 
     if (!(mArchive || mUnrar || mDirectory))
+    {
         return;
+    }
 
     delete mArchive;
     mArchive = nullptr;
@@ -155,7 +179,8 @@ void Document::close()
 
 bool Document::processArchive()
 {
-    if (!mArchive->open(QIODevice::ReadOnly)) {
+    if (!mArchive->open(QIODevice::ReadOnly))
+    {
         delete mArchive;
         mArchive = nullptr;
 
@@ -163,7 +188,8 @@ bool Document::processArchive()
     }
 
     const KArchiveDirectory *directory = mArchive->directory();
-    if (!directory) {
+    if (!directory)
+    {
         delete mArchive;
         mArchive = nullptr;
 
@@ -187,35 +213,51 @@ void Document::pages(QVector<Okular::Page *> *pagesVector)
     pagesVector->resize(mEntries.size());
     QImageReader reader;
     reader.setAutoTransform(true);
-    for (const QString &file : qAsConst(mEntries)) {
-        if (mArchive) {
+    for (const QString &file : qAsConst(mEntries))
+    {
+        if (mArchive)
+        {
             const KArchiveFile *entry = static_cast<const KArchiveFile *>(mArchiveDir->entry(file));
-            if (entry) {
+            if (entry)
+            {
                 dev.reset(entry->createDevice());
             }
-        } else if (mDirectory) {
+        }
+        else if (mDirectory)
+        {
             dev.reset(mDirectory->createDevice(file));
-        } else {
+        }
+        else
+        {
             dev.reset(mUnrar->createDevice(file));
         }
 
-        if (!dev.isNull()) {
+        if (!dev.isNull())
+        {
             reader.setDevice(dev.data());
-            if (reader.canRead()) {
+            if (reader.canRead())
+            {
                 QSize pageSize = reader.size();
-                if (reader.transformation() & QImageIOHandler::TransformationRotate90) {
+                if (reader.transformation() & QImageIOHandler::TransformationRotate90)
+                {
                     pageSize.transpose();
                 }
-                if (!pageSize.isValid()) {
+                if (!pageSize.isValid())
+                {
                     const QImage i = reader.read();
                     if (!i.isNull())
+                    {
                         pageSize = i.size();
+                    }
                 }
-                if (pageSize.isValid()) {
+                if (pageSize.isValid())
+                {
                     pagesVector->replace(count, new Okular::Page(count, pageSize.width(), pageSize.height(), Okular::Rotation0));
                     mPageMap.append(file);
                     count++;
-                } else {
+                }
+                else
+                {
                     qCDebug(OkularComicbookDebug) << "Ignoring" << file << "doesn't seem to be an image even if QImageReader::canRead returned true";
                 }
             }
@@ -231,17 +273,23 @@ QStringList Document::pageTitles() const
 
 QImage Document::pageImage(int page) const
 {
-    if (mArchive) {
+    if (mArchive)
+    {
         const KArchiveFile *entry = static_cast<const KArchiveFile *>(mArchiveDir->entry(mPageMap[page]));
-        if (entry) {
+        if (entry)
+        {
             std::unique_ptr<QIODevice> dev(entry->createDevice());
             QImageReader reader(dev.get());
             reader.setAutoTransform(true);
             return reader.read();
         }
-    } else if (mDirectory) {
+    }
+    else if (mDirectory)
+    {
         return QImage(mPageMap[page]);
-    } else {
+    }
+    else
+    {
         return QImage::fromData(mUnrar->contentOf(mPageMap[page]));
     }
 
