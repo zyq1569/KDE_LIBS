@@ -29,7 +29,7 @@
 // qt/kde includes
 #include <QApplication>
 #include <QContextMenuEvent>
-#include <QDialog>
+//#include <QDialog>
 #include <QDialogButtonBox>
 #include <QFile>
 #include <QFileDialog>
@@ -191,11 +191,12 @@ private:
 //{
 //    Q_OBJECT
 //    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "okularpart.json")
 //public:
 //    explicit OkularPartFactory();
 //    ~OkularPartFactory();
 //};
-OkularPartFactory::OkularPartFactory()
+OkularPartFactory::OkularPartFactory():KPluginFactory()
 {
     registerPlugin<Okular::Part>();
 }
@@ -203,7 +204,34 @@ OkularPartFactory::~OkularPartFactory()
 {
 
 }
-
+///
+//class OkularPartFactory : public KPluginFactory
+//{
+//public:
+//    static const QMetaObject staticMetaObject;
+//    virtual const QMetaObject *metaObject() const;
+//    virtual void *qt_metacast(const char *);
+//    virtual int qt_metacall(QMetaObject::Call, int, void **);
+//    static inline QString tr(const char *s, const char *c = nullptr, int n = -1)
+//    {
+//        return staticMetaObject.tr(s, c, n);
+//    }
+//    static inline QString trUtf8(const char *s, const char *c = nullptr, int n = -1)
+//    {
+//        return staticMetaObject.tr(s, c, n);
+//    }
+//private:
+//    static void qt_static_metacall(QObject *, QMetaObject::Call, int, void **);
+//    struct QPrivateSignal {};
+//public:
+//    explicit OkularPartFactory();
+//    ~OkularPartFactory();
+//};
+//OkularPartFactory::OkularPartFactory()
+//{
+//    registerPlugin<Okular::Part>();
+//}
+//OkularPartFactory::~OkularPartFactory() {}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 static QAction *actionForExportFormat(const Okular::ExportFormat &format, QObject *parent = Q_NULLPTR)
 {
@@ -2598,59 +2626,102 @@ void Part::slotHideFindBar()
 }
 
 // BEGIN go to page dialog
-class GotoPageDialog : public QDialog
+GotoPageDialog::GotoPageDialog(QWidget *p, int current, int max) : QDialog(p)
 {
-//    Q_OBJECT
-public:
-    GotoPageDialog(QWidget *p, int current, int max)
-        : QDialog(p)
-    {
-        setWindowTitle(i18n("Go to Page"));
-        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
-        connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-        connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+  setWindowTitle(i18n("Go to Page"));
+  buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-        QVBoxLayout *topLayout = new QVBoxLayout(this);
-        topLayout->setContentsMargins(6, 6, 6, 6);
-        QHBoxLayout *midLayout = new QHBoxLayout();
-        spinbox = new QSpinBox(this);
-        spinbox->setRange(1, max);
-        spinbox->setValue(current);
-        spinbox->setFocus();
+  QVBoxLayout *topLayout = new QVBoxLayout(this);
+  topLayout->setContentsMargins(6, 6, 6, 6);
+  QHBoxLayout *midLayout = new QHBoxLayout();
+  spinbox = new QSpinBox(this);
+  spinbox->setRange(1, max);
+  spinbox->setValue(current);
+  spinbox->setFocus();
 
-        slider = new QSlider(Qt::Horizontal, this);
-        slider->setRange(1, max);
-        slider->setValue(current);
-        slider->setSingleStep(1);
-        slider->setTickPosition(QSlider::TicksBelow);
-        slider->setTickInterval(max / 10);
+  slider = new QSlider(Qt::Horizontal, this);
+  slider->setRange(1, max);
+  slider->setValue(current);
+  slider->setSingleStep(1);
+  slider->setTickPosition(QSlider::TicksBelow);
+  slider->setTickInterval(max / 10);
 
-        connect(slider, &QSlider::valueChanged, spinbox, &QSpinBox::setValue);
-        connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), slider, &QSlider::setValue);
+  connect(slider, &QSlider::valueChanged, spinbox, &QSpinBox::setValue);
+  connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), slider, &QSlider::setValue);
 
-        QLabel *label = new QLabel(i18n("&Page:"), this);
-        label->setBuddy(spinbox);
-        topLayout->addWidget(label);
-        topLayout->addLayout(midLayout);
-        midLayout->addWidget(slider);
-        midLayout->addWidget(spinbox);
+  QLabel *label = new QLabel(i18n("&Page:"), this);
+  label->setBuddy(spinbox);
+  topLayout->addWidget(label);
+  topLayout->addLayout(midLayout);
+  midLayout->addWidget(slider);
+  midLayout->addWidget(spinbox);
 
-        // A little bit extra space
-        topLayout->addStretch(10);
-        topLayout->addWidget(buttonBox);
-        spinbox->setFocus();
-    }
+  // A little bit extra space
+  topLayout->addStretch(10);
+  topLayout->addWidget(buttonBox);
+  spinbox->setFocus();
+}
 
-    int getPage() const
-    {
-        return spinbox->value();
-    }
+int GotoPageDialog::getPage() const
+{
+  return spinbox->value();
+}
 
-protected:
-    QSpinBox *spinbox;
-    QSlider *slider;
-    QDialogButtonBox *buttonBox;
-};
+//class GotoPageDialog : public QDialog
+//{
+////    Q_OBJECT
+//public:
+//    GotoPageDialog(QWidget *p, int current, int max)
+//        : QDialog(p)
+//    {
+//        setWindowTitle(i18n("Go to Page"));
+//        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+//        connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+//        connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+
+//        QVBoxLayout *topLayout = new QVBoxLayout(this);
+//        topLayout->setContentsMargins(6, 6, 6, 6);
+//        QHBoxLayout *midLayout = new QHBoxLayout();
+//        spinbox = new QSpinBox(this);
+//        spinbox->setRange(1, max);
+//        spinbox->setValue(current);
+//        spinbox->setFocus();
+
+//        slider = new QSlider(Qt::Horizontal, this);
+//        slider->setRange(1, max);
+//        slider->setValue(current);
+//        slider->setSingleStep(1);
+//        slider->setTickPosition(QSlider::TicksBelow);
+//        slider->setTickInterval(max / 10);
+
+//        connect(slider, &QSlider::valueChanged, spinbox, &QSpinBox::setValue);
+//        connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), slider, &QSlider::setValue);
+
+//        QLabel *label = new QLabel(i18n("&Page:"), this);
+//        label->setBuddy(spinbox);
+//        topLayout->addWidget(label);
+//        topLayout->addLayout(midLayout);
+//        midLayout->addWidget(slider);
+//        midLayout->addWidget(spinbox);
+
+//        // A little bit extra space
+//        topLayout->addStretch(10);
+//        topLayout->addWidget(buttonBox);
+//        spinbox->setFocus();
+//    }
+
+//    int getPage() const
+//    {
+//        return spinbox->value();
+//    }
+
+//protected:
+//    QSpinBox *spinbox;
+//    QSlider *slider;
+//    QDialogButtonBox *buttonBox;
+//};
 // END go to page dialog
 
 void Part::slotGoToPage()

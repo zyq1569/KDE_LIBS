@@ -25,6 +25,11 @@
 #include <QProcess>
 #include <QUrl>
 #include <QtDBus> // krazy:exclude=includes
+#include <QDialog>
+#include <QSpinBox>
+#include <QSlider>
+#include <QDialogButtonBox>
+
 
 #include <KCompressionDevice>
 #include <KIO/Job>
@@ -87,6 +92,8 @@ namespace Okular
 {
 class BrowserExtension;
 class ExportFormat;
+
+
 
 /**
  * Describes the possible embedding modes of the part
@@ -434,7 +441,19 @@ private Q_SLOTS:
     void slotHandleActivatedSourceReference(const QString &absFileName, int line, int col, bool *handled);
 };
 
+class GotoPageDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    GotoPageDialog(QWidget *p, int current, int max);
 
+    int getPage() const;
+
+protected:
+    QSpinBox *spinbox;
+    QSlider *slider;
+    QDialogButtonBox *buttonBox;
+};
 }
 
 
@@ -442,7 +461,7 @@ class OkularPartFactory : public KPluginFactory
 {
     Q_OBJECT
     Q_INTERFACES(KPluginFactory)
-    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularpart.json")
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "okularpart.json")
 public:
     explicit OkularPartFactory();
     ~OkularPartFactory();
