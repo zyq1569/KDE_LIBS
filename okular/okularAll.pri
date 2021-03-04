@@ -45,6 +45,7 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5/ThreadWeaver \
                 $$SDK_INSTALL_PREFIX/KF5/purpose \
                 $$SDK_INSTALL_PREFIX/KF5/purposewidgets \
+                $$SDK_INSTALL_PREFIX/KF5/KWallet \
                 $$SDK_INSTALL_PREFIX/poppler\qt5 \
                 $$SDK_INSTALL_PREFIX/poppler \
                 $$SDK_INSTALL_PREFIX/openjpeg-2.3 \
