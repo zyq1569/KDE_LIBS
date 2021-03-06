@@ -4,7 +4,7 @@
 
 TEMPLATE  = lib
 TARGET    = okularpart
-DESTDIR   = bin/
+DESTDIR   = ./bin/
 QT        += core xml gui svg widgets dbus printsupport gui texttospeech network
 #network gui svg widgets printsupport concurrent dbus texttospeech
 
