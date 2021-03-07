@@ -455,17 +455,34 @@ protected:
     QDialogButtonBox *buttonBox;
 };
 }
+//K_PLUGIN_FACTORY(OkularPartFactory, registerPlugin<Okular::Part>();)
+//https://binary-factory.kde.org/job/Okular_Nightly_win64/lastSuccessfulBuild/consoleFull
+//class OkularPartFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "okularpart.json")
+//public:
+//    explicit OkularPartFactory();
+//    ~OkularPartFactory() ;
+//};
 
 
-class OkularPartFactory : public KPluginFactory
-{
-    Q_OBJECT
-    Q_INTERFACES(KPluginFactory)
-    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "okularpart.json")
-public:
-    explicit OkularPartFactory();
-    ~OkularPartFactory();
-};
+//class OkularPartFactory : public KPluginFactory
+//{
+//  Q_OBJECT
+//public:
+//  OkularPartFactory()
+//  {}
+//protected:
+//  virtual QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
+//  {
+//    const QString identifier = QLatin1String(iface) + QLatin1Char('_') + keyword;
+//    // load scripting language module from the information in identifier
+//    // and return it:
+//    return object;
+//  }
+//};
 #endif
 
 /* kate: replace-tabs on; indent-width 4; */
