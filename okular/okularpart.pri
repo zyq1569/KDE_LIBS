@@ -81,8 +81,6 @@ HEADERS +=     part/preferencesdialog.h \
                conf/settings.h \
                part/tts.h
 
-
-
 SOURCES +=     part/preferencesdialog.cpp \
                part/dlgaccessibility.cpp \
                part/dlgdebug.cpp \
