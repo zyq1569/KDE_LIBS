@@ -107,6 +107,7 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -lphonon4qt5 \
         -lKF5Bookmarks \
         -lKF5ThreadWeaver \
+        -lKF5Wallet \
 #        -llibzstd \
         -llibz \
         -llibKF5JS \
@@ -183,3 +184,12 @@ LIBS += -L$${SDK_LIB_PREFIX} \
 #ComicBookGeneratorFactory::~ComicBookGeneratorFactory()
 #{
 #}
+
+
+#############################################
+# Custom command for settings_core.h
+
+#build settings_core.h settings_core.cpp: CUSTOM_COMMAND D$:\CraftRoot\build\_\b43af741\okular-20.12.2\conf\okular_core.kcfg D$:\CraftRoot\bin\kconfig_compiler_kf5.exe D$:\CraftRoot\build\_\b43af741\okular-20.12.2\conf\settings_core.kcfgc || okularcore_autogen okularcore_autogen_timestamp_deps
+#  COMMAND = cmd.exe /C "cd /D D:\CraftRoot\build\_\b43af741\build && D:\CraftRoot\bin\kconfig_compiler_kf5.exe D:/CraftRoot/build/_/b43af741/okular-20.12.2/conf/okular_core.kcfg D:/CraftRoot/build/_/b43af741/okular-20.12.2/conf/settings_core.kcfgc -d D:/CraftRoot/build/_/b43af741/build/"
+#  DESC = Generating settings_core.h, settings_core.cpp
+#  restat = 1
