@@ -89,3 +89,4 @@ LIBS +=    -L$${DESTDIR} \
 
 include(../okularAll.pri)
 include(okular.pri)
+
