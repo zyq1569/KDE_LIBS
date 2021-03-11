@@ -25,7 +25,8 @@
  ***************************************************************************/
 
 #include "part.h"
-
+#include <KPluginFactory>
+//#include <plugininterface.h>
 // qt/kde includes
 #include <QApplication>
 #include <QContextMenuEvent>
@@ -204,6 +205,55 @@ OkularPartFactory::~OkularPartFactory()
 {
 
 }
+
+
+//class OkularPartFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//public:
+//    OkularPartFactory()
+//    {
+
+//    }
+//protected:
+//    virtual QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
+//    {
+//        const QString identifier = QLatin1String(iface) + QLatin1Char('_') + keyword;
+////    // load scripting language module from the information in identifier
+////    // and return it:
+////    return object;
+////return  KPluginFactory::create(iface,parentWidget,parent,args,keyword);
+//        QObject *obj = nullptr;
+
+////        const QList<KPluginFactoryPrivate::Plugin> candidates(d->createInstanceHash.values(keyword));
+////        // for !keyword.isEmpty() candidates.count() is 0 or 1
+
+////        for (const KPluginFactoryPrivate::Plugin &plugin : candidates)
+////        {
+////            for (const QMetaObject *current = plugin.first; current; current = current->superClass())
+////            {
+////                if (0 == qstrcmp(iface, current->className()))
+////                {
+////                    if (obj)
+////                    {
+////                        qCWarning(KCOREADDONS_DEBUG) << "ambiguous interface requested from a DSO containing more than one plugin";
+////                    }
+////                    obj = plugin.second(parentWidget, parent, args);
+////                    break;
+////                }
+////            }
+////        }
+
+////        if (obj)
+////        {
+////            emit objectCreated(obj);
+////        }
+//        return obj;
+
+//    }
+//};
+
+
 ///
 //class OkularPartFactory : public KPluginFactory
 //{
@@ -232,6 +282,11 @@ OkularPartFactory::~OkularPartFactory()
 //    registerPlugin<Okular::Part>();
 //}
 //OkularPartFactory::~OkularPartFactory() {}
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 static QAction *actionForExportFormat(const Okular::ExportFormat &format, QObject *parent = Q_NULLPTR)
 {
@@ -2628,45 +2683,45 @@ void Part::slotHideFindBar()
 // BEGIN go to page dialog
 GotoPageDialog::GotoPageDialog(QWidget *p, int current, int max) : QDialog(p)
 {
-  setWindowTitle(i18n("Go to Page"));
-  buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    setWindowTitle(i18n("Go to Page"));
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-  QVBoxLayout *topLayout = new QVBoxLayout(this);
-  topLayout->setContentsMargins(6, 6, 6, 6);
-  QHBoxLayout *midLayout = new QHBoxLayout();
-  spinbox = new QSpinBox(this);
-  spinbox->setRange(1, max);
-  spinbox->setValue(current);
-  spinbox->setFocus();
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setContentsMargins(6, 6, 6, 6);
+    QHBoxLayout *midLayout = new QHBoxLayout();
+    spinbox = new QSpinBox(this);
+    spinbox->setRange(1, max);
+    spinbox->setValue(current);
+    spinbox->setFocus();
 
-  slider = new QSlider(Qt::Horizontal, this);
-  slider->setRange(1, max);
-  slider->setValue(current);
-  slider->setSingleStep(1);
-  slider->setTickPosition(QSlider::TicksBelow);
-  slider->setTickInterval(max / 10);
+    slider = new QSlider(Qt::Horizontal, this);
+    slider->setRange(1, max);
+    slider->setValue(current);
+    slider->setSingleStep(1);
+    slider->setTickPosition(QSlider::TicksBelow);
+    slider->setTickInterval(max / 10);
 
-  connect(slider, &QSlider::valueChanged, spinbox, &QSpinBox::setValue);
-  connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), slider, &QSlider::setValue);
+    connect(slider, &QSlider::valueChanged, spinbox, &QSpinBox::setValue);
+    connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), slider, &QSlider::setValue);
 
-  QLabel *label = new QLabel(i18n("&Page:"), this);
-  label->setBuddy(spinbox);
-  topLayout->addWidget(label);
-  topLayout->addLayout(midLayout);
-  midLayout->addWidget(slider);
-  midLayout->addWidget(spinbox);
+    QLabel *label = new QLabel(i18n("&Page:"), this);
+    label->setBuddy(spinbox);
+    topLayout->addWidget(label);
+    topLayout->addLayout(midLayout);
+    midLayout->addWidget(slider);
+    midLayout->addWidget(spinbox);
 
-  // A little bit extra space
-  topLayout->addStretch(10);
-  topLayout->addWidget(buttonBox);
-  spinbox->setFocus();
+    // A little bit extra space
+    topLayout->addStretch(10);
+    topLayout->addWidget(buttonBox);
+    spinbox->setFocus();
 }
 
 int GotoPageDialog::getPage() const
 {
-  return spinbox->value();
+    return spinbox->value();
 }
 
 //class GotoPageDialog : public QDialog

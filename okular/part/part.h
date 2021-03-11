@@ -457,15 +457,15 @@ protected:
 }
 //K_PLUGIN_FACTORY(OkularPartFactory, registerPlugin<Okular::Part>();)
 //https://binary-factory.kde.org/job/Okular_Nightly_win64/lastSuccessfulBuild/consoleFull
-//class OkularPartFactory : public KPluginFactory
-//{
-//    Q_OBJECT
-//    Q_INTERFACES(KPluginFactory)
-//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "okularpart.json")
-//public:
-//    explicit OkularPartFactory();
-//    ~OkularPartFactory() ;
-//};
+class OkularPartFactory : public KPluginFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(KPluginFactory)
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid) // FILE "okularpart.json")
+public:
+    explicit OkularPartFactory();
+    ~OkularPartFactory() ;
+};
 
 
 //class OkularPartFactory : public KPluginFactory
