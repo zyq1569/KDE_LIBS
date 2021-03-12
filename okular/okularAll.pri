@@ -118,6 +118,10 @@ LIBS += -L$${SDK_LIB_PREFIX} \
         -llibtiffxx \
         -llibfxstiff \
         -llibjpeg \
+        -llibdjvulibre \
+        -llibfreetype \
+        -llibturbojpeg \
+        -llibpcre \
         -lws2_32 \
         -lnetapi32 \
         -lkernel32 \
