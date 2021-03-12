@@ -5,6 +5,9 @@
 SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
 SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
 
+#SDK_INSTALL_PREFIX = D:/CraftRoot/include
+#SDK_LIB_PREFIX     = D:/CraftRoot/lib/
+
 CONFIG += debug_and_release
 CONFIG += C++ 14
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
