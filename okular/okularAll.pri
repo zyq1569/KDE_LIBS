@@ -6,7 +6,7 @@ SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
 SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
 
 CONFIG += debug_and_release
-#CONFIG += C++ 11
+CONFIG += C++ 14
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
                 $$SDK_INSTALL_PREFIX/KF5/KrossUi \
