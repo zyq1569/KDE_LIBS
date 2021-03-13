@@ -21,4 +21,4 @@ SOURCES +=  generator_pdf.cpp \
             pdfsignatureutils.cpp\
             conf/pdfsettings.cpp
 
-FORMS +=  conf/pdfsettingswidget.ui
+FORMS  +=  conf/pdfsettingswidget.ui
