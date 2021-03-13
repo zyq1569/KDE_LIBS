@@ -32,8 +32,29 @@
 
 #include <core/page.h>
 
-OKULAR_EXPORT_PLUGIN(KIMGIOGenerator, "libokularGenerator_kimgio.json")
+//OKULAR_EXPORT_PLUGIN(KIMGIOGenerator, "libokularGenerator_kimgio.json")
 
+
+//class KIMGIOGeneratorFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE jsonFile)
+//public:
+//    explicit KIMGIOGeneratorFactory();
+//    ~KIMGIOGeneratorFactory();
+//};
+
+KIMGIOGeneratorFactory::KIMGIOGeneratorFactory()
+{
+    registerPlugin<KIMGIOGenerator >();
+}
+KIMGIOGeneratorFactory::~KIMGIOGeneratorFactory()
+{
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 KIMGIOGenerator::KIMGIOGenerator(QObject *parent, const QVariantList &args)
     : Generator(parent, args)
 {
@@ -159,4 +180,4 @@ Okular::DocumentInfo KIMGIOGenerator::generateDocumentInfo(const QSet<Okular::Do
     return docInfo;
 }
 
-#include "generator_kimgio.moc"
+//#include "generator_kimgio.moc"

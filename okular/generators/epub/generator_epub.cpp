@@ -10,13 +10,31 @@
 #include "generator_epub.h"
 
 #include "converter.h"
-
+#include <kpluginfactory.h>
 #include <KAboutData>
 #include <KConfigDialog>
 #include <KLocalizedString>
 
-OKULAR_EXPORT_PLUGIN(EPubGenerator, "libokularGenerator_epub.json")
+//OKULAR_EXPORT_PLUGIN(EPubGenerator, "libokularGenerator_epub.json")
+//class EPubGeneratorFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_epub.json")
+//public:
+//    explicit EPubGeneratorFactory();
+//    ~EPubGeneratorFactory();
+//};
 
+EPubGeneratorFactory::EPubGeneratorFactory()
+{
+    registerPlugin<EPubGenerator >();
+}
+EPubGeneratorFactory::~EPubGeneratorFactory()
+{
+
+}
+////////////////////////////////////////////////////////////////////////
 EPubGenerator::EPubGenerator(QObject *parent, const QVariantList &args)
     : Okular::TextDocumentGenerator(new Epub::Converter, QStringLiteral("okular_epub_generator_settings"), parent, args)
 {
@@ -33,4 +51,4 @@ void EPubGenerator::addPages(KConfigDialog *dlg)
     dlg->addPage(widget, generalSettings(), i18n("EPub"), QStringLiteral("application-epub+zip"), i18n("EPub Backend Configuration"));
 }
 
-#include "generator_epub.moc"
+//#include "generator_epub.moc"

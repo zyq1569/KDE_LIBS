@@ -18,7 +18,27 @@
 
 #include <QCheckBox>
 
-OKULAR_EXPORT_PLUGIN(MarkdownGenerator, "libokularGenerator_md.json")
+//OKULAR_EXPORT_PLUGIN(MarkdownGenerator, "libokularGenerator_md.json")
+
+//class MarkdownGeneratorFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularGenerator_md.json")
+//public:
+//    explicit MarkdownGeneratorFactory();
+//    ~MarkdownGeneratorFactory();
+//};
+
+MarkdownGeneratorFactory::MarkdownGeneratorFactory()
+{
+    registerPlugin<MarkdownGenerator >();
+}
+
+MarkdownGeneratorFactory::~MarkdownGeneratorFactory()
+{
+
+}
 
 MarkdownGenerator::MarkdownGenerator(QObject *parent, const QVariantList &args)
     : Okular::TextDocumentGenerator(new Markdown::Converter, QStringLiteral("okular_markdown_generator_settings"), parent, args)
@@ -63,4 +83,4 @@ void MarkdownGenerator::addPages(KConfigDialog *dlg)
 
 Q_LOGGING_CATEGORY(OkularMdDebug, "org.kde.okular.generators.md", QtWarningMsg)
 
-#include "generator_md.moc"
+//#include "generator_md.moc"

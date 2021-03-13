@@ -14,7 +14,27 @@
 #include <KConfigDialog>
 #include <KLocalizedString>
 
-OKULAR_EXPORT_PLUGIN(MobiGenerator, "libokularGenerator_mobi.json")
+//OKULAR_EXPORT_PLUGIN(MobiGenerator, "libokularGenerator_mobi.json")
+
+//define K_PLUGIN_FACTORY_WITH_JSON(name, jsonFile, pluginRegistrations)
+//class MobiGeneratorFactory : public KPluginFactory
+//{
+//    Q_OBJECT
+//    Q_INTERFACES(KPluginFactory)
+//    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularGenerator_mobi.json")
+//public:
+//    explicit MobiGeneratorFactory();
+//    ~MobiGeneratorFactory();
+//};
+
+MobiGeneratorFactory::MobiGeneratorFactory()
+{
+    registerPlugin<MobiGenerator >();
+}
+MobiGeneratorFactory::~MobiGeneratorFactory()
+{
+
+}
 
 MobiGenerator::MobiGenerator(QObject *parent, const QVariantList &args)
     : Okular::TextDocumentGenerator(new Mobi::Converter, QStringLiteral("okular_mobi_generator_settings"), parent, args)
@@ -28,4 +48,4 @@ void MobiGenerator::addPages(KConfigDialog *dlg)
     dlg->addPage(widget, generalSettings(), i18n("Mobipocket"), QStringLiteral("application-x-mobipocket-ebook"), i18n("Mobipocket Backend Configuration"));
 }
 
-#include "generator_mobi.moc"
+//#include "generator_mobi.moc"

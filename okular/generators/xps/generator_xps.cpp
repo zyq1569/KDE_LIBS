@@ -39,6 +39,7 @@
 //OKULAR_EXPORT_PLUGIN(XpsGenerator, "libokularGenerator_xps.json")
 
 
+
 XpsGeneratorFactory::XpsGeneratorFactory()
 {
     registerPlugin<XpsGenerator >();

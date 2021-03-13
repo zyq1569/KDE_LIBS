@@ -43,11 +43,9 @@
 //OKULAR_EXPORT_PLUGIN(DviGenerator, "libokularGenerator_dvi.json")
 
 
-
-
 DviGeneratorFactory::DviGeneratorFactory()
 {
-    registerPlugin<DviGenerator >();
+    registerPlugin<DviGenerator>();
 }
 DviGeneratorFactory::~DviGeneratorFactory()
 {
