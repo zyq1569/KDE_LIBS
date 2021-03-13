@@ -50,4 +50,13 @@ private:
     Okular::DocumentInfo docInfo;
 };
 
+class KIMGIOGeneratorFactory : public KPluginFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(KPluginFactory)
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularGenerator_kimgio.json")
+public:
+    explicit KIMGIOGeneratorFactory();
+    ~KIMGIOGeneratorFactory();
+};
 #endif

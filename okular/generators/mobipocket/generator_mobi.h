@@ -25,4 +25,14 @@ public:
     void addPages(KConfigDialog *dlg) override;
 };
 
+class MobiGeneratorFactory : public KPluginFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(KPluginFactory)
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularGenerator_mobi.json")
+public:
+    explicit MobiGeneratorFactory();
+    ~MobiGeneratorFactory();
+};
+
 #endif

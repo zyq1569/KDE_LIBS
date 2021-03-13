@@ -29,4 +29,14 @@ private:
     bool m_wasFancyPantsConfigEnabled = true;
 };
 
+
+class MarkdownGeneratorFactory : public KPluginFactory
+{
+    Q_OBJECT
+    Q_INTERFACES(KPluginFactory)
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "libokularGenerator_md.json")
+public:
+    explicit MarkdownGeneratorFactory();
+    ~MarkdownGeneratorFactory();
+};
 #endif
