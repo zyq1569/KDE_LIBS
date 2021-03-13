@@ -16,6 +16,10 @@ INCLUDEPATH +=  ../ \
                 ../../core
 #                ../../../../../inst/zlib-1.2.11
 
+MOC_DIR     += DESTDIR/tmp
+OBJECTS_DIR += DESTDIR/tmp
+UI_DIR      += DESTDIR/tmp
+RCC_DIR     += DESTDIR/tmp
 
 include(../../okularAll.pri)
 include(okular_comicbook.pri)

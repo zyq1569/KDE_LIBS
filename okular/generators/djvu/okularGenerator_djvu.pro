@@ -21,6 +21,10 @@ INCLUDEPATH += ../ \
 LIBS +=    -L$${LIBDIR} \
              -lOkularCore
 
+MOC_DIR     += DESTDIR/tmp
+OBJECTS_DIR += DESTDIR/tmp
+UI_DIR      += DESTDIR/tmp
+RCC_DIR     += DESTDIR/tmp
 
 include(../../okularAll.pri)
 include(okularGenerator_djvu.pri)
