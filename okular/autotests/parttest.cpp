@@ -23,7 +23,7 @@
 #include "../part/sidebar.h"
 #include "../part/toc.h"
 #include "../part/toggleactionmenu.h"
-#include "../settings.h"
+#include "../conf/settings.h"
 #include "closedialoghelper.h"
 
 #include "../generators/poppler/config-okular-poppler.h"
@@ -48,69 +48,69 @@
 
 namespace Okular
 {
-class PartTest : public QObject
-{
-    Q_OBJECT
+//class PartTest : public QObject
+//{
+//    Q_OBJECT
 
-    static bool openDocument(Okular::Part *part, const QString &filePath);
+//    static bool openDocument(Okular::Part *part, const QString &filePath);
 
-signals:
-    void urlHandler(const QUrl &url); // NOLINT(readability-inconsistent-declaration-parameter-name)
+//signals:
+//    void urlHandler(const QUrl &url); // NOLINT(readability-inconsistent-declaration-parameter-name)
 
-private slots:
-    void testReload();
-    void testCanceledReload();
-    void testTOCReload();
-    void testForwardPDF();
-    void testForwardPDF_data();
-    void testGeneratorPreferences();
-    void testSelectText();
-    void testClickInternalLink();
-    void testScrollBarAndMouseWheel();
-    void testOpenUrlArguments();
-    void test388288();
-    void testSaveAs();
-    void testSaveAs_data();
-    void testSaveAsToNonExistingPath();
-    void testSaveAsToSymlink();
-    void testSaveIsSymlink();
-    void testSidebarItemAfterSaving();
-    void testViewModeSavingPerFile();
-    void testSaveAsUndoStackAnnotations();
-    void testSaveAsUndoStackAnnotations_data();
-    void testSaveAsUndoStackForms();
-    void testSaveAsUndoStackForms_data();
-    void testMouseMoveOverLinkWhileInSelectionMode();
-    void testClickUrlLinkWhileInSelectionMode();
-    void testeTextSelectionOverAndAcrossLinks_data();
-    void testeTextSelectionOverAndAcrossLinks();
-    void testClickUrlLinkWhileLinkTextIsSelected();
-    void testRClickWhileLinkTextIsSelected();
-    void testRClickOverLinkWhileLinkTextIsSelected();
-    void testRClickOnSelectionModeShoulShowFollowTheLinkMenu();
-    void testClickAnywhereAfterSelectionShouldUnselect();
-    void testeRectSelectionStartingOnLinks();
-    void testCheckBoxReadOnly();
-    void testCrashTextEditDestroy();
-    void testAnnotWindow();
-    void testAdditionalActionTriggers();
-    void testTypewriterAnnotTool();
-    void testJumpToPage();
-    void testOpenAtPage();
-    void testForwardBackwardNavigation();
-    void testTabletProximityBehavior();
-    void testOpenPrintPreview();
-    void testMouseModeMenu();
-    void testFullScreenRequest();
-    void testZoomInFacingPages();
+//private slots:
+//    void testReload();
+//    void testCanceledReload();
+//    void testTOCReload();
+//    void testForwardPDF();
+//    void testForwardPDF_data();
+//    void testGeneratorPreferences();
+//    void testSelectText();
+//    void testClickInternalLink();
+//    void testScrollBarAndMouseWheel();
+//    void testOpenUrlArguments();
+//    void test388288();
+//    void testSaveAs();
+//    void testSaveAs_data();
+//    void testSaveAsToNonExistingPath();
+//    void testSaveAsToSymlink();
+//    void testSaveIsSymlink();
+//    void testSidebarItemAfterSaving();
+//    void testViewModeSavingPerFile();
+//    void testSaveAsUndoStackAnnotations();
+//    void testSaveAsUndoStackAnnotations_data();
+//    void testSaveAsUndoStackForms();
+//    void testSaveAsUndoStackForms_data();
+//    void testMouseMoveOverLinkWhileInSelectionMode();
+//    void testClickUrlLinkWhileInSelectionMode();
+//    void testeTextSelectionOverAndAcrossLinks_data();
+//    void testeTextSelectionOverAndAcrossLinks();
+//    void testClickUrlLinkWhileLinkTextIsSelected();
+//    void testRClickWhileLinkTextIsSelected();
+//    void testRClickOverLinkWhileLinkTextIsSelected();
+//    void testRClickOnSelectionModeShoulShowFollowTheLinkMenu();
+//    void testClickAnywhereAfterSelectionShouldUnselect();
+//    void testeRectSelectionStartingOnLinks();
+//    void testCheckBoxReadOnly();
+//    void testCrashTextEditDestroy();
+//    void testAnnotWindow();
+//    void testAdditionalActionTriggers();
+//    void testTypewriterAnnotTool();
+//    void testJumpToPage();
+//    void testOpenAtPage();
+//    void testForwardBackwardNavigation();
+//    void testTabletProximityBehavior();
+//    void testOpenPrintPreview();
+//    void testMouseModeMenu();
+//    void testFullScreenRequest();
+//    void testZoomInFacingPages();
 
-private:
-    void simulateMouseSelection(double startX, double startY, double endX, double endY, QWidget *target);
-};
+//private:
+//    void simulateMouseSelection(double startX, double startY, double endX, double endY, QWidget *target);
+//};
 
 class PartThatHijacksQueryClose : public Okular::Part
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
     PartThatHijacksQueryClose(QWidget *parentWidget, QObject *parent, const QVariantList &args)
         : Okular::Part(parentWidget, parent, args)
@@ -128,9 +128,13 @@ public:
     bool queryClose() override
     {
         if (behavior == PassThru)
+        {
             return Okular::Part::queryClose();
+        }
         else // ReturnTrue or ReturnFalse
+        {
             return (behavior == ReturnTrue);
+        }
     }
 
 private:
@@ -201,12 +205,14 @@ void PartTest::testForwardPDF()
     process.setWorkingDirectory(workDir.path());
 
     const QString pdflatexPath(QStandardPaths::findExecutable(QStringLiteral("pdflatex")));
-    if (pdflatexPath.isEmpty()) {
+    if (pdflatexPath.isEmpty())
+    {
         QFAIL("pdflatex executable not found, but needed for the test. Try installing the respective TeXLive packages.");
     }
     process.start(pdflatexPath, QStringList() << QStringLiteral("-synctex=1") << QStringLiteral("-interaction=nonstopmode") << texDestination);
     bool started = process.waitForStarted();
-    if (!started) {
+    if (!started)
+    {
         qDebug() << "start error:" << process.error();
         qDebug() << "start stdout:" << process.readAllStandardOutput();
         qDebug() << "start stderr:" << process.readAllStandardError();
@@ -214,7 +220,8 @@ void PartTest::testForwardPDF()
     QVERIFY(started);
 
     process.waitForFinished();
-    if (process.exitStatus() != QProcess::NormalExit || process.exitCode() != 0) {
+    if (process.exitStatus() != QProcess::NormalExit || process.exitCode() != 0)
+    {
         qDebug() << "exit error:" << process.error() << "status" << process.exitStatus() << "code" << process.exitCode();
         qDebug() << "exit stdout:" << process.readAllStandardOutput();
         qDebug() << "exit stderr:" << process.readAllStandardError();
@@ -553,7 +560,8 @@ void PartTest::testRClickWhileLinkTextIsSelected()
     // the menu disappear
     PageView *view = part.m_pageView;
     bool menuClosed = false;
-    QTimer::singleShot(2000, view, [view, &menuClosed]() {
+    QTimer::singleShot(2000, view, [view, &menuClosed]()
+    {
         // check if popup menu is active and visible
         QMenu *menu = qobject_cast<QMenu *>(view->findChild<QMenu *>(QStringLiteral("PopupMenu")));
         QVERIFY(menu);
@@ -619,7 +627,8 @@ void PartTest::testRClickOverLinkWhileLinkTextIsSelected()
     // the menu disappear
     PageView *view = part.m_pageView;
     bool menuClosed = false;
-    QTimer::singleShot(2000, view, [view, &menuClosed]() {
+    QTimer::singleShot(2000, view, [view, &menuClosed]()
+    {
         // check if popup menu is active and visible
         QMenu *menu = qobject_cast<QMenu *>(view->findChild<QMenu *>(QStringLiteral("PopupMenu")));
         QVERIFY(menu);
@@ -674,7 +683,8 @@ void PartTest::testRClickOnSelectionModeShoulShowFollowTheLinkMenu()
     // the menu disappear
     PageView *view = part.m_pageView;
     bool menuClosed = false;
-    QTimer::singleShot(2000, view, [view, &menuClosed]() {
+    QTimer::singleShot(2000, view, [view, &menuClosed]()
+    {
         // check if popup menu is active and visible
         QMenu *menu = qobject_cast<QMenu *>(view->findChild<QMenu *>(QStringLiteral("PopupMenu")));
         QVERIFY(menu);
@@ -775,7 +785,8 @@ void PartTest::testeRectSelectionStartingOnLinks()
     // the menu disappear
     PageView *view = part.m_pageView;
     bool menuClosed = false;
-    QTimer::singleShot(2000, view, [view, &menuClosed]() {
+    QTimer::singleShot(2000, view, [view, &menuClosed]()
+    {
         QApplication::clipboard()->clear();
 
         // check if popup menu is active and visible
@@ -808,7 +819,8 @@ void PartTest::simulateMouseSelection(double startX, double startY, double endX,
     QTestEventList events;
     events.addMouseMove(QPoint(startX, startY));
     events.addMousePress(Qt::LeftButton, Qt::NoModifier, QPoint(startX, startY));
-    for (int i = 0; i < steps - 1; ++i) {
+    for (int i = 0; i < steps - 1; ++i)
+    {
         events.addMouseMove(QPoint(startX + i * diffXStep, startY + i * diffYStep));
         events.addDelay(100);
     }
@@ -939,8 +951,10 @@ void PartTest::testSaveAs()
         part.m_document->addPageAnnotation(0, annot);
         annotName = annot->uniqueName();
 
-        if (canSwapBackingFile) {
-            if (!nativelySupportsAnnotations) {
+        if (canSwapBackingFile)
+        {
+            if (!nativelySupportsAnnotations)
+            {
                 closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
             }
             QVERIFY(part.saveAs(QUrl::fromLocalFile(nativeDirectSave.fileName()), Part::NoSaveAsFlags));
@@ -949,13 +963,16 @@ void PartTest::testSaveAs()
             // so we want to give her a last chance to save on close with the "you have changes dialog"
             QCOMPARE(part.isModified(), !nativelySupportsAnnotations);
             QVERIFY(part.saveAs(QUrl::fromLocalFile(archiveSave.fileName()), Part::SaveAsOkularArchive));
-        } else {
+        }
+        else
+        {
             // We need to save to archive first otherwise we lose the annotation
 
             closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::Yes)); // this is the "you're going to lose the undo/redo stack" dialog
             QVERIFY(part.saveAs(QUrl::fromLocalFile(archiveSave.fileName()), Part::SaveAsOkularArchive));
 
-            if (!nativelySupportsAnnotations) {
+            if (!nativelySupportsAnnotations)
+            {
                 closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
             }
             QVERIFY(part.saveAs(QUrl::fromLocalFile(nativeDirectSave.fileName()), Part::NoSaveAsFlags));
@@ -974,12 +991,14 @@ void PartTest::testSaveAs()
         QCOMPARE(part.m_document->page(0)->annotations().size(), 1);
         QCOMPARE(part.m_document->page(0)->annotations().first()->uniqueName(), annotName);
 
-        if (!nativelySupportsAnnotations) {
+        if (!nativelySupportsAnnotations)
+        {
             closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
         }
         QVERIFY(part.saveAs(QUrl::fromLocalFile(nativeFromArchiveFile.fileName()), Part::NoSaveAsFlags));
 
-        if (canSwapBackingFile && !nativelySupportsAnnotations) {
+        if (canSwapBackingFile && !nativelySupportsAnnotations)
+        {
             // For backends that don't support annotations natively we mark the part as still modified
             // after a save because we keep the annotation around but it will get lost if the user closes the app
             // so we want to give her a last chance to save on close with the "you have changes dialog"
@@ -998,7 +1017,9 @@ void PartTest::testSaveAs()
 
         QCOMPARE(part.m_document->page(0)->annotations().size(), nativelySupportsAnnotations ? 1 : 0);
         if (nativelySupportsAnnotations)
+        {
             QCOMPARE(part.m_document->page(0)->annotations().first()->uniqueName(), annotName);
+        }
 
         part.closeUrl();
     }
@@ -1011,7 +1032,9 @@ void PartTest::testSaveAs()
 
         QCOMPARE(part.m_document->page(0)->annotations().size(), nativelySupportsAnnotations ? 1 : 0);
         if (nativelySupportsAnnotations)
+        {
             QCOMPARE(part.m_document->page(0)->annotations().first()->uniqueName(), annotName);
+        }
 
         part.closeUrl();
     }
@@ -1115,13 +1138,15 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->addPageAnnotation(0, annot);
     QString annotName = annot->uniqueName();
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
 
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile1.fileName()), saveFlags));
 
-    if (!canSwapBackingFile) {
+    if (!canSwapBackingFile)
+    {
         // The undo/redo stack gets lost if you can not swap the backing file
         QVERIFY(!part.m_document->canUndo());
         QVERIFY(!part.m_document->canRedo());
@@ -1141,7 +1166,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->redo();
     QVERIFY(!part.m_document->canRedo());
 
-    if (nativelySupportsAnnotations) {
+    if (nativelySupportsAnnotations)
+    {
         // If the annots are provided by the backend we need to refetch the pointer after save
         annot = part.m_document->page(0)->annotation(annotName);
         QVERIFY(annot);
@@ -1160,7 +1186,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     QCOMPARE(part.m_document->page(0)->annotations().count(), 1);
 
     // Check we can still undo the annot add after save
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile2.fileName()), saveFlags));
@@ -1176,7 +1203,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     QVERIFY(part.m_document->canUndo());
     QVERIFY(part.m_document->canRedo());
 
-    if (nativelySupportsAnnotations) {
+    if (nativelySupportsAnnotations)
+    {
         // If the annots are provided by the backend we need to refetch the pointer after save
         annot = part.m_document->page(0)->annotation(annotName);
         QVERIFY(annot);
@@ -1189,7 +1217,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->modifyPageAnnotationProperties(0, annot);
 
     // Now check we can still undo/redo/save at all the intermediate states and things still work
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile2.fileName()), saveFlags));
@@ -1197,7 +1226,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->undo();
     QVERIFY(part.m_document->canUndo());
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile1.fileName()), saveFlags));
@@ -1205,7 +1235,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->undo();
     QVERIFY(part.m_document->canUndo());
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile2.fileName()), saveFlags));
@@ -1213,7 +1244,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->undo();
     QVERIFY(part.m_document->canUndo());
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile1.fileName()), saveFlags));
@@ -1228,7 +1260,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->redo();
     QVERIFY(part.m_document->canRedo());
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile2.fileName()), saveFlags));
@@ -1236,7 +1269,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->redo();
     QVERIFY(part.m_document->canRedo());
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile1.fileName()), saveFlags));
@@ -1244,7 +1278,8 @@ void PartTest::testSaveAsUndoStackAnnotations()
     part.m_document->redo();
     QVERIFY(part.m_document->canRedo());
 
-    if (!nativelySupportsAnnotations && !saveToArchive) {
+    if (!nativelySupportsAnnotations && !saveToArchive)
+    {
         closeDialogHelper.reset(new TestingUtils::CloseDialogHelper(&part, QDialogButtonBox::No)); // this is the "you're going to lose the annotations" dialog
     }
     QVERIFY(part.saveAs(QUrl::fromLocalFile(saveFile2.fileName()), saveFlags));
@@ -1292,22 +1327,30 @@ void PartTest::testSaveAsUndoStackForms()
     part.openDocument(file);
 
     const QLinkedList<Okular::FormField *> pageFormFields = part.m_document->page(0)->formFields();
-    for (FormField *ff : pageFormFields) {
-        if (ff->id() == 65537) {
+    for (FormField *ff : pageFormFields)
+    {
+        if (ff->id() == 65537)
+        {
             QCOMPARE(ff->type(), FormField::FormText);
             FormFieldText *fft = static_cast<FormFieldText *>(ff);
             part.m_document->editFormText(0, fft, QStringLiteral("BlaBla"), 6, 0, 0);
-        } else if (ff->id() == 65538) {
+        }
+        else if (ff->id() == 65538)
+        {
             QCOMPARE(ff->type(), FormField::FormButton);
             FormFieldButton *ffb = static_cast<FormFieldButton *>(ff);
             QCOMPARE(ffb->buttonType(), FormFieldButton::Radio);
             part.m_document->editFormButtons(0, QList<FormFieldButton *>() << ffb, QList<bool>() << true);
-        } else if (ff->id() == 65542) {
+        }
+        else if (ff->id() == 65542)
+        {
             QCOMPARE(ff->type(), FormField::FormChoice);
             FormFieldChoice *ffc = static_cast<FormFieldChoice *>(ff);
             QCOMPARE(ffc->choiceType(), FormFieldChoice::ListBox);
             part.m_document->editFormList(0, ffc, QList<int>() << 1);
-        } else if (ff->id() == 65543) {
+        }
+        else if (ff->id() == 65543)
+        {
             QCOMPARE(ff->type(), FormField::FormChoice);
             FormFieldChoice *ffc = static_cast<FormFieldChoice *>(ff);
             QCOMPARE(ffc->choiceType(), FormFieldChoice::ComboBox);
@@ -1449,7 +1492,8 @@ void PartTest::testCheckBoxReadOnly()
     // CBMakeRW, CBMakeRO, TargetDefaultRO, TargetDefaultRW
 
     const QLinkedList<Okular::FormField *> pageFormFields = page->formFields();
-    for (Okular::FormField *ff : pageFormFields) {
+    for (Okular::FormField *ff : pageFormFields)
+    {
         fields.insert(ff->name(), static_cast<Okular::FormField *>(ff));
     }
 
@@ -1525,7 +1569,8 @@ void PartTest::testCheckBoxReadOnly()
 
     {
         const QLinkedList<Okular::FormField *> pageFormFields = page->formFields();
-        for (Okular::FormField *ff : pageFormFields) {
+        for (Okular::FormField *ff : pageFormFields)
+        {
             fields.insert(ff->name(), static_cast<Okular::FormField *>(ff));
         }
     }
@@ -1610,9 +1655,12 @@ void PartTest::testAnnotWindow()
     // Verify that the first window is hidden covered by the second, which is visible
     QList<QFrame *> lstWin = part.m_pageView->findChildren<QFrame *>(QStringLiteral("AnnotWindow"));
     QFrame *win2;
-    if (lstWin[0] == win1) {
+    if (lstWin[0] == win1)
+    {
         win2 = lstWin[1];
-    } else {
+    }
+    else
+    {
         win2 = lstWin[0];
     }
     QVERIFY(win1->visibleRegion().isEmpty());
@@ -1681,7 +1729,8 @@ void PartTest::testAdditionalActionTriggers()
     // <trigger_name>_mouse_target
     const Okular::Page *page = part.m_document->page(0);
     const QLinkedList<Okular::FormField *> pageFormFields = page->formFields();
-    for (Okular::FormField *ff : pageFormFields) {
+    for (Okular::FormField *ff : pageFormFields)
+    {
         fields.insert(ff->name(), static_cast<Okular::FormField *>(ff));
     }
 
@@ -2021,7 +2070,8 @@ void PartTest::testZoomInFacingPages()
     part.widget()->show();
     QVERIFY(QTest::qWaitForWindowExposed(part.widget()));
     facingAction->trigger();
-    while (zoomSelectAction->currentText() != "12%") {
+    while (zoomSelectAction->currentText() != "12%")
+    {
         QVERIFY(QMetaObject::invokeMethod(part.m_pageView, "slotZoomOut"));
     }
     QTRY_VERIFY(part.m_document->page(0)->hasPixmap(part.m_pageView));
@@ -2039,7 +2089,8 @@ int main(int argc, char *argv[])
 {
     // Force consistent locale
     QLocale locale(QStringLiteral("en_US.UTF-8"));
-    if (locale == QLocale::c()) { // This is the way to check if the above worked
+    if (locale == QLocale::c())   // This is the way to check if the above worked
+    {
         locale = QLocale(QLocale::English, QLocale::UnitedStates);
     }
 
@@ -2072,4 +2123,4 @@ int main(int argc, char *argv[])
     return QTest::qExec(&test, argc, argv);
 }
 
-#include "parttest.moc"
+//#include "parttest.moc"
