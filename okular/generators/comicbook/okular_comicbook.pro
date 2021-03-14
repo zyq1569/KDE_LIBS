@@ -15,6 +15,9 @@ INCLUDEPATH +=  ../ \
                 ../../core/synctex \
                 ../../core
 
+LIBS +=    -L$${DESTDIR} \
+            -lokularcore
+
 
 UI_DIR       = DESTDIR/tmp/ui
 MOC_DIR      = DESTDIR/tmp/moc

@@ -19,8 +19,8 @@ INCLUDEPATH +=  ../ \
 
 
 LIBS +=     -L$${LIBDIR} \
-            -lokularcore \
-            -lokular_comicbook
+            -lokular_comicbook \
+            -lokularcore
 
 UI_DIR       = DESTDIR/tmp/ui
 MOC_DIR      = DESTDIR/tmp/moc
