@@ -87,10 +87,10 @@ Shell::Shell(const QString &serializedOptions)
     // name which is a bad idea usually.. but it's alright in this
     // case since our Part is made for this Shell
     KPluginLoader loader(QStringLiteral("okularpart"));
-    if (!loader.isLoaded())
-    {
-        KMessageBox::error(this, i18n("Unable to loader the Okular component: %1", loader.errorString()));
-    }
+//    if (!loader.isLoaded()) //for test
+//    {
+//        KMessageBox::warningYesNoCancel(this, i18n("Unable to loader the Okular component: %1", loader.errorString()));
+//    }
     m_partFactory = loader.factory();
     if (!m_partFactory)
     {
