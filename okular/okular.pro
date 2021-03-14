@@ -20,5 +20,6 @@ SUBDIRS +=  shell/okular.pro \
             generators/txt/okularGenerator_txt.pro \
             generators/xps/okularGenerator_xps.pro \
             generators/comicbook/okular_comicbook.pro \
+            autotests/parttest.pro \
             okularcore.pro \
             okularpart.pro
