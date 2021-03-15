@@ -96,3 +96,5 @@ OBJECTS_DIR += DESTDIR/tmp/obj
 include(../okularAll.pri)
 include(okular.pri)
 
+
+

@@ -85,22 +85,28 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     // see if we are starting with session management
-    if (app.isSessionRestored()) {
+    if (app.isSessionRestored())
+    {
         kRestoreMainWindows<Shell>();
-    } else {
+    }
+    else
+    {
         // no session.. just start up normally
         QStringList paths;
         for (int i = 0; i < parser.positionalArguments().count(); ++i)
+        {
             paths << parser.positionalArguments().at(i);
+        }
         Okular::Status status = Okular::main(paths, ShellUtils::serializeOptions(parser));
-        switch (status) {
-        case Okular::Error:
-            return -1;
-        case Okular::AttachedOtherProcess:
-            return 0;
-        case Okular::Success:
-            // Do nothing
-            break;
+        switch (status)
+        {
+            case Okular::Error:
+                return -1;
+            case Okular::AttachedOtherProcess:
+                return 0;
+            case Okular::Success:
+                // Do nothing
+                break;
         }
     }
 
