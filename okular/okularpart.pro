@@ -44,8 +44,8 @@ DEFINES += D_WIN32_WINNT=0x0600
 
 INCLUDEPATH +=  ../ \
                 conf/ \
-                ../core/synctex \
-                ../core \
+                core/synctex \
+                core \
                 mobile/components
 
 
