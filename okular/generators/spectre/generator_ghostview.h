@@ -73,4 +73,14 @@ private:
     bool cache_AAgfx;
 };
 
+class GSGeneratorFactory : public KPluginFactory
+{
+  Q_OBJECT
+  Q_INTERFACES(KPluginFactory)
+  Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE  "libokularGenerator_ghostview.json")
+public:
+  explicit GSGeneratorFactory();
+  ~GSGeneratorFactory();
+};
+
 #endif

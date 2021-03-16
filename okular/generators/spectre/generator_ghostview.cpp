@@ -37,7 +37,17 @@
 #include "rendererthread.h"
 #include "spectre_debug.h"
 
-OKULAR_EXPORT_PLUGIN(GSGenerator, "libokularGenerator_ghostview.json")
+//OKULAR_EXPORT_PLUGIN(GSGenerator, "libokularGenerator_ghostview.json")
+
+
+GSGeneratorFactory::GSGeneratorFactory()
+{
+    registerPlugin<GSGenerator >();
+}
+GSGeneratorFactory::~GSGeneratorFactory()
+{
+}
+
 
 GSGenerator::GSGenerator(QObject *parent, const QVariantList &args)
     : Okular::Generator(parent, args)
@@ -290,4 +300,4 @@ QVariant GSGenerator::metaData(const QString &key, const QVariant &option) const
     return QVariant();
 }
 
-#include "generator_ghostview.moc"
+//#include "generator_ghostview.moc"
