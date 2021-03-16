@@ -20,6 +20,10 @@ INCLUDEPATH += ../ \
 LIBS +=    -L$${LIBDIR} \
            -lOkularCore
 
+UI_DIR       = DESTDIR/tmp/ui
+MOC_DIR      = DESTDIR/tmp/moc
+RCC_DIR      = DESTDIR/tmp/rcc
+OBJECTS_DIR += DESTDIR/tmp/obj
 
 include(../../okularAll.pri)
 include(okularGenerator_xps.pri)
