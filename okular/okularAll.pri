@@ -141,6 +141,7 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
             -lQt5Widgets \
             -lQt5Gui \
             -lQt5Core \
+            -lspectre \
             -lqtmain \
             -lkernel32 \
             -luser32 \

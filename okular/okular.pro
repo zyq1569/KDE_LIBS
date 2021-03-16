@@ -20,6 +20,13 @@ SUBDIRS +=  shell/okular.pro \
             generators/txt/okularGenerator_txt.pro \
             generators/xps/okularGenerator_xps.pro \
             generators/comicbook/okular_comicbook.pro \
-            autotests/parttest.pro \
+            generators/spectre/okularGenerator_ghostview.pro \
+#            autotests/parttest.pro \
             okularcore.pro \
             okularpart.pro
+
+
+#https://www.ghostscript.com/download.html
+#https://www.exiv2.org/
+#https://github.com/ArtifexSoftware
+#https://gcompris.net/index-en.html
