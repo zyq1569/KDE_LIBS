@@ -6,44 +6,8 @@ TEMPLATE = lib
 TARGET   = okularGenerator_kimgio
 DESTDIR  = ../.././bin/okular/generators
 LIBDIR   = ../.././bin/
-QT += core xml gui widgets printsupport dbus
-#CONFIG += release
-#DEFINES += _WINDOWS WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0600 WINVER=0x0600 _WIN32_IE=0x0600 _UNICODE _USE_MATH_DEFINES _CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE _SCL_SECURE_NO_WARNINGS HAVE_SPEECH WITH_KWALLET=1 WITH_KJS=1 QT_USE_QSTRINGBUILDER QT_NO_URL_CAST_FROM_STRING QT_DEPRECATED_WARNINGS_SINCE=0x050C00 KF_DEPRECATED_WARNINGS_SINCE=0x054400 TRANSLATION_DOMAIN=\"okular_kimgio\" KCOREADDONS_LIB QT_XML_LIB QT_WIDGETS_LIB QT_DBUS_LIB QT_PRINTSUPPORT_LIB CMAKE_INTDIR=\"Release\" okularGenerator_kimgio_EXPORTS
-#LIBS += -L"." \
-#    -l../../lib/Release/Okular5Core \
-#    -lD:/CraftRoot/lib/KF5KExiv2 \
-#    -lD:/CraftRoot/lib/KF5XmlGui \
-#    -lD:/CraftRoot/lib/Qt5PrintSupport \
-#    -lD:/CraftRoot/lib/KF5ConfigWidgets \
-#    -lD:/CraftRoot/lib/KF5I18n \
-#    -lD:/CraftRoot/lib/KF5ConfigGui \
-#    -lD:/CraftRoot/lib/Qt5Xml \
-#    -lD:/CraftRoot/lib/KF5Auth \
-#    -lD:/CraftRoot/lib/KF5AuthCore \
-#    -lD:/CraftRoot/lib/KF5CoreAddons \
-#    -lD:/CraftRoot/lib/KF5Codecs \
-#    -lD:/CraftRoot/lib/KF5WidgetsAddons \
-#    -lD:/CraftRoot/lib/KF5ConfigCore \
-#    -lD:/CraftRoot/lib/Qt5DBus \
-#    -lD:/CraftRoot/lib/Qt5Widgets \
-#    -lD:/CraftRoot/lib/Qt5Gui \
-#    -lD:/CraftRoot/lib/Qt5Core \
-#    -lkernel32 \
-#    -luser32 \
-#    -lgdi32 \
-#    -lwinspool \
-#    -lshell32 \
-#    -lole32 \
-#    -loleaut32 \
-#    -luuid \
-#    -lcomdlg32 \
-#    -ladvapi32 \
-#    -l$(NOINHERIT)
-#DEPENDPATH += .
-#MOC_DIR += GeneratedFiles/$(ConfigurationName)
-#OBJECTS_DIR += release
-#UI_DIR += GeneratedFiles
-#RCC_DIR += GeneratedFiles
+QT      += core xml gui widgets printsupport dbus
+
 INCLUDEPATH +=  ../../ \
                 ../../core
 
@@ -53,8 +17,8 @@ RCC_DIR      = DESTDIR/tmp/rcc
 OBJECTS_DIR += DESTDIR/tmp/obj
 
 
-LIBS +=    -L$${LIBDIR} \
-           -lOkularCore
+LIBS        +=  -L$${LIBDIR} \
+                -lOkularCore
 
 include(../../okularAll.pri)
 include(okularGenerator_kimgio.pri)

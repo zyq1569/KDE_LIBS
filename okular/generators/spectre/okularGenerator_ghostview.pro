@@ -17,8 +17,8 @@ INCLUDEPATH += ../ \
             ../../../../../inst/zlib-1.2.11
 
 
-LIBS  +=    -L$${LIBDIR} \
-             -lOkularCore
+LIBS        +=  -L$${LIBDIR} \
+                -lOkularCore
 
 UI_DIR       = DESTDIR/tmp/ui
 MOC_DIR      = DESTDIR/tmp/moc

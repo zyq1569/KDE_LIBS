@@ -17,76 +17,8 @@ INCLUDEPATH +=  ../shell \
                 ../../core
 
 
-# ../ \
-#    ../../../okular/shell \
-#    ../okular_autogen/include_Debug \
-#    ../../../okular \
-#    ../../../okular/core/synctex \
-#    ../../core \
-#    ../../../okular \
-#    ../../ \
-#    ../../../../../include/phonon4qt5 \
-#    ../../../../../include/phonon4qt5/KDE \
-#    ../../../../inst/zlib-1.2.11 \
-#    ../../../../../include/KF5/KParts \
-#    ../../../../../include/KF5 \
-#    ../../../../../include/KF5/KIOWidgets \
-#    ../../../../../include/KF5/KIOGui \
-#    ../../../../../include/KF5/KIOCore \
-#    ../../../../../CraftRoot/include/KF5/KCoreAddons \
-#    ../../../../../CraftRoot/include/KF5 \
-#    $(QTDIR)/./mkspecs/win32-msvc \
-#    ../../../../../include/KF5/KService \
-#    ../../../../../include/KF5/KConfigCore \
-#    ../../../../../include/KF5/KWindowSystem \
-#    ../../../../../include/KF5/KJobWidgets \
-#    ../../../../../include/KF5/KCompletion \
-#    ../../../../../include/KF5/KWidgetsAddons \
-#    ../../../../../include/KF5/KXmlGui \
-#    ../../../../../include/KF5/KConfigWidgets \
-#    ../../../../../include/KF5/KCodecs \
-#    ../../../../../include/KF5/KConfigGui \
-#    ../../../../../include/KF5/KAuth \
-#    ../../../../../include/KF5/KTextWidgets \
-#    ../../../../../include/KF5/SonnetUi \
-#    ../../../../../include/KF5/KCrash
-#LIBS += -L"." \
-#    -lD://lib/KF5Parts \
-#    -lD://lib/KF5KIOWidgets \
-#    -lD://lib/KF5KIOGui \
-#    -lD://lib/KF5KIOCore \
-#    -lD://lib/KF5Crash \
-#    -lD://lib/KF5JobWidgets \
-#    -lD://lib/KF5Service \
-#    -lKF5::DBusAddons \
-#    -lD://lib/KF5Completion \
-#    -lD://lib/KF5XmlGui \
-#    -lD://lib/KF5WindowSystem \
-#    -lD://lib/KF5TextWidgets \
-#    -lKF5::I18n \
-#    -lD://lib/KF5SonnetUi \
-#    -lD://lib/KF5IconThemes \
-#    -lD://lib/KF5ConfigWidgets \
-#    -lD://lib/KF5WidgetsAddons \
-#    -lD://lib/KF5ConfigGui \
-#    -lD://lib/KF5ConfigCore \
-#    -lD://lib/KF5Codecs \
-#    -lD://lib/KF5Auth \
-#    -lD://lib/KF5AuthCore \
-#    -lD:/CraftRoot/lib/libKF5CoreAddons.dll.a \
-#    -lkernel32 \
-#    -luser32 \
-#    -lgdi32 \
-#    -lwinspool \
-#    -lshell32 \
-#    -lole32 \
-#    -loleaut32 \
-#    -luuid \
-#    -lcomdlg32 \
-#    -ladvapi32 \
-#    -l$(NOINHERIT)
-LIBS +=    -L$${DESTDIR} \
-            -lokularcore
+LIBS        +=  -L$${DESTDIR} \
+                -lokularcore
 
 UI_DIR       = DESTDIR/tmp/ui
 MOC_DIR      = DESTDIR/tmp/moc
