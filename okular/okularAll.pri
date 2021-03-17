@@ -8,8 +8,8 @@ CONFIG += C++ 14
 #if(contains(DEFINES,win32-msvc*)){
 DEFINES += MSC2019
 contains(DEFINES,MSC2019) {
-    SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/MSC/include
-    SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/MSC/lib
+    SDK_INSTALL_PREFIX = ../../KDE_SDK/MSC/include
+    SDK_LIB_PREFIX     = ../../KDE_SDK/MSC/lib
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
@@ -156,8 +156,8 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
             -ladvapi32
 }else {
 #for to do : MinGW
-    SDK_INSTALL_PREFIX = D:/KDE/calligra_KDE/include
-    SDK_LIB_PREFIX     = D:/KDE/calligra_KDE/libs
+    SDK_INSTALL_PREFIX = ../../KDE_SDK/include
+    SDK_LIB_PREFIX     = ../../KDE_SDK/libs
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
