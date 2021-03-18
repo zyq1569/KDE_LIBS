@@ -8,8 +8,8 @@ CONFIG += C++ 14
 #if(contains(DEFINES,win32-msvc*)){
 DEFINES += MSC2019
 contains(DEFINES,MSC2019) {
-    SDK_INSTALL_PREFIX = D:/KDE/KDE_SDK/MSC/include
-    SDK_LIB_PREFIX     = D:/KDE/KDE_SDK/MSC/lib
+    SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/MSC/include
+    SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/MSC/lib
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
