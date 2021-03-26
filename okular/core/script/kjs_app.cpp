@@ -41,7 +41,8 @@ Q_GLOBAL_STATIC(TimerCache, g_timerCache)
 // the acrobat version we fake
 static const double fake_acroversion = 8.00;
 
-static const struct FakePluginInfo {
+static const struct FakePluginInfo
+{
     const char *name;
     bool certified;
     bool loaded;
@@ -62,33 +63,61 @@ static KJSObject appGetLanguage(KJSContext *, void *)
     QString country = QLocale::countryToString(locale.country());
     QString acroLang = QStringLiteral("ENU");
     if (lang == QLatin1String("da"))
-        acroLang = QStringLiteral("DAN"); // Danish
+    {
+        acroLang = QStringLiteral("DAN");    // Danish
+    }
     else if (lang == QLatin1String("de"))
-        acroLang = QStringLiteral("DEU"); // German
+    {
+        acroLang = QStringLiteral("DEU");    // German
+    }
     else if (lang == QLatin1String("en"))
-        acroLang = QStringLiteral("ENU"); // English
+    {
+        acroLang = QStringLiteral("ENU");    // English
+    }
     else if (lang == QLatin1String("es"))
-        acroLang = QStringLiteral("ESP"); // Spanish
+    {
+        acroLang = QStringLiteral("ESP");    // Spanish
+    }
     else if (lang == QLatin1String("fr"))
-        acroLang = QStringLiteral("FRA"); // French
+    {
+        acroLang = QStringLiteral("FRA");    // French
+    }
     else if (lang == QLatin1String("it"))
-        acroLang = QStringLiteral("ITA"); // Italian
+    {
+        acroLang = QStringLiteral("ITA");    // Italian
+    }
     else if (lang == QLatin1String("ko"))
-        acroLang = QStringLiteral("KOR"); // Korean
+    {
+        acroLang = QStringLiteral("KOR");    // Korean
+    }
     else if (lang == QLatin1String("ja"))
-        acroLang = QStringLiteral("JPN"); // Japanese
+    {
+        acroLang = QStringLiteral("JPN");    // Japanese
+    }
     else if (lang == QLatin1String("nl"))
-        acroLang = QStringLiteral("NLD"); // Dutch
+    {
+        acroLang = QStringLiteral("NLD");    // Dutch
+    }
     else if (lang == QLatin1String("pt") && country == QLatin1String("BR"))
-        acroLang = QStringLiteral("PTB"); // Brazilian Portuguese
+    {
+        acroLang = QStringLiteral("PTB");    // Brazilian Portuguese
+    }
     else if (lang == QLatin1String("fi"))
-        acroLang = QStringLiteral("SUO"); // Finnish
+    {
+        acroLang = QStringLiteral("SUO");    // Finnish
+    }
     else if (lang == QLatin1String("sv"))
-        acroLang = QStringLiteral("SVE"); // Swedish
+    {
+        acroLang = QStringLiteral("SVE");    // Swedish
+    }
     else if (lang == QLatin1String("zh") && country == QLatin1String("CN"))
-        acroLang = QStringLiteral("CHS"); // Chinese Simplified
+    {
+        acroLang = QStringLiteral("CHS");    // Chinese Simplified
+    }
     else if (lang == QLatin1String("zh") && country == QLatin1String("TW"))
-        acroLang = QStringLiteral("CHT"); // Chinese Traditional
+    {
+        acroLang = QStringLiteral("CHT");    // Chinese Traditional
+    }
     return KJSString(acroLang);
 }
 
@@ -111,7 +140,8 @@ static KJSObject appGetPlatform(KJSContext *, void *)
 static KJSObject appGetPlugIns(KJSContext *context, void *)
 {
     KJSArray plugins(context, s_num_fake_plugins);
-    for (int i = 0; i < s_num_fake_plugins; ++i) {
+    for (int i = 0; i < s_num_fake_plugins; ++i)
+    {
         const FakePluginInfo &info = s_fake_plugins[i];
         KJSObject plugin;
         plugin.setProperty(context, QStringLiteral("certified"), info.certified);
@@ -158,7 +188,8 @@ static KJSObject appGetViewerVersion(KJSContext *, void *)
 */
 static KJSObject appAlert(KJSContext *context, void *, const KJSArguments &arguments)
 {
-    if (arguments.count() < 1) {
+    if (arguments.count() < 1)
+    {
         return context->throwException(i18n("Missing alert type"));
     }
     QString cMsg = arguments.at(0).toString(context);
@@ -167,59 +198,72 @@ static KJSObject appAlert(KJSContext *context, void *, const KJSArguments &argum
     QString cTitle = QStringLiteral("Okular");
 
     if (arguments.count() >= 2)
+    {
         nIcon = arguments.at(1).toInt32(context);
+    }
     if (arguments.count() >= 3)
+    {
         nType = arguments.at(2).toInt32(context);
+    }
     if (arguments.count() >= 4)
+    {
         cTitle = arguments.at(3).toString(context);
+    }
 
     QMessageBox::Icon icon;
-    switch (nIcon) {
-    case 0:
-        icon = QMessageBox::Critical;
-        break;
-    case 1:
-        icon = QMessageBox::Warning;
-        break;
-    case 2:
-        icon = QMessageBox::Question;
-        break;
-    case 3:
-        icon = QMessageBox::Information;
-        break;
+    switch (nIcon)
+    {
+        case 0:
+            icon = QMessageBox::Critical;
+            break;
+        case 1:
+            icon = QMessageBox::Warning;
+            break;
+        case 2:
+            icon = QMessageBox::Question;
+            break;
+        case 3:
+            icon = QMessageBox::Information;
+            break;
     }
 
     QMessageBox box(icon, cTitle, cMsg);
 
-    switch (nType) {
-    case 0:
-        box.setStandardButtons(QMessageBox::Ok);
-        break;
-    case 1:
-        box.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        break;
-    case 2:
-        box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        break;
-    case 3:
-        box.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        break;
+    switch (nType)
+    {
+        case 0:
+            box.setStandardButtons(QMessageBox::Ok);
+            break;
+        case 1:
+            box.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            break;
+        case 2:
+            box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            break;
+        case 3:
+            box.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+            break;
     }
 
     QCheckBox *checkBox = nullptr;
     KJSObject oCheckbox;
-    if (arguments.count() >= 6) {
+    if (arguments.count() >= 6)
+    {
         oCheckbox = arguments.at(5);
         KJSObject oMsg = oCheckbox.property(context, QStringLiteral("cMsg"));
         QString msg = i18n("Do not show this message again");
 
         if (oMsg.isString())
+        {
             msg = oMsg.toString(context);
+        }
 
         bool bInitialValue = false;
         KJSObject value = oCheckbox.property(context, QStringLiteral("bInitialValue"));
         if (value.isBoolean())
+        {
             bInitialValue = value.toBoolean(context);
+        }
         checkBox = new QCheckBox(msg);
         checkBox->setChecked(bInitialValue);
         box.setCheckBox(checkBox);
@@ -239,23 +283,26 @@ static KJSObject appAlert(KJSContext *context, void *, const KJSArguments &argum
 
     int ret;
 
-    switch (button) {
-    case QMessageBox::Ok:
-        ret = 1;
-        break;
-    case QMessageBox::Cancel:
-        ret = 2;
-        break;
-    case QMessageBox::No:
-        ret = 3;
-        break;
-    case QMessageBox::Yes:
-        ret = 4;
-        break;
+    switch (button)
+    {
+        case QMessageBox::Ok:
+            ret = 1;
+            break;
+        case QMessageBox::Cancel:
+            ret = 2;
+            break;
+        case QMessageBox::No:
+            ret = 3;
+            break;
+        case QMessageBox::Yes:
+            ret = 4;
+            break;
     }
 
     if (arguments.count() >= 6)
+    {
         oCheckbox.setProperty(context, QStringLiteral("bAfterValue"), checkBox->isChecked());
+    }
 
     delete checkBox;
 
@@ -264,7 +311,8 @@ static KJSObject appAlert(KJSContext *context, void *, const KJSArguments &argum
 
 static KJSObject appBeep(KJSContext *context, void *, const KJSArguments &arguments)
 {
-    if (arguments.count() < 1) {
+    if (arguments.count() < 1)
+    {
         return context->throwException(QStringLiteral("Missing beep type"));
     }
     QApplication::beep();
@@ -273,13 +321,16 @@ static KJSObject appBeep(KJSContext *context, void *, const KJSArguments &argume
 
 static KJSObject appGetNthPlugInName(KJSContext *context, void *, const KJSArguments &arguments)
 {
-    if (arguments.count() < 1) {
+    if (arguments.count() < 1)
+    {
         return context->throwException(QStringLiteral("Missing plugin index"));
     }
     const int nIndex = arguments.at(0).toInt32(context);
 
     if (nIndex < 0 || nIndex >= s_num_fake_plugins)
+    {
         return context->throwException(QStringLiteral("PlugIn index out of bounds"));
+    }
 
     const FakePluginInfo &info = s_fake_plugins[nIndex];
     return KJSString(info.name);
@@ -289,7 +340,9 @@ static KJSObject appGoBack(KJSContext *, void *object, const KJSArguments &)
 {
     const DocumentPrivate *doc = reinterpret_cast<DocumentPrivate *>(object);
     if (doc->m_parent->historyAtBegin())
+    {
         return KJSUndefined();
+    }
 
     doc->m_parent->setPrevViewport();
     return KJSUndefined();
@@ -299,7 +352,9 @@ static KJSObject appGoForward(KJSContext *, void *object, const KJSArguments &)
 {
     const DocumentPrivate *doc = reinterpret_cast<DocumentPrivate *>(object);
     if (doc->m_parent->historyAtEnd())
+    {
         return KJSUndefined();
+    }
 
     doc->m_parent->setNextViewport();
     return KJSUndefined();
@@ -314,7 +369,10 @@ static KJSObject appSetInterval(KJSContext *ctx, void *object, const KJSArgument
 
     QTimer *timer = new QTimer();
 
-    QObject::connect(timer, &QTimer::timeout, doc->m_parent, [=]() { doc->executeScript(function); });
+    QObject::connect(timer, &QTimer::timeout, doc->m_parent, [=]()
+    {
+        doc->executeScript(function);
+    });
 
     timer->start(interval);
 
@@ -327,7 +385,8 @@ static KJSObject appClearInterval(KJSContext *ctx, void *, const KJSArguments &a
     KJSObject timerObject = arguments.at(0);
     const int timerId = timerObject.property(ctx, OKULAR_TIMERID).toInt32(ctx);
     QTimer *timer = g_timerCache->value(timerId);
-    if (timer != nullptr) {
+    if (timer != nullptr)
+    {
         timer->stop();
         g_timerCache->remove(timerId);
         delete timer;
@@ -346,7 +405,10 @@ static KJSObject appSetTimeOut(KJSContext *ctx, void *object, const KJSArguments
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
 
-    QObject::connect(timer, &QTimer::timeout, doc->m_parent, [=]() { doc->executeScript(function); });
+    QObject::connect(timer, &QTimer::timeout, doc->m_parent, [=]()
+    {
+        doc->executeScript(function);
+    });
 
     timer->start(interval);
 
@@ -360,7 +422,8 @@ static KJSObject appClearTimeOut(KJSContext *ctx, void *, const KJSArguments &ar
     const int timerId = timerObject.property(ctx, OKULAR_TIMERID).toInt32(ctx);
     QTimer *timer = g_timerCache->value(timerId);
 
-    if (timer != nullptr) {
+    if (timer != nullptr)
+    {
         timer->stop();
         g_timerCache->remove(timerId);
         delete timer;
@@ -373,7 +436,9 @@ void JSApp::initType(KJSContext *ctx)
 {
     static bool initialized = false;
     if (initialized)
+    {
         return;
+    }
     initialized = true;
 
     g_appProto = new KJSPrototype();
@@ -417,7 +482,8 @@ KJSObject JSApp::wrapTimer(KJSContext *ctx, QTimer *timer)
 
 void JSApp::clearCachedFields()
 {
-    if (g_timerCache) {
+    if (g_timerCache)
+    {
         qDeleteAll(g_timerCache->begin(), g_timerCache->end());
         g_timerCache->clear();
     }
