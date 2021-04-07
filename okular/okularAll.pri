@@ -1,13 +1,19 @@
 
 
-CONFIG += debug_and_release
-CONFIG += C++ 14
+CONFIG            +=   debug_and_release
+CONFIG            +=   C++ 14
 
 
 
 #if(contains(DEFINES,win32-msvc*)){
-DEFINES += MSC2019
-contains(DEFINES,MSC2019) {
+win32 {
+CONFIG             +=   precompile_header
+PRECOMPILED_HEADER  =   compiler.h
+msvc: DEFINES += MSVC
+}
+
+
+contains(DEFINES, MSVC) {
     SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/MSC/include
     SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/MSC/lib
 
