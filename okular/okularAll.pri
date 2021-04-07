@@ -7,9 +7,9 @@ CONFIG            +=   C++ 14
 
 #if(contains(DEFINES,win32-msvc*)){
 win32 {
-CONFIG             +=   precompile_header
-PRECOMPILED_HEADER  =   compiler.h
+
 msvc: DEFINES += MSVC
+
 }
 
 
