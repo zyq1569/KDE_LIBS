@@ -66,7 +66,7 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/phonon4qt5/KDE \
                 $$SDK_INSTALL_PREFIX/KChart
 
-    LIBS += -L$${SDK_LIB_PREFIX} \
+LIBS     += -L$${SDK_LIB_PREFIX} \
             -lKF5Parts \
             -lKF5KIOWidgets \
             -lKF5KIOGui \
@@ -288,6 +288,11 @@ LIBS        += -L$${SDK_LIB_PREFIX} \
 
 }
 
+#for pdf print
+#https://www.ghostscript.com/download.html
+#https://www.exiv2.org/
+#https://github.com/ArtifexSoftware
+#https://gcompris.net/index-en.html
 
 #    -lkernel32 \
 #    -luser32 \
