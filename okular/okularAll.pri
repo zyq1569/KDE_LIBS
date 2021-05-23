@@ -14,8 +14,9 @@ msvc: DEFINES += MSVC
 
 
 contains(DEFINES, MSVC) {
-    SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/MSC/include
-    SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/MSC/lib
+
+                SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/MSC/include
+                SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/MSC/lib
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
@@ -162,8 +163,8 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
             -ladvapi32
 }else {
 #for to do : MinGW
-    SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/include
-    SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/libs
+                SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/include
+                SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/libs
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
@@ -213,77 +214,77 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/phonon4qt5/KDE \
                 $$SDK_INSTALL_PREFIX/KChart
 
-    LIBS += -L$${SDK_LIB_PREFIX} \
-            -lKF5I18n \
-            -lKF5WidgetsAddons \
-            -lKF5KIOCore \
-            -lKF5Service \
-            -lKF5Crash \
-            -lKF5DBusAddons \
-            -lKF5XmlGui \
-            -lKF5KIOFileWidgets \
-            -lKF5IconThemes \
-            -lKF5ConfigWidgets \
-            -lKF5Codecs \
-            -lKF5ConfigGui \
-            -lKF5ConfigCore \
-            -lKF5NotifyConfig \
-            -lKF5Auth \
-            -lKF5AuthCore \
-            -lKF5Activities \
-            -lKF5Archive \
-            -lKF5AuthCore \
-            -lKF5CoreAddons \
-            -lKF5JobWidgets \
-            -lKF5Parts \
-            -lKF5SonnetUi \
-            -lKF5Crash \
-            -lKF5Solid \
-            -lKF5Completion \
-            -lKF5GuiAddons \
-            -lKF5TextWidgets \
-            -lKF5WindowSystem \
-            -lKF5ItemViews \
-            -lKF5KIOWidgets \
-            -lKF5KrossCore \
-            -lKF5KrossUi \
-            -lKF5Notifications \
-            -llibpoppler \
-            -llibpoppler-cpp \
-            -llibpoppler-qt5 \
-            -llibphonon4qt5 \
-            -lphonon4qt5 \
-            -lKF5Bookmarks \
-            -lKF5ThreadWeaver \
-            -lKF5Wallet \
-    #        -llibzstd \
-            -llibz \
-            -llibKF5JS \
-            -llibKF5JSApi \
-            -llibKF5PurposeWidgets \
-            -llibKF5Purpose \
-            -llibtiff \
-            -llibtiffxx \
-            -llibfxstiff \
-            -llibjpeg \
-            -llibdjvulibre \
-            -llibfreetype \
-            -llibturbojpeg \
-            -llibpcre \
-            -lws2_32 \
-            -lnetapi32 \
-            -lkernel32 \
-            -luser32 \
-            -lgdi32 \
-            -lwinspool \
-            -lshell32 \
-            -lole32 \
-            -loleaut32 \
-            -luuid \
-            -lcomdlg32 \
-            -ladvapi32 \
-            -lshlwapi \
-            -llibdjvulibre
+LIBS        += -L$${SDK_LIB_PREFIX} \
+               -lKF5I18n \
+               -lKF5WidgetsAddons \
+               -lKF5KIOCore \
+               -lKF5Service \
+               -lKF5Crash \
+               -lKF5DBusAddons \
+               -lKF5XmlGui \
+               -lKF5KIOFileWidgets \
+               -lKF5IconThemes \
+               -lKF5ConfigWidgets \
+               -lKF5Codecs \
+               -lKF5ConfigGui \
+               -lKF5ConfigCore \
+               -lKF5NotifyConfig \
+               -lKF5Auth \
+               -lKF5AuthCore \
+               -lKF5Activities \
+               -lKF5Archive \
+               -lKF5AuthCore \
+               -lKF5CoreAddons \
+               -lKF5JobWidgets \
+               -lKF5Parts \
+               -lKF5SonnetUi \
+               -lKF5Crash \
+               -lKF5Solid \
+               -lKF5Completion \
+               -lKF5GuiAddons \
+               -lKF5TextWidgets \
+               -lKF5WindowSystem \
+               -lKF5ItemViews \
+               -lKF5KIOWidgets \
+               -lKF5KrossCore \
+               -lKF5KrossUi \
+               -lKF5Notifications \
+               -llibpoppler \
+               -llibpoppler-cpp \
+               -llibpoppler-qt5 \
+               -llibphonon4qt5 \
+               -lphonon4qt5 \
+               -lKF5Bookmarks \
+               -lKF5ThreadWeaver \
+               -lKF5Wallet \
+       #        -llibzstd \
+               -llibz \
+               -llibKF5JS \
+               -llibKF5JSApi \
+               -llibKF5PurposeWidgets \
+               -llibKF5Purpose \
+               -llibtiff \
+               -llibtiffxx \
+               -llibfxstiff \
+               -llibjpeg \
+               -llibdjvulibre \
+               -llibfreetype \
+               -llibturbojpeg \
+               -llibpcre \
+               -lws2_32 \
+               -lnetapi32 \
+               -lkernel32 \
+               -luser32 \
+               -lgdi32 \
+               -lwinspool \
+               -lshell32 \
+               -lole32 \
+               -loleaut32 \
+               -luuid \
+               -lcomdlg32 \
+               -ladvapi32 \
+               -lshlwapi \
+               -llibdjvulibre
 
 }
 
