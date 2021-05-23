@@ -162,8 +162,8 @@ INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
             -ladvapi32
 }else {
 #for to do : MinGW
-    SDK_INSTALL_PREFIX = ../../KDE_SDK/include
-    SDK_LIB_PREFIX     = ../../KDE_SDK/libs
+    SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/include
+    SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/libs
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
