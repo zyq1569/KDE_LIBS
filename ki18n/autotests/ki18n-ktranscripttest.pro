@@ -10,25 +10,25 @@ INCLUDEPATH += ../ \
               ../autotests \
               ../src
 
-LIBS      += -L"." \
-            -l../lib/Debug/KF5I18n \
-            -lkernel32 \
-            -luser32 \
-            -lgdi32 \
-            -lwinspool \
-            -lshell32 \
-            -lole32 \
-            -loleaut32 \
-            -luuid \
-            -lcomdlg32 \
-            -ladvapi32 \
-            -l$(NOINHERIT)
+#LIBS      += -L"." \
+#            -l../lib/Debug/KF5I18n \
+#            -lkernel32 \
+#            -luser32 \
+#            -lgdi32 \
+#            -lwinspool \
+#            -lshell32 \
+#            -lole32 \
+#            -loleaut32 \
+#            -luuid \
+#            -lcomdlg32 \
+#            -ladvapi32 \
+#            -l$(NOINHERIT)
 
-DEPENDPATH  += .
-MOC_DIR     += ./GeneratedFiles/$(ConfigurationName)
-OBJECTS_DIR += debug
-UI_DIR      += ./GeneratedFiles
-RCC_DIR     += ./GeneratedFiles
+#DEPENDPATH  += .
+#MOC_DIR     += ./GeneratedFiles/$(ConfigurationName)
+#OBJECTS_DIR += debug
+#UI_DIR      += ./GeneratedFiles
+#RCC_DIR     += ./GeneratedFiles
 
 
 

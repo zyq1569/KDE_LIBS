@@ -1,4 +1,4 @@
-
+HEADERS +=  ktranscriptcleantest.h
 
 SOURCES +=  ktranscriptcleantest.cpp \
             ../src/ktranscript.cpp \

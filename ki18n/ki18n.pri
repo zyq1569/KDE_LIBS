@@ -153,4 +153,5 @@ LIBS             +=  -L$${SDK_LIB_PREFIX} \
                      -lKF5KrossCore \
                      -lKF5KrossUi \
                      -lKF5Notifications \
-                     -lzstd
+                     -lzstd \
+                     -lintl
