@@ -38,9 +38,9 @@ void KTranscriptCleanTest::test_data()
 
     // Example test case, replace with first clean-slate test
     QTest::newRow("test_basic")
-        << (QVariantList() << "test_basic" << "foo")
-        << false
-        << "foo bar";
+            << (QVariantList() << "test_basic" << "foo")
+            << false
+            << "foo bar";
 }
 
 void KTranscriptCleanTest::test()
@@ -73,13 +73,17 @@ void KTranscriptCleanTest::test()
                          subs, values, ordinaryTranslation,
                          modules, error, fallback);
 
-    if (!error.isEmpty()) {
+    if (!error.isEmpty())
+    {
         QFAIL(qPrintable(error));
     }
-    if (!fallsBack) {
+    if (!fallsBack)
+    {
         QVERIFY(!fallback);
         QCOMPARE(result, expected);
-    } else {
+    }
+    else
+    {
         QVERIFY(fallback);
     }
 }
