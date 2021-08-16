@@ -44,12 +44,16 @@ void KLocalizedTranslator::removeContextToMonitor(const QString &context)
 
 QString KLocalizedTranslator::translate(const char *context, const char *sourceText, const char *disambiguation, int n) const
 {
-    if (d->translationDomain.isEmpty() || !d->monitoredContexts.contains(QString::fromUtf8(context))) {
+    if (d->translationDomain.isEmpty() || !d->monitoredContexts.contains(QString::fromUtf8(context)))
+    {
         return QTranslator::translate(context, sourceText, disambiguation, n);
     }
-    if (qstrlen(disambiguation) == 0) {
+    if (qstrlen(disambiguation) == 0)
+    {
         return ki18nd(d->translationDomain.toUtf8().constData(), sourceText).toString();
-    } else {
+    }
+    else
+    {
         return ki18ndc(d->translationDomain.toUtf8().constData(), disambiguation, sourceText).toString();
     }
 }

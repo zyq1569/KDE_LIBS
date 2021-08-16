@@ -30,19 +30,31 @@ QString Kuit::escape(const QString &text)
     int tlen = text.length();
     QString ntext;
     ntext.reserve(tlen);
-    for (int i = 0; i < tlen; ++i) {
+    for (int i = 0; i < tlen; ++i)
+    {
         QChar c = text[i];
-        if (c == QL1C('&')) {
+        if (c == QL1C('&'))
+        {
             ntext += QStringLiteral("&amp;");
-        } else if (c == QL1C('<')) {
+        }
+        else if (c == QL1C('<'))
+        {
             ntext += QStringLiteral("&lt;");
-        } else if (c == QL1C('>')) {
+        }
+        else if (c == QL1C('>'))
+        {
             ntext += QStringLiteral("&gt;");
-        } else if (c == QL1C('\'')) {
+        }
+        else if (c == QL1C('\''))
+        {
             ntext += QStringLiteral("&apos;");
-        } else if (c == QL1C('"')) {
+        }
+        else if (c == QL1C('"'))
+        {
             ntext += QStringLiteral("&quot;");
-        } else {
+        }
+        else
+        {
             ntext += c;
         }
     }
@@ -56,9 +68,12 @@ QString Kuit::escape(const QString &text)
 static QString shorten(const QString &str)
 {
     const int maxlen = 80;
-    if (str.length() <= maxlen) {
+    if (str.length() <= maxlen)
+    {
         return str;
-    } else {
+    }
+    else
+    {
         return str.leftRef(maxlen) + QSL("...");
     }
 }
@@ -73,20 +88,23 @@ static void parseUiMarker(const QString &context_,
     // Note that names remain untouched if the marker is not found.
     // Normalize the whole string, all lowercase.
     QString context = context_.trimmed().toLower();
-    if (context.startsWith(QL1C('@'))) { // found UI marker
+    if (context.startsWith(QL1C('@')))   // found UI marker
+    {
         static const QRegularExpression wsRx(QStringLiteral("\\s"));
         context = context.mid(1, wsRx.match(context).capturedStart(0) - 1);
 
         // Possible format.
         int pfmt = context.indexOf(QL1C('/'));
-        if (pfmt >= 0) {
+        if (pfmt >= 0)
+        {
             formatName = context.mid(pfmt + 1);
             context.truncate(pfmt);
         }
 
         // Possible subcue.
         int pcue = context.indexOf(QL1C(':'));
-        if (pcue >= 0) {
+        if (pcue >= 0)
+        {
             cueName = context.mid(pcue + 1);
             context.truncate(pcue);
         }
@@ -122,12 +140,14 @@ private:
 namespace Kuit
 {
 
-enum Role { // UI marker roles
+enum Role   // UI marker roles
+{
     UndefinedRole,
     ActionRole, TitleRole, OptionRole, LabelRole, ItemRole, InfoRole
 };
 
-enum Cue { // UI marker subcues
+enum Cue   // UI marker subcues
+{
     UndefinedCue,
     ButtonCue, InmenuCue, IntoolbarCue,
     WindowCue, MenuCue, TabCue, GroupCue, ColumnCue, RowCue,
@@ -382,22 +402,26 @@ QString KuitStaticData::toKeyCombo(const QStringList &languages,
 
     const QRegularExpressionMatch match = delimRx.match(shstr);
     QStringList keys;
-    if (match.hasMatch()) { // delimiter found, multi-key shortcut
+    if (match.hasMatch())   // delimiter found, multi-key shortcut
+    {
         const QString oldDelim = match.captured(0);
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
         keys = shstr.split(oldDelim, QString::SkipEmptyParts);
 #else
         keys = shstr.split(oldDelim, Qt::SkipEmptyParts);
 #endif
-    } else { // single-key shortcut, no delimiter found
+    }
+    else     // single-key shortcut, no delimiter found
+    {
         keys.append(shstr);
     }
 
-    for (int i = 0; i < keys.size(); ++i) {
+    for (int i = 0; i < keys.size(); ++i)
+    {
         // Normalize key, trim and all lower-case.
         const QString nkey = keys.at(i).trimmed().toLower();
         keys[i] = keyNames.contains(nkey) ? keyNames[nkey].toString(languages)
-                                            : keys.at(i).trimmed();
+                  : keys.at(i).trimmed();
     }
     const QString delim = comboKeyDelim.value(format).toString(languages);
     return keys.join(delim);
@@ -411,7 +435,8 @@ QString KuitStaticData::toInterfacePath(const QStringList &languages,
     // whichever is first encountered.
     static const QRegularExpression delimRx(QStringLiteral("\\||->"));
     const QRegularExpressionMatch match = delimRx.match(inpstr);
-    if (match.hasMatch()) { // multi-element path
+    if (match.hasMatch())   // multi-element path
+    {
         const QString oldDelim = match.captured(0);
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
         QStringList guiels = inpstr.split(oldDelim, QString::SkipEmptyParts);
@@ -464,36 +489,48 @@ QString KuitTag::format(const QStringList &languages,
     QString formattedText = text;
     QString attribKey = attributeSetKey(attributes.keys());
     const QHash<Kuit::VisualFormat, KLocalizedString> pattern = patterns.value(attribKey);
-    if (pattern.contains(format)) {
+    if (pattern.contains(format))
+    {
         QString modText;
         Kuit::TagFormatter formatter = formatters.value(attribKey).value(format);
-        if (formatter != nullptr) {
+        if (formatter != nullptr)
+        {
             modText = formatter(languages, name, attributes, text, tagPath, format);
-        } else {
+        }
+        else
+        {
             modText = text;
         }
         KLocalizedString aggText = pattern.value(format);
         // line below is first-aid fix.for e.g. <emphasis strong='true'>.
         // TODO: proper handling of boolean attributes still needed
         aggText = aggText.relaxSubs();
-        if (!aggText.isEmpty()) {
+        if (!aggText.isEmpty())
+        {
             aggText = aggText.subs(modText);
             const QStringList attributeOrder = attributeOrders.value(attribKey).value(format);
-            for (const QString &attribName : attributeOrder) {
+            for (const QString &attribName : attributeOrder)
+            {
                 aggText = aggText.subs(attributes.value(attribName));
             }
             formattedText = aggText.ignoreMarkup().toString(languages);
-        } else {
+        }
+        else
+        {
             formattedText = modText;
         }
-    } else if (patterns.contains(attribKey)) {
+    }
+    else if (patterns.contains(attribKey))
+    {
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Undefined visual format for tag <%1> and attribute combination %2: %3.")
-                               .arg(name, attribKey, s->namesByFormat.value(format));
-    } else {
+                                  "Undefined visual format for tag <%1> and attribute combination %2: %3.")
+                              .arg(name, attribKey, s->namesByFormat.value(format));
+    }
+    else
+    {
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Undefined attribute combination for tag <%1>: %2.")
-                               .arg(name, attribKey);
+                                  "Undefined attribute combination for tag <%1>: %2.")
+                              .arg(name, attribKey);
     }
     return formattedText;
 }
@@ -502,7 +539,8 @@ KuitSetup &Kuit::setupForDomain(const QByteArray& domain)
 {
     KuitStaticData *s = staticData();
     KuitSetup *setup = s->domainSetups.value(domain);
-    if (!setup) {
+    if (!setup)
+    {
         setup = new KuitSetup(domain);
         s->domainSetups.insert(domain, setup);
     }
@@ -546,13 +584,15 @@ void KuitSetupPrivate::setTagPattern(const QString &tagName,
 {
     bool isNewTag = knownTags.contains(tagName);
     KuitTag &tag = knownTags[tagName];
-    if (isNewTag) {
+    if (isNewTag)
+    {
         tag.name = tagName;
         tag.type = Kuit::PhraseTag;
     }
     QStringList attribNames = attribNames_;
     attribNames.removeAll(QString());
-    for (const QString &attribName : qAsConst(attribNames)) {
+    for (const QString &attribName : qAsConst(attribNames))
+    {
         tag.knownAttribs.insert(attribName);
     }
     QString attribKey = attributeSetKey(attribNames);
@@ -567,7 +607,8 @@ void KuitSetupPrivate::setTagClass(const QString &tagName,
 {
     bool isNewTag = knownTags.contains(tagName);
     KuitTag &tag = knownTags[tagName];
-    if (isNewTag) {
+    if (isNewTag)
+    {
         tag.name = tagName;
     }
     tag.type = aClass;
@@ -582,35 +623,46 @@ void KuitSetupPrivate::setFormatForMarker(const QString &marker,
     parseUiMarker(marker, roleName, cueName, formatName);
 
     Kuit::Role role;
-    if (s->rolesByName.contains(roleName)) {
+    if (s->rolesByName.contains(roleName))
+    {
         role = s->rolesByName.value(roleName);
-    } else if (!roleName.isEmpty()) {
+    }
+    else if (!roleName.isEmpty())
+    {
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Unknown role '@%1' in UI marker {%2}, visual format not set.")
-                               .arg(roleName, marker);
+                                  "Unknown role '@%1' in UI marker {%2}, visual format not set.")
+                              .arg(roleName, marker);
         return;
-    } else {
+    }
+    else
+    {
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Empty role in UI marker {%1}, visual format not set.")
-                               .arg(marker);
+                                  "Empty role in UI marker {%1}, visual format not set.")
+                              .arg(marker);
         return;
     }
 
     Kuit::Cue cue;
-    if (s->cuesByName.contains(cueName)) {
+    if (s->cuesByName.contains(cueName))
+    {
         cue = s->cuesByName.value(cueName);
-        if (!s->knownRoleCues.value(role).contains(cue)) {
+        if (!s->knownRoleCues.value(role).contains(cue))
+        {
             qCWarning(KI18N_KUIT) << QStringLiteral(
-                                   "Subcue ':%1' does not belong to role '@%2' in UI marker {%3}, visual format not set.")
-                                   .arg(cueName, roleName, marker);
+                                      "Subcue ':%1' does not belong to role '@%2' in UI marker {%3}, visual format not set.")
+                                  .arg(cueName, roleName, marker);
             return;
         }
-    } else if (!cueName.isEmpty()) {
+    }
+    else if (!cueName.isEmpty())
+    {
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Unknown subcue ':%1' in UI marker {%2}, visual format not set.")
-                               .arg(cueName, marker);
+                                  "Unknown subcue ':%1' in UI marker {%2}, visual format not set.")
+                              .arg(cueName, marker);
         return;
-    } else {
+    }
+    else
+    {
         cue = Kuit::UndefinedCue;
     }
 
@@ -634,7 +686,8 @@ static QString tagFormatterFilename(TAG_FORMATTER_ARGS)
 #ifdef Q_OS_WIN
     // with rich text the path can include <foo>...</foo> which will be replaced by <foo>...<\foo> on Windows!
     // the same problem also happens for tags such as <br/> -> <br\>
-    if (format == Kuit::RichText) {
+    if (format == Kuit::RichText)
+    {
         // replace all occurrences of "</" or "/>" to make sure toNativeSeparators() doesn't destroy XML markup
         const auto KUIT_CLOSE_XML_REPLACEMENT = QStringLiteral("__kuit_close_xml_tag__");
         const auto KUIT_NOTEXT_XML_REPLACEMENT = QStringLiteral("__kuit_notext_xml_tag__");
@@ -1215,18 +1268,23 @@ QString KuitFormatterPrivate::format(const QByteArray &domain,
 
     // If format is undefined, determine it based on UI marker inside context.
     Kuit::VisualFormat resolvedFormat = format;
-    if (resolvedFormat == Kuit::UndefinedFormat) {
+    if (resolvedFormat == Kuit::UndefinedFormat)
+    {
         resolvedFormat = formatFromUiMarker(context, setup);
     }
 
     // Quick check: are there any tags at all?
     QString ftext;
-    if (text.indexOf(QL1C('<')) < 0) {
+    if (text.indexOf(QL1C('<')) < 0)
+    {
         ftext = finalizeVisualText(text, resolvedFormat);
-    } else {
+    }
+    else
+    {
         // Format the text.
         ftext = toVisualText(text, resolvedFormat, setup);
-        if (ftext.isEmpty()) { // error while processing markup
+        if (ftext.isEmpty())   // error while processing markup
+        {
             ftext = salvageMarkup(text, resolvedFormat, setup);
         }
     }
@@ -1243,56 +1301,73 @@ Kuit::VisualFormat KuitFormatterPrivate::formatFromUiMarker(const QString &conte
 
     // Set role from name.
     Kuit::Role role = s->rolesByName.value(roleName, Kuit::UndefinedRole);
-    if (role == Kuit::UndefinedRole) { // unknown role
-        if (!roleName.isEmpty()) {
+    if (role == Kuit::UndefinedRole)   // unknown role
+    {
+        if (!roleName.isEmpty())
+        {
             qCWarning(KI18N_KUIT) << QStringLiteral(
-                                   "Unknown role '@%1' in UI marker in context {%2}.")
-                                   .arg(roleName, shorten(context));
+                                      "Unknown role '@%1' in UI marker in context {%2}.")
+                                  .arg(roleName, shorten(context));
         }
     }
 
     // Set subcue from name.
     Kuit::Cue cue;
-    if (role != Kuit::UndefinedRole) {
+    if (role != Kuit::UndefinedRole)
+    {
         cue = s->cuesByName.value(cueName, Kuit::UndefinedCue);
-        if (cue != Kuit::UndefinedCue) { // known subcue
-            if (!s->knownRoleCues.value(role).contains(cue)) {
+        if (cue != Kuit::UndefinedCue)   // known subcue
+        {
+            if (!s->knownRoleCues.value(role).contains(cue))
+            {
                 cue = Kuit::UndefinedCue;
                 qCWarning(KI18N_KUIT) << QStringLiteral(
-                                       "Subcue ':%1' does not belong to role '@%2' in UI marker in context {%3}.")
-                                       .arg(cueName, roleName, shorten(context));
-            }
-        } else { // unknown or not given subcue
-            if (!cueName.isEmpty()) {
-                qCWarning(KI18N_KUIT) << QStringLiteral(
-                                       "Unknown subcue ':%1' in UI marker in context {%2}.")
-                                       .arg(cueName, shorten(context));
+                                          "Subcue ':%1' does not belong to role '@%2' in UI marker in context {%3}.")
+                                      .arg(cueName, roleName, shorten(context));
             }
         }
-    } else {
+        else     // unknown or not given subcue
+        {
+            if (!cueName.isEmpty())
+            {
+                qCWarning(KI18N_KUIT) << QStringLiteral(
+                                          "Unknown subcue ':%1' in UI marker in context {%2}.")
+                                      .arg(cueName, shorten(context));
+            }
+        }
+    }
+    else
+    {
         // Bad role, silently ignore the cue.
         cue = Kuit::UndefinedCue;
     }
 
     // Set format from name, or by derivation from contex/subcue.
     Kuit::VisualFormat format = s->formatsByName.value(formatName, Kuit::UndefinedFormat);
-    if (format == Kuit::UndefinedFormat) { // unknown or not given format
+    if (format == Kuit::UndefinedFormat)   // unknown or not given format
+    {
         // Check first if there is a format defined for role/subcue
         // combination, then for role only, otherwise default to undefined.
-        if (setup.d->formatsByRoleCue.contains(role)) {
-            if (setup.d->formatsByRoleCue.value(role).contains(cue)) {
+        if (setup.d->formatsByRoleCue.contains(role))
+        {
+            if (setup.d->formatsByRoleCue.value(role).contains(cue))
+            {
                 format = setup.d->formatsByRoleCue.value(role).value(cue);
-            } else {
+            }
+            else
+            {
                 format = setup.d->formatsByRoleCue.value(role).value(Kuit::UndefinedCue);
             }
         }
-        if (!formatName.isEmpty()) {
+        if (!formatName.isEmpty())
+        {
             qCWarning(KI18N_KUIT) << QStringLiteral(
-                                   "Unknown format '/%1' in UI marker for message {%2}.")
-                                   .arg(formatName, shorten(context));
+                                      "Unknown format '/%1' in UI marker for message {%2}.")
+                                  .arg(formatName, shorten(context));
         }
     }
-    if (format == Kuit::UndefinedFormat) {
+    if (format == Kuit::UndefinedFormat)
+    {
         format = Kuit::PlainText;
     }
 
@@ -1307,9 +1382,11 @@ bool KuitFormatterPrivate::determineIsStructured(const QString &text,
     static const QRegularExpression opensWithTagRx(QStringLiteral("^\\s*<\\s*(\\w+)[^>]*>"));
     bool isStructured = false;
     const QRegularExpressionMatch match = opensWithTagRx.match(text);
-    if (match.hasMatch()) {
+    if (match.hasMatch())
+    {
         const QString tagName = match.captured(1).toLower();
-        if (setup.d->knownTags.contains(tagName)) {
+        if (setup.d->knownTags.contains(tagName))
+        {
             const KuitTag &tag = setup.d->knownTags.value(tagName);
             isStructured = (tag.type == Kuit::StructTag);
         }
@@ -1333,10 +1410,12 @@ QString KuitFormatterPrivate::toVisualText(const QString &text_,
 
     QString text;
     int p = original.indexOf(QL1C('&'));
-    while (p >= 0) {
+    while (p >= 0)
+    {
         text.append(original.midRef(0, p + 1));
         original.remove(0, p + 1);
-        if (original.indexOf(restRx) != 0) { // not an entity
+        if (original.indexOf(restRx) != 0)   // not an entity
+        {
             text.append(QSL("amp;"));
         }
         p = original.indexOf(QL1C('&'));
@@ -1358,16 +1437,20 @@ QString KuitFormatterPrivate::toVisualText(const QString &text_,
     xml.setEntityResolver(&s->xmlEntityResolver);
     QStringRef lastElementName;
 
-    while (!xml.atEnd()) {
+    while (!xml.atEnd())
+    {
         xml.readNext();
 
-        if (xml.isStartElement()) {
+        if (xml.isStartElement())
+        {
             lastElementName = xml.name();
 
             // Find first proper enclosing element.
             OpenEl enclosingOel;
-            for (int i = openEls.size() - 1; i >= 0; --i) {
-                if (openEls[i].handling == OpenEl::Proper) {
+            for (int i = openEls.size() - 1; i >= 0; --i)
+            {
+                if (openEls[i].handling == OpenEl::Proper)
+                {
                     enclosingOel = openEls[i];
                     break;
                 }
@@ -1378,12 +1461,15 @@ QString KuitFormatterPrivate::toVisualText(const QString &text_,
 
             // Record the new element on the parse stack.
             openEls.push(oel);
-        } else if (xml.isEndElement()) {
+        }
+        else if (xml.isEndElement())
+        {
             // Get closed element data.
             OpenEl oel = openEls.pop();
 
             // If this was closing of the top element, we're done.
-            if (openEls.isEmpty()) {
+            if (openEls.isEmpty())
+            {
                 // Return with final touches applied.
                 return finalizeVisualText(oel.formattedText, format);
             }
@@ -1392,17 +1478,23 @@ QString KuitFormatterPrivate::toVisualText(const QString &text_,
             QString ptext = openEls.top().formattedText; // preceding text
             openEls.top().formattedText += formatSubText(ptext, oel,
                                            format, setup);
-        } else if (xml.isCharacters()) {
+        }
+        else if (xml.isCharacters())
+        {
             // Stream reader will automatically resolve default XML entities,
             // which is not desired in this case, as the entities are to be
             // resolved in finalizeVisualText. Convert back into entities.
             const QString ctext = xml.text().toString();
             QString nctext;
-            for (const QChar c : ctext) {
-                if (s->xmlEntitiesInverse.contains(c)) {
+            for (const QChar c : ctext)
+            {
+                if (s->xmlEntitiesInverse.contains(c))
+                {
                     const QString entName = s->xmlEntitiesInverse[c];
                     nctext += QL1C('&') + entName + QL1C(';');
-                } else {
+                }
+                else
+                {
                     nctext += c;
                 }
             }
@@ -1410,11 +1502,12 @@ QString KuitFormatterPrivate::toVisualText(const QString &text_,
         }
     }
 
-    if (xml.hasError()) {
+    if (xml.hasError())
+    {
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Markup error in message {%1}: %2. Last tag parsed: %3. Complete message follows:\n%4")
-                               .arg(shorten(text), xml.errorString(), lastElementName.toString(),
-                               text);
+                                  "Markup error in message {%1}: %2. Last tag parsed: %3. Complete message follows:\n%4")
+                              .arg(shorten(text), xml.errorString(), lastElementName.toString(),
+                                   text);
         return QString();
     }
 
@@ -1434,7 +1527,8 @@ KuitFormatterPrivate::parseOpenEl(const QXmlStreamReader &xml,
     // Collect attribute names and values, and format attribute string.
     QStringList attribNames, attribValues;
     const auto listAttributes = xml.attributes();
-    for (const QXmlStreamAttribute &xatt : listAttributes) {
+    for (const QXmlStreamAttribute &xatt : listAttributes)
+    {
         attribNames += xatt.name().toString().toLower();
         attribValues += xatt.value().toString();
         QChar qc =   attribValues.last().indexOf(QL1C('\'')) < 0
@@ -1443,7 +1537,8 @@ KuitFormatterPrivate::parseOpenEl(const QXmlStreamReader &xml,
                            + qc + attribValues.last() + qc;
     }
 
-    if (setup.d->knownTags.contains(oel.name)) { // known KUIT element
+    if (setup.d->knownTags.contains(oel.name))   // known KUIT element
+    {
         const KuitTag &tag = setup.d->knownTags.value(oel.name);
         const KuitTag &etag = setup.d->knownTags.value(enclosingOel.name);
 
@@ -1451,26 +1546,33 @@ KuitFormatterPrivate::parseOpenEl(const QXmlStreamReader &xml,
         // mark it proper, otherwise mark it for removal.
         if (tag.name.isEmpty()
                 || tag.type == Kuit::PhraseTag
-                || etag.type == Kuit::StructTag) {
+                || etag.type == Kuit::StructTag)
+        {
             oel.handling = OpenEl::Proper;
-        } else {
+        }
+        else
+        {
             oel.handling = OpenEl::Dropout;
             qCWarning(KI18N_KUIT) << QStringLiteral(
-                                   "Structuring tag ('%1') cannot be subtag of phrase tag ('%2') in message {%3}.")
-                                   .arg(tag.name, etag.name, shorten(text));
+                                      "Structuring tag ('%1') cannot be subtag of phrase tag ('%2') in message {%3}.")
+                                  .arg(tag.name, etag.name, shorten(text));
         }
 
         // Resolve attributes and compute attribute set key.
         QSet<QString> attset;
-        for (int i = 0; i < attribNames.size(); ++i) {
+        for (int i = 0; i < attribNames.size(); ++i)
+        {
             QString att = attribNames[i];
-            if (tag.knownAttribs.contains(att)) {
+            if (tag.knownAttribs.contains(att))
+            {
                 attset << att;
                 oel.attributes[att] = attribValues[i];
-            } else {
+            }
+            else
+            {
                 qCWarning(KI18N_KUIT) << QStringLiteral(
-                                       "Attribute '%1' not defined for tag '%2' in message {%3}.")
-                                       .arg(att, tag.name, shorten(text));
+                                          "Attribute '%1' not defined for tag '%2' in message {%3}.")
+                                      .arg(att, tag.name, shorten(text));
             }
         }
 
@@ -1478,11 +1580,13 @@ KuitFormatterPrivate::parseOpenEl(const QXmlStreamReader &xml,
         oel.tagPath = enclosingOel.tagPath;
         oel.tagPath.prepend(enclosingOel.name);
 
-    } else { // unknown element, leave it in verbatim
+    }
+    else     // unknown element, leave it in verbatim
+    {
         oel.handling = OpenEl::Ignored;
         qCWarning(KI18N_KUIT) << QStringLiteral(
-                               "Tag '%1' is not defined in message {%2}.")
-                               .arg(oel.name, shorten(text));
+                                  "Tag '%1' is not defined in message {%2}.")
+                              .arg(oel.name, shorten(text));
     }
 
     return oel;
@@ -1493,7 +1597,8 @@ QString KuitFormatterPrivate::formatSubText(const QString &ptext,
         Kuit::VisualFormat format,
         const KuitSetup &setup) const
 {
-    if (oel.handling == OpenEl::Proper) {
+    if (oel.handling == OpenEl::Proper)
+    {
         const KuitTag &tag = setup.d->knownTags.value(oel.name);
         QString ftext = tag.format(languageAsList,
                                    oel.attributes, oel.formattedText,
@@ -1501,7 +1606,8 @@ QString KuitFormatterPrivate::formatSubText(const QString &ptext,
 
         // Handle leading newlines, if this is not start of the text
         // (ptext is the preceding text).
-        if (!ptext.isEmpty() && tag.leadingNewlines > 0) {
+        if (!ptext.isEmpty() && tag.leadingNewlines > 0)
+        {
             // Count number of present newlines.
             int pnumle, pnumtr, fnumle, fnumtr;
             countWrappingNewlines(ptext, pnumle, pnumtr);
@@ -1510,7 +1616,8 @@ QString KuitFormatterPrivate::formatSubText(const QString &ptext,
             int numle = pnumtr + fnumle;
             // The required extra newlines.
             QString strle;
-            if (numle < tag.leadingNewlines) {
+            if (numle < tag.leadingNewlines)
+            {
                 strle = QString(tag.leadingNewlines - numle, QL1C('\n'));
             }
             ftext = strle + ftext;
@@ -1518,12 +1625,16 @@ QString KuitFormatterPrivate::formatSubText(const QString &ptext,
 
         return ftext;
 
-    } else if (oel.handling == OpenEl::Ignored) {
+    }
+    else if (oel.handling == OpenEl::Ignored)
+    {
         return   QL1C('<') + oel.name + oel.attribStr + QL1C('>')
                  + oel.formattedText
                  + QSL("</") + oel.name + QL1C('>');
 
-    } else { // oel.handling == OpenEl::Dropout
+    }
+    else     // oel.handling == OpenEl::Dropout
+    {
         return oel.formattedText;
     }
 }
@@ -1534,12 +1645,14 @@ void KuitFormatterPrivate::countWrappingNewlines(const QString &text,
     int len = text.length();
     // Number of newlines at start of text.
     numle = 0;
-    while (numle < len && text[numle] == QL1C('\n')) {
+    while (numle < len && text[numle] == QL1C('\n'))
+    {
         ++numle;
     }
     // Number of newlines at end of text.
     numtr = 0;
-    while (numtr < len && text[len - numtr - 1] == QL1C('\n')) {
+    while (numtr < len && text[len - numtr - 1] == QL1C('\n'))
+    {
         ++numtr;
     }
 }
@@ -1552,27 +1665,37 @@ QString KuitFormatterPrivate::finalizeVisualText(const QString &text_,
     QString text = text_;
 
     // Resolve XML entities.
-    if (format != Kuit::RichText) {
+    if (format != Kuit::RichText)
+    {
         // regex is (see s_entitySubRx var): (&([a-z]+|#[0-9]+|#x[0-9a-fA-F]+);)
         static const QRegularExpression entRx(QLatin1String("(&(") +  QLatin1String(s_entitySubRx) + QLatin1String(");)"));
         QRegularExpressionMatch match;
         QString plain;
-        while ((match = entRx.match(text)).hasMatch()) {
+        while ((match = entRx.match(text)).hasMatch())
+        {
             const QString ent = match.captured(2);
             plain.append(text.midRef(0, match.capturedStart(0)));
             text.remove(0, match.capturedEnd(0));
-            if (ent.startsWith(QL1C('#'))) { // numeric character entity
+            if (ent.startsWith(QL1C('#')))   // numeric character entity
+            {
                 bool ok;
                 const QChar c = ent.at(1) == QL1C('x') ? QChar(ent.midRef(2).toInt(&ok, 16))
-                                                         : QChar(ent.midRef(1).toInt(&ok, 10));
-                if (ok) {
+                                : QChar(ent.midRef(1).toInt(&ok, 10));
+                if (ok)
+                {
                     plain.append(c);
-                } else { // unknown Unicode point, leave as is
+                }
+                else     // unknown Unicode point, leave as is
+                {
                     plain.append(match.captured(0));
                 }
-            } else if (s->xmlEntities.contains(ent)) { // known entity
+            }
+            else if (s->xmlEntities.contains(ent))     // known entity
+            {
                 plain.append(s->xmlEntities[ent]);
-            } else { // unknown entity, just leave as is
+            }
+            else     // unknown entity, just leave as is
+            {
                 plain.append(match.captured(0));
             }
         }
@@ -1581,7 +1704,8 @@ QString KuitFormatterPrivate::finalizeVisualText(const QString &text_,
     }
 
     // Add top tag.
-    if (format == Kuit::RichText) {
+    if (format == Kuit::RichText)
+    {
         text = QLatin1String("<html>") + text + QLatin1String("</html>");
     }
 
@@ -1603,19 +1727,23 @@ QString KuitFormatterPrivate::salvageMarkup(const QString &text_,
     QRegularExpressionMatchIterator iter = wrapRx.globalMatch(text);
     QRegularExpressionMatch match;
     int pos = 0;
-    while (iter.hasNext()) {
+    while (iter.hasNext())
+    {
         match = iter.next();
         ntext += text.midRef(pos, match.capturedStart(0) - pos);
         const QString tagname = match.captured(2).toLower();
         const QString content = salvageMarkup(match.captured(4), format, setup);
-        if (setup.d->knownTags.contains(tagname)) {
+        if (setup.d->knownTags.contains(tagname))
+        {
             const KuitTag &tag = setup.d->knownTags.value(tagname);
             QHash<QString, QString> attributes;
             // TODO: Do not ignore attributes (in match.captured(3)).
             ntext += tag.format(languageAsList,
                                 attributes, content,
                                 QStringList(), format);
-        } else {
+        }
+        else
+        {
             ntext += match.captured(1) + content + match.captured(5);
         }
         pos = match.capturedEnd(0);
@@ -1626,20 +1754,24 @@ QString KuitFormatterPrivate::salvageMarkup(const QString &text_,
 
     // - tags without content
     static const QRegularExpression nowrRx(QStringLiteral("<\\s*(\\w+)\\b([^>]*)/\\s*>"),
-                                QRegularExpression::InvertedGreedinessOption);
+                                           QRegularExpression::InvertedGreedinessOption);
     iter = nowrRx.globalMatch(text);
     pos = 0;
     ntext.clear();
-    while (iter.hasNext()) {
+    while (iter.hasNext())
+    {
         match = iter.next();
         ntext += text.midRef(pos, match.capturedStart(0) - pos);
         const QString tagname = match.captured(1).toLower();
-        if (setup.d->knownTags.contains(tagname)) {
+        if (setup.d->knownTags.contains(tagname))
+        {
             const KuitTag &tag = setup.d->knownTags.value(tagname);
             ntext += tag.format(languageAsList,
                                 QHash<QString, QString>(), QString(),
                                 QStringList(), format);
-        } else {
+        }
+        else
+        {
             ntext += match.captured(0);
         }
         pos = match.capturedEnd(0);
@@ -1649,7 +1781,8 @@ QString KuitFormatterPrivate::salvageMarkup(const QString &text_,
     text = ntext;
 
     // Add top tag.
-    if (format == Kuit::RichText) {
+    if (format == Kuit::RichText)
+    {
         text = QStringLiteral("<html>") + text + QStringLiteral("</html>");
     }
 
