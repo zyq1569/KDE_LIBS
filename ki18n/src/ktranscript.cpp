@@ -82,11 +82,11 @@ public:
     // Interface functions.
     Q_INVOKABLE QJSValue load(const QString &name);
     Q_INVOKABLE QJSValue setcall(const QJSValue &name, const QJSValue &func,
-                                     const QJSValue &fval = QJSValue::NullValue);
+                                 const QJSValue &fval = QJSValue::NullValue);
     Q_INVOKABLE QJSValue hascall(const QString &name);
     Q_INVOKABLE QJSValue acallInternal(const QJSValue &args);
     Q_INVOKABLE QJSValue setcallForall(const QJSValue &name, const QJSValue &func,
-                                           const QJSValue &fval = QJSValue::NullValue);
+                                       const QJSValue &fval = QJSValue::NullValue);
     Q_INVOKABLE QJSValue fallback();
     Q_INVOKABLE QJSValue nsubs();
     Q_INVOKABLE QJSValue subs(const QJSValue &index);
@@ -175,7 +175,8 @@ void dbgout(const char *str, const T1 &a1)
 #ifndef NDEBUG
     fprintf(stderr, DBGP"%s\n", QString::fromUtf8(str).arg(a1).toLocal8Bit().data());
 #else
-    Q_UNUSED(str); Q_UNUSED(a1);
+    Q_UNUSED(str);
+    Q_UNUSED(a1);
 #endif
 }
 template <typename T1, typename T2>
@@ -184,7 +185,9 @@ void dbgout(const char *str, const T1 &a1, const T2 &a2)
 #ifndef NDEBUG
     fprintf(stderr, DBGP"%s\n", QString::fromUtf8(str).arg(a1).arg(a2).toLocal8Bit().data());
 #else
-    Q_UNUSED(str); Q_UNUSED(a1); Q_UNUSED(a2);
+    Q_UNUSED(str);
+    Q_UNUSED(a1);
+    Q_UNUSED(a2);
 #endif
 }
 template <typename T1, typename T2, typename T3>
@@ -193,7 +196,10 @@ void dbgout(const char *str, const T1 &a1, const T2 &a2, const T3 &a3)
 #ifndef NDEBUG
     fprintf(stderr, DBGP"%s\n", QString::fromUtf8(str).arg(a1).arg(a2).arg(a3).toLocal8Bit().data());
 #else
-    Q_UNUSED(str); Q_UNUSED(a1); Q_UNUSED(a2); Q_UNUSED(a3);
+    Q_UNUSED(str);
+    Q_UNUSED(a1);
+    Q_UNUSED(a2);
+    Q_UNUSED(a3);
 #endif
 }
 
@@ -213,9 +219,11 @@ void warnout(const char *str, const T1 &a1)
 
 QString expt2str(const QJSValue &expt)
 {
-    if (expt.isError()) {
+    if (expt.isError())
+    {
         const QJSValue message = expt.property(QStringLiteral("message"));
-        if (!message.isUndefined()) {
+        if (!message.isUndefined())
+        {
             return QStringLiteral("Error: %1").arg(message.toString());
         }
     }
@@ -231,8 +239,10 @@ int countLines(const QString &s, int p)
 {
     int n = 1;
     int len = s.length();
-    for (int i = 0; i < p && i < len; ++i) {
-        if (s[i] == QLatin1Char('\n')) {
+    for (int i = 0; i < p && i < len; ++i)
+    {
+        if (s[i] == QLatin1Char('\n'))
+        {
             ++n;
         }
     }
@@ -252,16 +262,19 @@ QByteArray normKeystr(const QString &raw, bool mayHaveAcc = true)
     // Strip all whitespace.
     int len = key.length();
     QString nkey;
-    for (int i = 0; i < len; ++i) {
+    for (int i = 0; i < len; ++i)
+    {
         QChar c = key[i];
-        if (!c.isSpace()) {
+        if (!c.isSpace())
+        {
             nkey.append(c);
         }
     }
     key = nkey;
 
     // Strip accelerator marker.
-    if (mayHaveAcc) {
+    if (mayHaveAcc)
+    {
         key = removeAcceleratorMarker(key);
     }
 
@@ -285,18 +298,22 @@ QString trimSmart(const QString &raw)
     int len = raw.length();
 
     int is = 0;
-    while (is < len && raw[is].isSpace() && raw[is] != QLatin1Char('\n')) {
+    while (is < len && raw[is].isSpace() && raw[is] != QLatin1Char('\n'))
+    {
         ++is;
     }
-    if (is >= len || raw[is] != QLatin1Char('\n')) {
+    if (is >= len || raw[is] != QLatin1Char('\n'))
+    {
         is = -1;
     }
 
     int ie = len - 1;
-    while (ie >= 0 && raw[ie].isSpace() && raw[ie] != QLatin1Char('\n')) {
+    while (ie >= 0 && raw[ie].isSpace() && raw[ie] != QLatin1Char('\n'))
+    {
         --ie;
     }
-    if (ie < 0 || raw[ie] != QLatin1Char('\n')) {
+    if (ie < 0 || raw[ie] != QLatin1Char('\n'))
+    {
         ie = len;
     }
 
@@ -309,15 +326,22 @@ QString trimSmart(const QString &raw)
 QJSValue variantToJsValue(const QVariant &val)
 {
     QVariant::Type vtype = val.type();
-    if (vtype == QVariant::String) {
+    if (vtype == QVariant::String)
+    {
         return QJSValue(val.toString());
-    } else if (vtype == QVariant::Bool) {
+    }
+    else if (vtype == QVariant::Bool)
+    {
         return QJSValue(val.toBool());
-    } else if (vtype == QVariant::Double
-               || vtype == QVariant::Int || vtype == QVariant::UInt
-               || vtype == QVariant::LongLong || vtype == QVariant::ULongLong) {
+    }
+    else if (vtype == QVariant::Double
+             || vtype == QVariant::Int || vtype == QVariant::UInt
+             || vtype == QVariant::LongLong || vtype == QVariant::ULongLong)
+    {
         return QJSValue(val.toDouble());
-    } else {
+    }
+    else
+    {
         return QJSValue::UndefinedValue;
     }
 }
@@ -334,47 +358,58 @@ TsConfig readConfig(const QString &fname)
     configGroup = config.insert(QString(), TsConfigGroup());
 
     QFile file(fname);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly))
+    {
         return config;
     }
     QTextStream stream(&file);
     stream.setCodec("UTF-8");
-    while (!stream.atEnd()) {
+    while (!stream.atEnd())
+    {
         QString line = stream.readLine();
         int p1, p2;
 
         // Remove comment from the line.
         p1 = line.indexOf(QLatin1Char('#'));
-        if (p1 >= 0) {
+        if (p1 >= 0)
+        {
             line.truncate(p1);
         }
         line = line.trimmed();
-        if (line.isEmpty()) {
+        if (line.isEmpty())
+        {
             continue;
         }
 
-        if (line[0] == QLatin1Char('[')) {
+        if (line[0] == QLatin1Char('['))
+        {
             // Group switch.
             p1 = 0;
             p2 = line.indexOf(QLatin1Char(']'), p1 + 1);
-            if (p2 < 0) {
+            if (p2 < 0)
+            {
                 continue;
             }
             QString group = line.mid(p1 + 1, p2 - p1 - 1).trimmed();
             configGroup = config.find(group);
-            if (configGroup == config.end()) {
+            if (configGroup == config.end())
+            {
                 // Add new group.
                 configGroup = config.insert(group, TsConfigGroup());
             }
-        } else {
+        }
+        else
+        {
             // Field.
             p1 = line.indexOf(QLatin1Char('='));
-            if (p1 < 0) {
+            if (p1 < 0)
+            {
                 continue;
             }
             QStringRef field = line.leftRef(p1).trimmed();
             QStringRef value = line.midRef(p1 + 1).trimmed();
-            if (!field.isEmpty()) {
+            if (!field.isEmpty())
+            {
                 (*configGroup)[field.toString()] = value.toString();
             }
         }
@@ -388,7 +423,8 @@ TsConfig readConfig(const QString &fname)
 // throw or log error, depending on context availability
 static QJSValue throwError(QJSEngine *engine, const QString &message)
 {
-    if (engine) {
+    if (engine)
+    {
         return engine->evaluate(QStringLiteral("new Error(%1)").arg(message));
     }
 
@@ -443,7 +479,8 @@ KTranscriptImp::KTranscriptImp()
     // Load user configuration.
 
     QString tsConfigPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("ktranscript.ini"));
-    if (tsConfigPath.isEmpty()) {
+    if (tsConfigPath.isEmpty())
+    {
         tsConfigPath = QDir::homePath() + QLatin1Char('/') + QLatin1String(".transcriptrc");
     }
     config = readConfig(tsConfigPath);
@@ -477,7 +514,8 @@ QString KTranscriptImp::eval(const QList<QVariant> &argv,
     // Unportable (needs unistd.h)?
 
     // If effective user id is root and real user id is not root.
-    if (geteuid() == 0 && getuid() != 0) {
+    if (geteuid() == 0 && getuid() != 0)
+    {
         // Since scripts are user input, and the program is running with
         // root permissions while real user is not root, do not invoke
         // scripting at all, to prevent exploits.
@@ -487,10 +525,12 @@ QString KTranscriptImp::eval(const QList<QVariant> &argv,
 #endif
 
     // Load any new modules and clear the list.
-    if (!mods.isEmpty()) {
+    if (!mods.isEmpty())
+    {
         loadModules(mods, error);
         mods.clear();
-        if (!error.isEmpty()) {
+        if (!error.isEmpty())
+        {
             return QString();
         }
     }
@@ -499,7 +539,8 @@ QString KTranscriptImp::eval(const QList<QVariant> &argv,
     // (though it should never happen here, but earlier when loading modules;
     // this also means there are no calls set, so the unregistered call error
     // below will be reported).
-    if (!m_sface.contains(lang)) {
+    if (!m_sface.contains(lang))
+    {
         setupInterpreter(lang);
     }
 
@@ -521,14 +562,16 @@ QString KTranscriptImp::eval(const QList<QVariant> &argv,
 
     // Find corresponding JS function.
     int argc = argv.size();
-    if (argc < 1) {
+    if (argc < 1)
+    {
         //error = "At least the call name must be supplied.";
         // Empty interpolation is OK, possibly used just to initialize
         // at a given point (e.g. for Ts.setForall() to start having effect).
         return QString();
     }
     QString funcName = argv[0].toString();
-    if (!sface->funcs.contains(funcName)) {
+    if (!sface->funcs.contains(funcName))
+    {
         error = QStringLiteral("Unregistered call to '%1'.").arg(funcName);
         return QString();
     }
@@ -543,35 +586,47 @@ QString KTranscriptImp::eval(const QList<QVariant> &argv,
     // Execute function.
     QJSValueList arglist;
     arglist.reserve(argc-1);
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i)
+    {
         arglist.append(engine->toScriptValue(argv[i]));
     }
 
     QJSValue val;
-    if (fval.isObject()) {
+    if (fval.isObject())
+    {
         val = func.callWithInstance(fval, arglist);
-    } else { // no object associated to this function, use global
+    }
+    else     // no object associated to this function, use global
+    {
         val = func.callWithInstance(gobj, arglist);
     }
 
-    if (fallback) {
+    if (fallback)
+    {
         // Fallback to ordinary translation requested.
         return QString();
-    } else if (!val.isError()) {
+    }
+    else if (!val.isError())
+    {
         // Evaluation successful.
 
-        if (val.isString()) {
+        if (val.isString())
+        {
             // Good to go.
 
             return val.toString();
-        } else {
+        }
+        else
+        {
             // Accept only strings.
 
             QString strval = val.toString();
             error = QStringLiteral("Non-string return value: %1").arg(strval);
             return QString();
         }
-    } else {
+    }
+    else
+    {
         // Exception raised.
 
         error = expt2str(val);
@@ -584,7 +639,8 @@ QStringList KTranscriptImp::postCalls(const QString &lang)
 {
     // Return no calls if scripting was not already set up for this language.
     // NOTE: This shouldn't happen, as postCalls cannot be called in such case.
-    if (!m_sface.contains(lang)) {
+    if (!m_sface.contains(lang))
+    {
         return QStringList();
     }
 
@@ -599,19 +655,22 @@ void KTranscriptImp::loadModules(const QList<QStringList> &mods,
 {
     QList<QString> modErrors;
 
-    for (const QStringList &mod : mods) {
+    for (const QStringList &mod : mods)
+    {
         QString mpath = mod[0];
         QString mlang = mod[1];
 
         // Add interpreters for new languages.
-        if (!m_sface.contains(mlang)) {
+        if (!m_sface.contains(mlang))
+        {
             setupInterpreter(mlang);
         }
 
         // Setup current module path for loading submodules.
         // (sort of closure over invocations of loadf)
         int posls = mpath.lastIndexOf(QLatin1Char('/'));
-        if (posls < 1) {
+        if (posls < 1)
+        {
             modErrors.append(QStringLiteral(
                                  "Funny module path '%1', skipping.").arg(mpath));
             continue;
@@ -631,7 +690,8 @@ void KTranscriptImp::loadModules(const QList<QStringList> &mods,
     // Unset module path.
     currentModulePath.clear();
 
-    for (const QString &merr : qAsConst(modErrors)) {
+    for (const QString &merr : qAsConst(modErrors))
+    {
         error.append(merr + QLatin1Char('\n'));
     }
 }
@@ -668,7 +728,8 @@ Scriptface::~Scriptface()
 void Scriptface::put(const QString &propertyName, const QJSValue &value)
 {
     QJSValue internalObject = scriptEngine->globalObject().property(QStringLiteral("ScriptfaceInternal"));
-    if (internalObject.isUndefined()) {
+    if (internalObject.isUndefined())
+    {
         internalObject = scriptEngine->newObject();
         scriptEngine->globalObject().setProperty(QStringLiteral("ScriptfaceInternal"), internalObject);
     }
@@ -695,15 +756,18 @@ QJSValue Scriptface::load(const QString &name)
 
 QJSValue Scriptface::setcall(const QJSValue &name, const QJSValue &func, const QJSValue &fval)
 {
-    if (!name.isString()) {
+    if (!name.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("setcall: expected string as first argument"));
     }
-    if (!func.isCallable()) {
+    if (!func.isCallable())
+    {
         return throwError(scriptEngine,
                           SPREF("setcall: expected function as second argument"));
     }
-    if (!(fval.isObject() || fval.isNull())) {
+    if (!(fval.isObject() || fval.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("setcall: expected object or null as third argument"));
     }
@@ -732,17 +796,20 @@ QJSValue Scriptface::acallInternal(const QJSValue &args)
 {
     QJSValueIterator it(args);
 
-    if (!it.next()) {
+    if (!it.next())
+    {
         return throwError(scriptEngine,
                           SPREF("acall: expected at least one argument (call name)"));
     }
-    if (!it.value().isString()) {
+    if (!it.value().isString())
+    {
         return throwError(scriptEngine,
                           SPREF("acall: expected string as first argument (call name)"));
     }
     // Get the function and its context object.
     QString callname = it.value().toString();
-    if (!funcs.contains(callname)) {
+    if (!funcs.contains(callname))
+    {
         return throwError(scriptEngine,
                           SPREF("acall: unregistered call to '%1'").arg(callname));
     }
@@ -756,13 +823,18 @@ QJSValue Scriptface::acallInternal(const QJSValue &args)
     // Execute function.
     QJSValueList arglist;
     while (it.next())
+    {
         arglist.append(it.value());
+    }
 
     QJSValue val;
-    if (fval.isObject()) {
+    if (fval.isObject())
+    {
         // Call function with the context object.
         val = func.callWithInstance(fval, arglist);
-    } else {
+    }
+    else
+    {
         // No context object associated to this function, use global.
         val = func.callWithInstance(scriptEngine->globalObject(), arglist);
     }
@@ -771,15 +843,18 @@ QJSValue Scriptface::acallInternal(const QJSValue &args)
 
 QJSValue Scriptface::setcallForall(const QJSValue &name, const QJSValue &func, const QJSValue &fval)
 {
-    if (!name.isString()) {
+    if (!name.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("setcallForall: expected string as first argument"));
     }
-    if (!func.isCallable()) {
+    if (!func.isCallable())
+    {
         return throwError(scriptEngine,
                           SPREF("setcallForall: expected function as second argument"));
     }
-    if (!(fval.isObject() || fval.isNull())) {
+    if (!(fval.isObject() || fval.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("setcallForall: expected object or null as third argument"));
     }
@@ -804,7 +879,8 @@ QJSValue Scriptface::setcallForall(const QJSValue &name, const QJSValue &func, c
 
 QJSValue Scriptface::fallback()
 {
-    if (fallbackRequest) {
+    if (fallbackRequest)
+    {
         *fallbackRequest = true;
     }
     return QJSValue::UndefinedValue;
@@ -817,13 +893,15 @@ QJSValue Scriptface::nsubs()
 
 QJSValue Scriptface::subs(const QJSValue &index)
 {
-    if (!index.isNumber()) {
+    if (!index.isNumber())
+    {
         return throwError(scriptEngine,
                           SPREF("subs: expected number as first argument"));
     }
 
     int i = qRound(index.toNumber());
-    if (i < 0 || i >= subList->size()) {
+    if (i < 0 || i >= subList->size())
+    {
         return throwError(scriptEngine,
                           SPREF("subs: index out of range"));
     }
@@ -833,13 +911,15 @@ QJSValue Scriptface::subs(const QJSValue &index)
 
 QJSValue Scriptface::vals(const QJSValue &index)
 {
-    if (!index.isNumber()) {
+    if (!index.isNumber())
+    {
         return throwError(scriptEngine,
                           SPREF("vals: expected number as first argument"));
     }
 
     int i = qRound(index.toNumber());
-    if (i < 0 || i >= valList->size()) {
+    if (i < 0 || i >= valList->size())
+    {
         return throwError(scriptEngine,
                           SPREF("vals: index out of range"));
     }
@@ -855,7 +935,8 @@ QJSValue Scriptface::msgctxt()
 
 QJSValue Scriptface::dynctxt(const QString &qkey)
 {
-    if (dyncontext->contains(qkey)) {
+    if (dyncontext->contains(qkey))
+    {
         return QJSValue(dyncontext->value(qkey));
     }
     return QJSValue::UndefinedValue;
@@ -893,7 +974,8 @@ QJSValue Scriptface::localeCountry()
 
 QJSValue Scriptface::normKey(const QJSValue &phrase)
 {
-    if (!phrase.isString()) {
+    if (!phrase.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("normKey: expected string as argument"));
     }
@@ -911,19 +993,23 @@ QJSValue Scriptface::loadProps(const QString &name)
 
 QJSValue Scriptface::loadProps(const QJSValueList &fnames)
 {
-    if (globalKTI()->currentModulePath.isEmpty()) {
+    if (globalKTI()->currentModulePath.isEmpty())
+    {
         return throwError(scriptEngine,
                           SPREF("loadProps: no current module path, aiiie..."));
     }
 
-    for (int i = 0; i < fnames.size(); ++i) {
-        if (!fnames[i].isString()) {
+    for (int i = 0; i < fnames.size(); ++i)
+    {
+        if (!fnames[i].isString())
+        {
             return throwError(scriptEngine,
                               SPREF("loadProps: expected string as file name"));
         }
     }
 
-    for (int i = 0; i < fnames.size(); ++i) {
+    for (int i = 0; i < fnames.size(); ++i)
+    {
         QString qfname = fnames[i].toString();
         QString qfpath_base = globalKTI()->currentModulePath + QLatin1Char('/') + qfname;
 
@@ -932,11 +1018,13 @@ QJSValue Scriptface::loadProps(const QJSValueList &fnames)
         QString qfpath = qfpath_base + QLatin1String(".pmapc");
         bool haveCompiled = true;
         QFile file_check(qfpath);
-        if (!file_check.open(QIODevice::ReadOnly)) {
+        if (!file_check.open(QIODevice::ReadOnly))
+        {
             haveCompiled = false;
             qfpath = qfpath_base + QLatin1String(".pmap");
             QFile file_check(qfpath);
-            if (!file_check.open(QIODevice::ReadOnly)) {
+            if (!file_check.open(QIODevice::ReadOnly))
+            {
                 return throwError(scriptEngine,
                                   SPREF("loadProps: cannot read map '%1'")
                                   .arg(qfpath));
@@ -945,14 +1033,19 @@ QJSValue Scriptface::loadProps(const QJSValueList &fnames)
         file_check.close();
 
         // Load from appropriate type of map.
-        if (!loadedPmapPaths.contains(qfpath)) {
+        if (!loadedPmapPaths.contains(qfpath))
+        {
             QString errorString;
-            if (haveCompiled) {
+            if (haveCompiled)
+            {
                 errorString = loadProps_bin(qfpath);
-            } else {
+            }
+            else
+            {
                 errorString = loadProps_text(qfpath);
             }
-            if (!errorString.isEmpty()) {
+            if (!errorString.isEmpty())
+            {
                 return throwError(scriptEngine, errorString);
             }
             dbgout("Loaded property map: %1", qfpath);
@@ -965,24 +1058,29 @@ QJSValue Scriptface::loadProps(const QJSValueList &fnames)
 
 QJSValue Scriptface::getProp(const QJSValue &phrase, const QJSValue &prop)
 {
-    if (!phrase.isString()) {
+    if (!phrase.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("getProp: expected string as first argument"));
     }
-    if (!prop.isString()) {
+    if (!prop.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("getProp: expected string as second argument"));
     }
 
     QByteArray qphrase = normKeystr(phrase.toString());
     QHash<QByteArray, QByteArray> props = phraseProps.value(qphrase);
-    if (props.isEmpty()) {
+    if (props.isEmpty())
+    {
         props = resolveUnparsedProps(qphrase);
     }
-    if (!props.isEmpty()) {
+    if (!props.isEmpty())
+    {
         QByteArray qprop = normKeystr(prop.toString());
         QByteArray qval = props.value(qprop);
-        if (!qval.isEmpty()) {
+        if (!qval.isEmpty())
+        {
             return QJSValue(QString::fromUtf8(qval));
         }
     }
@@ -991,15 +1089,18 @@ QJSValue Scriptface::getProp(const QJSValue &phrase, const QJSValue &prop)
 
 QJSValue Scriptface::setProp(const QJSValue &phrase, const QJSValue &prop, const QJSValue &value)
 {
-    if (!phrase.isString()) {
+    if (!phrase.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("setProp: expected string as first argument"));
     }
-    if (!prop.isString()) {
+    if (!prop.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("setProp: expected string as second argument"));
     }
-    if (!value.isString()) {
+    if (!value.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("setProp: expected string as third argument"));
     }
@@ -1026,13 +1127,16 @@ static QString toCaseFirst(const QString &qstr, int qnalt, bool toupper)
     bool checkCase = true;
     int numChcased = 0;
     int i = 0;
-    while (i < len) {
+    while (i < len)
+    {
         QChar c = qstr[i];
 
-        if (qnalt && !remainingAlts && qstr.midRef(i, hlen) == head) {
+        if (qnalt && !remainingAlts && qstr.midRef(i, hlen) == head)
+        {
             // An alternatives directive is just starting.
             i += 2;
-            if (i >= len) {
+            if (i >= len)
+            {
                 break;    // malformed directive, bail out
             }
             // Record alternatives separator, set number of remaining
@@ -1040,16 +1144,23 @@ static QString toCaseFirst(const QString &qstr, int qnalt, bool toupper)
             altSep = qstrcc[i];
             remainingAlts = qnalt;
             checkCase = true;
-        } else if (remainingAlts && c == altSep) {
+        }
+        else if (remainingAlts && c == altSep)
+        {
             // Alternative separator found, reduce number of remaining
             // alternatives and reactivate case checking.
             --remainingAlts;
             checkCase = true;
-        } else if (checkCase && c.isLetter()) {
+        }
+        else if (checkCase && c.isLetter())
+        {
             // Case check is active and the character is a letter; change case.
-            if (toupper) {
+            if (toupper)
+            {
                 qstrcc[i] = c.toUpper();
-            } else {
+            }
+            else
+            {
                 qstrcc[i] = c.toLower();
             }
             ++numChcased;
@@ -1059,7 +1170,8 @@ static QString toCaseFirst(const QString &qstr, int qnalt, bool toupper)
 
         // If any letter has been changed, and there are no more alternatives
         // to be processed, we're done.
-        if (numChcased > 0 && remainingAlts == 0) {
+        if (numChcased > 0 && remainingAlts == 0)
+        {
             break;
         }
 
@@ -1072,11 +1184,13 @@ static QString toCaseFirst(const QString &qstr, int qnalt, bool toupper)
 
 QJSValue Scriptface::toUpperFirst(const QJSValue &str, const QJSValue &nalt)
 {
-    if (!str.isString()) {
+    if (!str.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("toUpperFirst: expected string as first argument"));
     }
-    if (!(nalt.isNumber() || nalt.isNull())) {
+    if (!(nalt.isNumber() || nalt.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("toUpperFirst: expected number as second argument"));
     }
@@ -1091,11 +1205,13 @@ QJSValue Scriptface::toUpperFirst(const QJSValue &str, const QJSValue &nalt)
 
 QJSValue Scriptface::toLowerFirst(const QJSValue &str, const QJSValue &nalt)
 {
-    if (!str.isString()) {
+    if (!str.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("toLowerFirst: expected string as first argument"));
     }
-    if (!(nalt.isNumber() || nalt.isNull())) {
+    if (!(nalt.isNumber() || nalt.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("toLowerFirst: expected number as second argument"));
     }
@@ -1110,17 +1226,20 @@ QJSValue Scriptface::toLowerFirst(const QJSValue &str, const QJSValue &nalt)
 
 QJSValue Scriptface::getConfString(const QJSValue &key, const QJSValue &dval)
 {
-    if (!key.isString()) {
+    if (!key.isString())
+    {
         return throwError(scriptEngine,
                           QStringLiteral("getConfString: expected string as first argument"));
     }
-    if (!(dval.isString() || dval.isNull())) {
+    if (!(dval.isString() || dval.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("getConfString: expected string as second argument (when given)"));
     }
 
     QString qkey = key.toString();
-    if (config.contains(qkey)) {
+    if (config.contains(qkey))
+    {
         return QJSValue(config.value(qkey));
     }
 
@@ -1129,24 +1248,28 @@ QJSValue Scriptface::getConfString(const QJSValue &key, const QJSValue &dval)
 
 QJSValue Scriptface::getConfBool(const QJSValue &key, const QJSValue &dval)
 {
-    if (!key.isString()) {
+    if (!key.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("getConfBool: expected string as first argument"));
     }
-    if (!(dval.isBool() || dval.isNull())) {
+    if (!(dval.isBool() || dval.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("getConfBool: expected boolean as second argument (when given)"));
     }
 
     static QStringList falsities;
-    if (falsities.isEmpty()) {
+    if (falsities.isEmpty())
+    {
         falsities.append(QString(QLatin1Char('0')));
         falsities.append(QStringLiteral("no"));
         falsities.append(QStringLiteral("false"));
     }
 
     QString qkey = key.toString();
-    if (config.contains(qkey)) {
+    if (config.contains(qkey))
+    {
         QString qval = config.value(qkey).toLower();
         return QJSValue(!falsities.contains(qval));
     }
@@ -1156,23 +1279,27 @@ QJSValue Scriptface::getConfBool(const QJSValue &key, const QJSValue &dval)
 
 QJSValue Scriptface::getConfNumber(const QJSValue &key, const QJSValue &dval)
 {
-    if (!key.isString()) {
+    if (!key.isString())
+    {
         return throwError(scriptEngine,
                           SPREF("getConfNumber: expected string "
-                          "as first argument"));
+                                "as first argument"));
     }
-    if (!(dval.isNumber() || dval.isNull())) {
+    if (!(dval.isNumber() || dval.isNull()))
+    {
         return throwError(scriptEngine,
                           SPREF("getConfNumber: expected number "
-                          "as second argument (when given)"));
+                                "as second argument (when given)"));
     }
 
     QString qkey = key.toString();
-    if (config.contains(qkey)) {
+    if (config.contains(qkey))
+    {
         QString qval = config.value(qkey);
         bool convOk;
         double qnum = qval.toDouble(&convOk);
-        if (convOk) {
+        if (convOk)
+        {
             return QJSValue(qnum);
         }
     }
@@ -1185,24 +1312,29 @@ QJSValue Scriptface::getConfNumber(const QJSValue &key, const QJSValue &dval)
 
 QJSValue Scriptface::load(const QJSValueList &fnames)
 {
-    if (globalKTI()->currentModulePath.isEmpty()) {
+    if (globalKTI()->currentModulePath.isEmpty())
+    {
         return throwError(scriptEngine,
                           SPREF("load: no current module path, aiiie..."));
     }
 
-    for (int i = 0; i < fnames.size(); ++i) {
-        if (!fnames[i].isString()) {
+    for (int i = 0; i < fnames.size(); ++i)
+    {
+        if (!fnames[i].isString())
+        {
             return throwError(scriptEngine,
                               SPREF("load: expected string as file name"));
         }
     }
 
-    for (int i = 0; i < fnames.size(); ++i) {
+    for (int i = 0; i < fnames.size(); ++i)
+    {
         QString qfname = fnames[i].toString();
         QString qfpath = globalKTI()->currentModulePath + QLatin1Char('/') + qfname + QLatin1String(".js");
 
         QFile file(qfpath);
-        if (!file.open(QIODevice::ReadOnly)) {
+        if (!file.open(QIODevice::ReadOnly))
+        {
             return throwError(scriptEngine,
                               SPREF("load: cannot read file '%1'") \
                               .arg(qfpath));
@@ -1215,13 +1347,16 @@ QJSValue Scriptface::load(const QJSValueList &fnames)
 
         QJSValue comp = scriptEngine->evaluate(source, qfpath, 0);
 
-        if (comp.isError()) {
+        if (comp.isError())
+        {
             QString msg = comp.toString();
 
             QString line;
-            if (comp.isObject()) {
+            if (comp.isObject())
+            {
                 QJSValue lval = comp.property(QStringLiteral("line"));
-                if (lval.isNumber()) {
+                if (lval.isNumber())
+                {
                     line = QString::number(lval.toInt());
                 }
             }
@@ -1238,7 +1373,8 @@ QJSValue Scriptface::load(const QJSValueList &fnames)
 QString Scriptface::loadProps_text(const QString &fpath)
 {
     QFile file(fpath);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly))
+    {
         return SPREF("loadProps_text: cannot read file '%1'")
                .arg(fpath);
     }
@@ -1258,27 +1394,34 @@ QString Scriptface::loadProps_text(const QString &fpath)
     QByteArray pkey;
     QChar prop_sep, key_sep;
     int i = 0;
-    while (1) {
+    while (1)
+    {
         int i_checkpoint = i;
 
-        if (state == s_nextEntry) {
-            while (s[i].isSpace()) {
+        if (state == s_nextEntry)
+        {
+            while (s[i].isSpace())
+            {
                 ++i;
-                if (i >= slen) {
+                if (i >= slen)
+                {
                     goto END_PROP_PARSE;
                 }
             }
-            if (i + 1 >= slen) {
+            if (i + 1 >= slen)
+            {
                 return SPREF("loadProps_text: unexpected end "
-                                           "of file in %1").arg(fpath);
+                             "of file in %1").arg(fpath);
             }
-            if (s[i] != QLatin1Char('#')) {
+            if (s[i] != QLatin1Char('#'))
+            {
                 // Separator characters for this entry.
                 key_sep = s[i];
                 prop_sep = s[i + 1];
-                if (key_sep.isLetter() || prop_sep.isLetter()) {
+                if (key_sep.isLetter() || prop_sep.isLetter())
+                {
                     return  SPREF("loadProps_text: separator "
-                                                "characters must not be letters at %1:%2")
+                                  "characters must not be letters at %1:%2")
                             .arg(fpath).arg(countLines(s, i));
                 }
 
@@ -1289,51 +1432,67 @@ QString Scriptface::loadProps_text(const QString &fpath)
 
                 i += 2;
                 state = s_nextKey;
-            } else {
+            }
+            else
+            {
                 // This is a comment, skip to EOL, don't change state.
-                while (s[i] != QLatin1Char('\n')) {
+                while (s[i] != QLatin1Char('\n'))
+                {
                     ++i;
-                    if (i >= slen) {
+                    if (i >= slen)
+                    {
                         goto END_PROP_PARSE;
                     }
                 }
             }
-        } else if (state == s_nextKey) {
+        }
+        else if (state == s_nextKey)
+        {
             int ip = i;
             // Proceed up to next key or property separator.
-            while (s[i] != key_sep && s[i] != prop_sep) {
+            while (s[i] != key_sep && s[i] != prop_sep)
+            {
                 ++i;
-                if (i >= slen) {
+                if (i >= slen)
+                {
                     goto END_PROP_PARSE;
                 }
             }
-            if (s[i] == key_sep) {
+            if (s[i] == key_sep)
+            {
                 // This is a property key,
                 // record for when the value gets parsed.
                 pkey = normKeystr(s.mid(ip, i - ip), false);
 
                 i += 1;
                 state = s_nextValue;
-            } else { // if (s[i] == prop_sep) {
+            }
+            else     // if (s[i] == prop_sep) {
+            {
                 // This is an entry key, or end of entry.
                 QByteArray ekey = normKeystr(s.mid(ip, i - ip), false);
-                if (!ekey.isEmpty()) {
+                if (!ekey.isEmpty())
+                {
                     // An entry key.
                     ekeys.append(ekey);
 
                     i += 1;
                     state = s_nextKey;
-                } else {
+                }
+                else
+                {
                     // End of entry.
-                    if (ekeys.size() < 1) {
+                    if (ekeys.size() < 1)
+                    {
                         return SPREF("loadProps_text: no entry key "
-                                                   "for entry ending at %1:%2")
+                                     "for entry ending at %1:%2")
                                .arg(fpath).arg(countLines(s, i));
                     }
 
                     // Add collected entry into global store,
                     // once for each entry key (QHash implicitly shared).
-                    for (const QByteArray &ekey : qAsConst(ekeys)) {
+                    for (const QByteArray &ekey : qAsConst(ekeys))
+                    {
                         phraseProps[ekey] = props;
                     }
 
@@ -1341,17 +1500,22 @@ QString Scriptface::loadProps_text(const QString &fpath)
                     state = s_nextEntry;
                 }
             }
-        } else if (state == s_nextValue) {
+        }
+        else if (state == s_nextValue)
+        {
             int ip = i;
             // Proceed up to next property separator.
-            while (s[i] != prop_sep) {
+            while (s[i] != prop_sep)
+            {
                 ++i;
-                if (i >= slen) {
+                if (i >= slen)
+                {
                     goto END_PROP_PARSE;
                 }
-                if (s[i] == key_sep) {
+                if (s[i] == key_sep)
+                {
                     return SPREF("loadProps_text: property separator "
-                                               "inside property value at %1:%2")
+                                 "inside property value at %1:%2")
                            .arg(fpath).arg(countLines(s, i));
                 }
             }
@@ -1361,13 +1525,16 @@ QString Scriptface::loadProps_text(const QString &fpath)
 
             i += 1;
             state = s_nextKey;
-        } else {
+        }
+        else
+        {
             return SPREF("loadProps: internal error 10 at %1:%2")
                    .arg(fpath).arg(countLines(s, i));
         }
 
         // To avoid infinite looping and stepping out.
-        if (i == i_checkpoint || i >= slen) {
+        if (i == i_checkpoint || i >= slen)
+        {
             return SPREF("loadProps: internal error 20 at %1:%2")
                    .arg(fpath).arg(countLines(s, i));
         }
@@ -1375,7 +1542,8 @@ QString Scriptface::loadProps_text(const QString &fpath)
 
 END_PROP_PARSE:
 
-    if (state != s_nextEntry) {
+    if (state != s_nextEntry)
+    {
         return SPREF("loadProps: unexpected end of file in %1")
                .arg(fpath);
     }
@@ -1390,7 +1558,8 @@ END_PROP_PARSE:
 template <typename T>
 static int bin_read_int_nbytes(const char *fc, qlonglong len, qlonglong &pos, int nbytes)
 {
-    if (pos + nbytes > len) {
+    if (pos + nbytes > len)
+    {
         pos = -1;
         return 0;
     }
@@ -1420,10 +1589,12 @@ static QByteArray bin_read_string(const char *fc, qlonglong len, qlonglong &pos)
     // Binary format stores strings as length followed by byte sequence.
     // No null-termination.
     int nbytes = bin_read_int(fc, len, pos);
-    if (pos < 0) {
+    if (pos < 0)
+    {
         return QByteArray();
     }
-    if (nbytes < 0 || pos + nbytes > len) {
+    if (nbytes < 0 || pos + nbytes > len)
+    {
         pos = -1;
         return QByteArray();
     }
@@ -1435,7 +1606,8 @@ static QByteArray bin_read_string(const char *fc, qlonglong len, qlonglong &pos)
 QString Scriptface::loadProps_bin(const QString &fpath)
 {
     QFile file(fpath);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly))
+    {
         return SPREF("loadProps: cannot read file '%1'")
                .arg(fpath);
     }
@@ -1445,11 +1617,16 @@ QString Scriptface::loadProps_bin(const QString &fpath)
     file.close();
 
     // Choose pmap loader based on header.
-    if (head == "TSPMAP00") {
+    if (head == "TSPMAP00")
+    {
         return loadProps_bin_00(fpath);
-    } else if (head == "TSPMAP01") {
+    }
+    else if (head == "TSPMAP01")
+    {
         return loadProps_bin_01(fpath);
-    } else {
+    }
+    else
+    {
         return SPREF("loadProps: unknown version of compiled map '%1'")
                .arg(fpath);
     }
@@ -1458,7 +1635,8 @@ QString Scriptface::loadProps_bin(const QString &fpath)
 QString Scriptface::loadProps_bin_00(const QString &fpath)
 {
     QFile file(fpath);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly))
+    {
         return SPREF("loadProps: cannot read file '%1'")
                .arg(fpath);
     }
@@ -1473,30 +1651,36 @@ QString Scriptface::loadProps_bin_00(const QString &fpath)
     // Match header.
     QByteArray head(fc, 8);
     pos += 8;
-    if (head != "TSPMAP00") {
+    if (head != "TSPMAP00")
+    {
         goto END_PROP_PARSE;
     }
 
     // Read total number of entries.
     int nentries;
     nentries = bin_read_int(fc, fclen, pos);
-    if (pos < 0) {
+    if (pos < 0)
+    {
         goto END_PROP_PARSE;
     }
 
     // Read all entries.
-    for (int i = 0; i < nentries; ++i) {
+    for (int i = 0; i < nentries; ++i)
+    {
 
         // Read number of entry keys and all entry keys.
         QList<QByteArray> ekeys;
         int nekeys = bin_read_int(fc, fclen, pos);
-        if (pos < 0) {
+        if (pos < 0)
+        {
             goto END_PROP_PARSE;
         }
         ekeys.reserve(nekeys); //nekeys are appended if data is not corrupted
-        for (int j = 0; j < nekeys; ++j) {
+        for (int j = 0; j < nekeys; ++j)
+        {
             QByteArray ekey = bin_read_string(fc, fclen, pos);
-            if (pos < 0) {
+            if (pos < 0)
+            {
                 goto END_PROP_PARSE;
             }
             ekeys.append(ekey);
@@ -1506,16 +1690,20 @@ QString Scriptface::loadProps_bin_00(const QString &fpath)
         // Read number of properties and all properties.
         QHash<QByteArray, QByteArray> props;
         int nprops = bin_read_int(fc, fclen, pos);
-        if (pos < 0) {
+        if (pos < 0)
+        {
             goto END_PROP_PARSE;
         }
-        for (int j = 0; j < nprops; ++j) {
+        for (int j = 0; j < nprops; ++j)
+        {
             QByteArray pkey = bin_read_string(fc, fclen, pos);
-            if (pos < 0) {
+            if (pos < 0)
+            {
                 goto END_PROP_PARSE;
             }
             QByteArray pval = bin_read_string(fc, fclen, pos);
-            if (pos < 0) {
+            if (pos < 0)
+            {
                 goto END_PROP_PARSE;
             }
             props[pkey] = pval;
@@ -1523,14 +1711,16 @@ QString Scriptface::loadProps_bin_00(const QString &fpath)
 
         // Add collected entry into global store,
         // once for each entry key (QHash implicitly shared).
-        for (const QByteArray &ekey : qAsConst(ekeys)) {
+        for (const QByteArray &ekey : qAsConst(ekeys))
+        {
             phraseProps[ekey] = props;
         }
     }
 
 END_PROP_PARSE:
 
-    if (pos < 0) {
+    if (pos < 0)
+    {
         return SPREF("loadProps: corrupt compiled map '%1'")
                .arg(fpath);
     }
@@ -1541,7 +1731,8 @@ END_PROP_PARSE:
 QString Scriptface::loadProps_bin_01(const QString &fpath)
 {
     QFile *file = new QFile(fpath);
-    if (!file->open(QIODevice::ReadOnly)) {
+    if (!file->open(QIODevice::ReadOnly))
+    {
         return SPREF("loadProps: cannot read file '%1'")
                .arg(fpath);
     }
@@ -1554,7 +1745,8 @@ QString Scriptface::loadProps_bin_01(const QString &fpath)
     pos = 0;
     QByteArray head = fstr.left(8);
     pos += 8;
-    if (head != "TSPMAP01") {
+    if (head != "TSPMAP01")
+    {
         return SPREF("loadProps: corrupt compiled map '%1'")
                .arg(fpath);
     }
@@ -1564,7 +1756,8 @@ QString Scriptface::loadProps_bin_01(const QString &fpath)
     // Read entry keys.
     fstr = file->read(lenekeys);
     pos = 0;
-    for (quint32 i = 0; i < numekeys; ++i) {
+    for (quint32 i = 0; i < numekeys; ++i)
+    {
         QByteArray ekey = bin_read_string(fstr, lenekeys, pos);
         quint64 offset = bin_read_int64(fstr, lenekeys, pos);
         phraseUnparsedProps[ekey] = QPair<QFile *, quint64>(file, offset);
@@ -1583,14 +1776,16 @@ QHash<QByteArray, QByteArray> Scriptface::resolveUnparsedProps(const QByteArray 
     QFile *file = ref.first;
     quint64 offset = ref.second;
     QHash<QByteArray, QByteArray> props;
-    if (file && file->seek(offset)) {
+    if (file && file->seek(offset))
+    {
         QByteArray fstr = file->read(4 + 4);
         qlonglong pos = 0;
         quint32 numpkeys = bin_read_int(fstr, fstr.size(), pos);
         quint32 lenpkeys = bin_read_int(fstr, fstr.size(), pos);
         fstr = file->read(lenpkeys);
         pos = 0;
-        for (quint32 i = 0; i < numpkeys; ++i) {
+        for (quint32 i = 0; i < numpkeys; ++i)
+        {
             QByteArray pkey = bin_read_string(fstr, lenpkeys, pos);
             QByteArray pval = bin_read_string(fstr, lenpkeys, pos);
             props[pkey] = pval;
