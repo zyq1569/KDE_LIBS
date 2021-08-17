@@ -6,7 +6,6 @@ TEMPLATE    =   subdirs
 
 SUBDIRS    +=   src/KF5I18n.pro \
                 src/ktranscript.pro \
-                src/ktranscriptt.pro \
                 autotests/ki18n-ktranscripttest.pro \
                 autotests/ki18n-ktranscriptcleantest.pro
 
