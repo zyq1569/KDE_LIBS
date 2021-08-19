@@ -4,7 +4,7 @@
 
 TEMPLATE          = lib
 TARGET            = okularcore
-DESTDIR           = ./bin
+DESTDIR           = ./
 
 QT               += core xml network gui widgets printsupport concurrent dbus qml
 

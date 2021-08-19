@@ -15,8 +15,8 @@ msvc: DEFINES += MSVC
 
 contains(DEFINES, MSVC) {
 
-                SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/MSC/include
-                SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/MSC/lib
+                SDK_INSTALL_PREFIX = D:/Dev/KDE_SDK/MSC/RelWithDebInfo-vc2017/include
+                SDK_LIB_PREFIX     = D:/Dev/KDE_SDK/MSC/RelWithDebInfo-vc2017/lib
 
 INCLUDEPATH +=  $$SDK_INSTALL_PREFIX \
                 $$SDK_INSTALL_PREFIX/KF5 \
