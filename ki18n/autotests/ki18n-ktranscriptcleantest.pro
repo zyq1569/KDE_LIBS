@@ -9,7 +9,7 @@ INCLUDEPATH += ../ \
                ../src
 
 LIBS        += -L"." \
-              -l../bin/KF5I18n
+              -l../bin/bin/KF5I18n
 #            -lkernel32 \
 #            -luser32 \
 #            -lgdi32 \
