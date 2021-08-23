@@ -74,7 +74,7 @@ private:
 // Script-side transcript interface.
 class Scriptface : public QObject
 {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     explicit Scriptface(const TsConfigGroup &config, QObject *parent = nullptr);
     ~Scriptface();
@@ -1796,4 +1796,4 @@ QHash<QByteArray, QByteArray> Scriptface::resolveUnparsedProps(const QByteArray 
     return props;
 }
 
-#include "ktranscript.moc"
+//#include "ktranscript.moc"

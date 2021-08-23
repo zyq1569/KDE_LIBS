@@ -3,6 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+#include "klocalizedstring.h"
 
 #include <ktranscriptcleantest.h>
 
@@ -45,7 +46,9 @@ void KTranscriptCleanTest::test_data()
 
 void KTranscriptCleanTest::test()
 {
+
     QFETCH(QVariantList, argv);
+//    QString str = i18n("test");
     QFETCH(bool, fallsBack);
     QFETCH(QString, expected);
 
