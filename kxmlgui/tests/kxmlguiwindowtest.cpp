@@ -55,7 +55,8 @@ void MainWindow::slotCreate()
     setupGUI(ToolBar|Keys);
     createGUI(xmlFile());
 
-    if (autoSaveConfigGroup().isValid()) {
+    if (autoSaveConfigGroup().isValid())
+    {
         applyMainWindowSettings(autoSaveConfigGroup());
     }
 }
@@ -106,4 +107,4 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#include "kxmlguiwindowtest.moc"
+//#include "kxmlguiwindowtest.moc"

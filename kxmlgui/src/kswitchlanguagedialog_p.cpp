@@ -18,7 +18,8 @@
 #include <QSettings>
 #include <QSharedPointer>
 #include <QStandardPaths>
-#include <private/qlocale_p.h>
+//#include <private/qlocale_p.h>//openword
+
 #include <QGridLayout>
 
 #include <klanguagebutton.h>
@@ -81,8 +82,9 @@ void initializeLanguages()
         // already created a QLocale at this stage so we need to set the reset it
         // by triggering the creation and destruction of a QSystemLocale
         // this is highly dependant on Qt internals, so may break, but oh well
-        QSystemLocale *dummy = new QSystemLocale();
-        delete dummy;
+        //openword
+        //QSystemLocale *dummy = new QSystemLocale();
+        //delete dummy;
     }
 }
 
