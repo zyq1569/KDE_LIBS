@@ -62,7 +62,7 @@ QT        += testlib
 #OBJECTS_DIR += debug
 #UI_DIR += ./GeneratedFiles
 #RCC_DIR += ./GeneratedFiles
-DESTDIR      = ../../bin/bin/
+DESTDIR    =   ../bin/bin/
 LIBS      +=   -L$${DESTDIR} \
                -lKF5XmlGui
 
