@@ -101,6 +101,7 @@ INCLUDEPATH        +=  $$SDK_INSTALL_PREFIX \
                        $$SDK_INSTALL_PREFIX/KF5/SonnetUi \
                        $$SDK_INSTALL_PREFIX/KF5/Solid \
                        $$SDK_INSTALL_PREFIX/KF5/Attica \
+                       $$SDK_INSTALL_PREFIX/KF5/KGlobalAccel \
                        $$SDK_INSTALL_PREFIX/phonon4qt5 \
                        $$SDK_INSTALL_PREFIX/KChart \
                        $$SDK_INSTALL_PREFIX/libwpd-0.9 \
@@ -112,6 +113,7 @@ LIBS             +=  -L$${SDK_LIB_PREFIX} \
                      -lnetapi32 \
                      -lkernel32 \
                      -luser32 \
+                     -lsecur32 \
                      -lgdi32 \
                      -lwinspool \
                      -lshell32 \
@@ -127,7 +129,6 @@ LIBS             +=  -L$${SDK_LIB_PREFIX} \
                      -lKF5Service \
                      -lKF5Crash \
                      -lKF5DBusAddons \
-                     -lKF5XmlGui \
                      -lKF5KIOFileWidgets \
                      -lKF5IconThemes \
                      -lKF5ConfigWidgets \
@@ -154,5 +155,7 @@ LIBS             +=  -L$${SDK_LIB_PREFIX} \
                      -lKF5KrossCore \
                      -lKF5KrossUi \
                      -lKF5Notifications \
+                     -lKF5Attica \
+                     -lKF5GlobalAccel \
                      -lzstd \
                      -lintl

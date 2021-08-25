@@ -10,17 +10,23 @@ HEADERS +=  kaboutapplicationdialog.h \
             kactioncollection.h \
             kbugreport.h \
             kedittoolbar.h \
+            kedittoolbar_p.h \
             khelpmenu.h \
             kkeysequencewidget.h \
+            kkeysequencewidget_p.h \
             klicensedialog_p.h \
             kmainwindow.h \
+            kmainwindow_p.h \
+            kmainwindowiface_p.h \
             kmenumenuhandler_p.h \
             kshortcutsdialog.h \
+            kshortcutsdialog_p.h \
             kshortcutseditor.h \
             kshortcutwidget.h \
             kswitchlanguagedialog_p.h \
             ktoggletoolbaraction.h \
             ktoolbar.h \
+            ktoolbarhandler_p.h \
             kxmlguibuilder.h \
             kxmlguiclient.h \
             kxmlguifactory.h \
@@ -73,10 +79,10 @@ SOURCES +=  kaboutapplicationdialog.cpp \
             kundoactions.cpp \
             kcheckaccelerators.cpp \
             kmainwindowiface.cpp \
-            qrc_kxmlgui.cpp \
+#            qrc_kxmlgui.cpp \
             debug.cpp
 
 FORMS   += kshortcutsdialog.ui \
            kshortcutwidget.ui
 
-RESOURCES += kxmlgui.qrc
+#RESOURCES += kxmlgui.qrc
