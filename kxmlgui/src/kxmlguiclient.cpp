@@ -78,17 +78,21 @@ KXMLGUIClient::KXMLGUIClient(KXMLGUIClient *parent)
 
 KXMLGUIClient::~KXMLGUIClient()
 {
-    if (d->m_parent) {
+    if (d->m_parent)
+    {
         d->m_parent->removeChildClient(this);
     }
 
-    if (d->m_factory) {
+    if (d->m_factory)
+    {
         qCWarning(DEBUG_KXMLGUI) << this << "deleted without having been removed from the factory first. This will leak standalone popupmenus and could lead to crashes.";
         d->m_factory->forgetClient(this);
     }
 
-    for (KXMLGUIClient *client : qAsConst(d->m_children)) {
-        if (d->m_factory) {
+    for (KXMLGUIClient *client : qAsConst(d->m_children))
+    {
+        if (d->m_factory)
+        {
             d->m_factory->forgetClient(client);
         }
         assert(client->d->m_parent == this);
@@ -102,10 +106,13 @@ KXMLGUIClient::~KXMLGUIClient()
 QAction *KXMLGUIClient::action(const char *name) const
 {
     QAction *act = actionCollection()->action(QLatin1String(name));
-    if (!act) {
-        for (KXMLGUIClient *client : qAsConst(d->m_children)) {
+    if (!act)
+    {
+        for (KXMLGUIClient *client : qAsConst(d->m_children))
+        {
             act = client->actionCollection()->action(QLatin1String(name));
-            if (act) {
+            if (act)
+            {
                 break;
             }
         }
@@ -115,7 +122,8 @@ QAction *KXMLGUIClient::action(const char *name) const
 
 KActionCollection *KXMLGUIClient::actionCollection() const
 {
-    if (!d->m_actionCollection) {
+    if (!d->m_actionCollection)
+    {
         d->m_actionCollection = new KActionCollection(this);
         d->m_actionCollection->setObjectName(QStringLiteral("KXMLGUIClient-KActionCollection"));
     }
@@ -144,15 +152,18 @@ QString KXMLGUIClient::xmlFile() const
 
 QString KXMLGUIClient::localXMLFile() const
 {
-    if (!d->m_localXMLFile.isEmpty()) {
+    if (!d->m_localXMLFile.isEmpty())
+    {
         return d->m_localXMLFile;
     }
 
-    if (!QDir::isRelativePath(d->m_xmlFile)) {
+    if (!QDir::isRelativePath(d->m_xmlFile))
+    {
         return QString();    // can't save anything here
     }
 
-    if (d->m_xmlFile.isEmpty()) { // setXMLFile not called at all, can't save. Use case: ToolBarHandler
+    if (d->m_xmlFile.isEmpty())   // setXMLFile not called at all, can't save. Use case: ToolBarHandler
+    {
         return QString();
     }
 
@@ -166,7 +177,8 @@ void KXMLGUIClient::reloadXML()
     //   -> KDE5: load ui_standards_rc in setXMLFile using a flag, and remember that flag?
     //            and then KEditToolBar can use reloadXML.
     QString file(xmlFile());
-    if (!file.isEmpty()) {
+    if (!file.isEmpty())
+    {
         setXMLFile(file);
     }
 }
@@ -176,18 +188,21 @@ void KXMLGUIClient::setComponentName(const QString &componentName, const QString
     d->m_componentName = componentName;
     actionCollection()->setComponentName(componentName);
     actionCollection()->setComponentDisplayName(componentDisplayName);
-    if (d->m_builder) {
+    if (d->m_builder)
+    {
         d->m_builder->setBuilderClient(this);
     }
 }
 
 QString KXMLGUIClient::standardsXmlFileLocation()
 {
-    if (QStandardPaths::isTestModeEnabled()) {
+    if (QStandardPaths::isTestModeEnabled())
+    {
         return QStringLiteral(":/kxmlgui5/ui_standards.rc");
     }
     QString file = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, QStringLiteral("ui/ui_standards.rc"));
-    if (file.isEmpty()) {
+    if (file.isEmpty())
+    {
         // fallback to resource, to allow to use the rc file compiled into this framework, must exist!
         file = QStringLiteral(":/kxmlgui5/ui_standards.rc");
         Q_ASSERT(QFile::exists(file));
@@ -203,19 +218,24 @@ void KXMLGUIClient::loadStandardsXmlFile()
 void KXMLGUIClient::setXMLFile(const QString &_file, bool merge, bool setXMLDoc)
 {
     // store our xml file name
-    if (!_file.isNull()) {
+    if (!_file.isNull())
+    {
         d->m_xmlFile = _file;
     }
 
-    if (!setXMLDoc) {
+    if (!setXMLDoc)
+    {
         return;
     }
 
     QString file = _file;
     QStringList allFiles;
-    if (!QDir::isRelativePath(file)) {
+    if (!QDir::isRelativePath(file))
+    {
         allFiles.append(file);
-    } else {
+    }
+    else
+    {
         const QString filter = componentName() + QLatin1Char('/') + _file;
 
         // files on filesystem
@@ -223,36 +243,42 @@ void KXMLGUIClient::setXMLFile(const QString &_file, bool merge, bool setXMLDoc)
 
         // KF >= 5.4 (resource file)
         const QString qrcFile(QLatin1String(":/kxmlgui5/") + filter);
-        if (QFile::exists(qrcFile)) {
+        if (QFile::exists(qrcFile))
+        {
             allFiles << qrcFile;
         }
 
         // then compat locations
         const QStringList compatFiles =
-                   QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, filter) + // kdelibs4, KF 5.0
-                   QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, _file); // kdelibs4, KF 5.0, caller passes component name
+            QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, filter) + // kdelibs4, KF 5.0
+            QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, _file); // kdelibs4, KF 5.0, caller passes component name
 
-        if (allFiles.isEmpty() && !compatFiles.isEmpty()) {
+        if (allFiles.isEmpty() && !compatFiles.isEmpty())
+        {
             qCWarning(DEBUG_KXMLGUI) << "KXMLGUI file found at deprecated location" << compatFiles << "-- please use ${KXMLGUI_INSTALL_DIR} to install this file instead.";
         }
         allFiles += compatFiles;
     }
-    if (allFiles.isEmpty() && !_file.isEmpty()) {
+    if (allFiles.isEmpty() && !_file.isEmpty())
+    {
         // if a non-empty file gets passed and we can't find it,
         // inform the developer using some debug output
         qCWarning(DEBUG_KXMLGUI) << "cannot find .rc file" << _file << "for component" << componentName();
     }
 
     // make sure to merge the settings from any file specified by setLocalXMLFile()
-    if (!d->m_localXMLFile.isEmpty() && !file.endsWith(QLatin1String("ui_standards.rc"))) {
+    if (!d->m_localXMLFile.isEmpty() && !file.endsWith(QLatin1String("ui_standards.rc")))
+    {
         const bool exists = QDir::isRelativePath(d->m_localXMLFile) || QFile::exists(d->m_localXMLFile);
-        if (exists && !allFiles.contains(d->m_localXMLFile)) {
+        if (exists && !allFiles.contains(d->m_localXMLFile))
+        {
             allFiles.prepend(d->m_localXMLFile);
         }
     }
 
     QString doc;
-    if (!allFiles.isEmpty()) {
+    if (!allFiles.isEmpty())
+    {
         file = findMostRecentXMLFile(allFiles, doc);
     }
 
@@ -267,7 +293,8 @@ void KXMLGUIClient::setLocalXMLFile(const QString &file)
 
 void KXMLGUIClient::replaceXMLFile(const QString &xmlfile, const QString &localxmlfile, bool merge)
 {
-    if (!QDir::isAbsolutePath(xmlfile)) {
+    if (!QDir::isAbsolutePath(xmlfile))
+    {
         qCWarning(DEBUG_KXMLGUI) << "xml file" << xmlfile << "is not an absolute path";
     }
 
@@ -287,19 +314,24 @@ static void propagateTranslationDomain(QDomDocument &doc, const QStringList &tag
     const QLatin1String attrDomain("translationDomain");
     QDomElement base = doc.documentElement();
     QString domain = base.attribute(attrDomain);
-    if (domain.isEmpty()) {
+    if (domain.isEmpty())
+    {
         domain = QString::fromUtf8(KLocalizedString::applicationDomain());
-        if (domain.isEmpty()) {
+        if (domain.isEmpty())
+        {
             return;
         }
     }
-    for (const QString &tagName : tagNames) {
+    for (const QString &tagName : tagNames)
+    {
         QDomNodeList textNodes = base.elementsByTagName(tagName);
-        for (int i = 0; i < textNodes.length(); ++i) {
+        for (int i = 0; i < textNodes.length(); ++i)
+        {
             QDomElement e = textNodes.item(i).toElement();
             QString localDomain = e.attribute(attrDomain);
-            if (localDomain.isEmpty()) {
-                 e.setAttribute(attrDomain, domain);
+            if (localDomain.isEmpty())
+            {
+                e.setAttribute(attrDomain, domain);
             }
         }
     }
@@ -313,10 +345,13 @@ void KXMLGUIClient::setXML(const QString &document, bool merge)
     // QDomDocument raises a parse error on empty document, but we accept no app-specific document,
     // in which case you only get ui_standards.rc layout.
     bool result = document.isEmpty() || doc.setContent(document, &errorMsg, &errorLine, &errorColumn);
-    if (result) {
+    if (result)
+    {
         propagateTranslationDomain(doc, d->m_textTagNames);
         setDOMDocument(doc, merge);
-    } else {
+    }
+    else
+    {
 #ifdef NDEBUG
         qCCritical(DEBUG_KXMLGUI) << "Error parsing XML document:" << errorMsg << "at line" << errorLine << "column" << errorColumn;
         setDOMDocument(QDomDocument(), merge); // otherwise empty menus from ui_standards.rc stay around
@@ -329,7 +364,8 @@ void KXMLGUIClient::setXML(const QString &document, bool merge)
 
 void KXMLGUIClient::setDOMDocument(const QDomDocument &document, bool merge)
 {
-    if (merge && !d->m_doc.isNull()) {
+    if (merge && !d->m_doc.isNull())
+    {
         QDomElement base = d->m_doc.documentElement();
 
         QDomElement e = document.documentElement();
@@ -344,10 +380,13 @@ void KXMLGUIClient::setDOMDocument(const QDomDocument &document, bool merge)
         //qCDebug(DEBUG_KXMLGUI) << "Result of xmlgui merging:" << d->m_doc.toString();
 
         // we want some sort of failsafe.. just in case
-        if (base.isNull()) {
+        if (base.isNull())
+        {
             d->m_doc = document;
         }
-    } else {
+    }
+    else
+    {
         d->m_doc = document;
     }
 
@@ -383,16 +422,20 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
     // additive.  this can be for any container.. either at a file wide
     // level or a simple container level.  we look for the 'noMerge'
     // tag, in any event and just replace the old with the new
-    if (additive.attribute(attrNoMerge) == attrOne) { // ### use toInt() instead? (Simon)
+    if (additive.attribute(attrNoMerge) == attrOne)   // ### use toInt() instead? (Simon)
+    {
         base.parentNode().replaceChild(additive, base);
         return true;
-    } else {
+    }
+    else
+    {
         // Merge attributes
         {
             const QDomNamedNodeMap attribs = additive.attributes();
             const int attribcount = attribs.count();
 
-            for (int i = 0; i < attribcount; ++i) {
+            for (int i = 0; i < attribcount; ++i)
+            {
                 const QDomNode node = attribs.item(i);
                 base.setAttribute(node.nodeName(), node.nodeValue());
             }
@@ -400,10 +443,12 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
 
         // iterate over all elements in the container (of the global DOM tree)
         QDomNode n = base.firstChild();
-        while (!n.isNull()) {
+        while (!n.isNull())
+        {
             QDomElement e = n.toElement();
             n = n.nextSibling(); // Advance now so that we can safely delete e
-            if (e.isNull()) {
+            if (e.isNull())
+            {
                 continue;
             }
 
@@ -411,10 +456,12 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
 
             // if there's an action tag in the global tree and the action is
             // not implemented, then we remove the element
-            if (equalstr(tag, tagAction)) {
+            if (equalstr(tag, tagAction))
+            {
                 const QString name =  e.attribute(attrName);
                 if (!actionCollection->action(name) ||
-                        !KAuthorized::authorizeAction(name)) {
+                        !KAuthorized::authorizeAction(name))
+                {
                     // remove this child as we aren't using it
                     base.removeChild(e);
                     continue;
@@ -423,7 +470,8 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
 
             // if there's a separator defined in the global tree, then add an
             // attribute, specifying that this is a "weak" separator
-            else if (equalstr(tag, tagSeparator)) {
+            else if (equalstr(tag, tagSeparator))
+            {
                 e.setAttribute(attrWeakSeparator, uint(1));
 
                 // okay, hack time. if the last item was a weak separator OR
@@ -432,7 +480,8 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
                 QDomElement prev = e.previousSibling().toElement();
                 if (prev.isNull() ||
                         (equalstr(prev.tagName(), tagSeparator) && !prev.attribute(attrWeakSeparator).isNull()) ||
-                        (equalstr(prev.tagName(), tagText))) {
+                        (equalstr(prev.tagName(), tagText)))
+                {
                     // the previous element was a weak separator or didn't exist
                     base.removeChild(e);
                     continue;
@@ -442,20 +491,25 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
             // the MergeLocal tag lets us specify where non-standard elements
             // of the local tree shall be merged in.  After inserting the
             // elements we delete this element
-            else if (equalstr(tag, tagMergeLocal)) {
+            else if (equalstr(tag, tagMergeLocal))
+            {
                 QDomNode it = additive.firstChild();
-                while (!it.isNull()) {
+                while (!it.isNull())
+                {
                     QDomElement newChild = it.toElement();
                     it = it.nextSibling();
-                    if (newChild.isNull()) {
+                    if (newChild.isNull())
+                    {
                         continue;
                     }
 
-                    if (equalstr(newChild.tagName(), tagText)) {
+                    if (equalstr(newChild.tagName(), tagText))
+                    {
                         continue;
                     }
 
-                    if (newChild.attribute(attrAlreadyVisited) == attrOne) {
+                    if (newChild.attribute(attrAlreadyVisited) == attrOne)
+                    {
                         continue;
                     }
 
@@ -463,12 +517,14 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
                     QString elemName(e.attribute(attrName));
 
                     if ((itAppend.isNull() && elemName.isEmpty()) ||
-                            (itAppend == elemName)) {
+                            (itAppend == elemName))
+                    {
                         // first, see if this new element matches a standard one in
                         // the global file.  if it does, then we skip it as it will
                         // be merged in, later
                         QDomElement matchingElement = findMatchingElement(newChild, base);
-                        if (matchingElement.isNull() || equalstr(newChild.tagName(), tagSeparator)) {
+                        if (matchingElement.isNull() || equalstr(newChild.tagName(), tagSeparator))
+                        {
                             base.insertBefore(newChild, e);
                         }
                     }
@@ -478,9 +534,12 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
                 continue;
             }
 
-            else if (equalstr(tag, tagText)) {
+            else if (equalstr(tag, tagText))
+            {
                 continue;
-            } else if (equalstr(tag, tagMerge)) {
+            }
+            else if (equalstr(tag, tagMerge))
+            {
                 continue;
             }
 
@@ -488,26 +547,32 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
             // can be sure that it is a container --> proceed with child nodes
             // recursively and delete the just proceeded container item in
             // case it is empty (if the recursive call returns true)
-            else {
+            else
+            {
                 QDomElement matchingElement = findMatchingElement(e, additive);
-                if (!matchingElement.isNull()) {
+                if (!matchingElement.isNull())
+                {
                     matchingElement.setAttribute(attrAlreadyVisited, uint(1));
 
-                    if (mergeXML(e, matchingElement, actionCollection)) {
+                    if (mergeXML(e, matchingElement, actionCollection))
+                    {
                         base.removeChild(e);
                         additive.removeChild(matchingElement); // make sure we don't append it below
                         continue;
                     }
 
                     continue;
-                } else {
+                }
+                else
+                {
                     // this is an important case here! We reach this point if the
                     // "local" tree does not contain a container definition for
                     // this container. However we have to call mergeXML recursively
                     // and make it check if there are actions implemented for this
                     // container. *If* none, then we can remove this container now
                     QDomElement dummy;
-                    if (mergeXML(e, dummy, actionCollection)) {
+                    if (mergeXML(e, dummy, actionCollection))
+                    {
                         base.removeChild(e);
                     }
                     continue;
@@ -518,16 +583,19 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
         //here we append all child elements which were not inserted
         //previously via the LocalMerge tag
         n = additive.firstChild();
-        while (!n.isNull()) {
+        while (!n.isNull())
+        {
             QDomElement e = n.toElement();
             n = n.nextSibling(); // Advance now so that we can safely delete e
-            if (e.isNull()) {
+            if (e.isNull())
+            {
                 continue;
             }
 
             QDomElement matchingElement = findMatchingElement(e, base);
 
-            if (matchingElement.isNull()) {
+            if (matchingElement.isNull())
+            {
                 base.appendChild(e);
             }
         }
@@ -536,7 +604,8 @@ bool KXMLGUIClientPrivate::mergeXML(QDomElement &base, QDomElement &additive, KA
         // a weak separator
         QDomElement last = base.lastChild().toElement();
         if (equalstr(last.tagName(), tagSeparator) &&
-                (!last.attribute(attrWeakSeparator).isNull())) {
+                (!last.attribute(attrWeakSeparator).isNull()))
+        {
             base.removeChild(last);
         }
     }
@@ -550,38 +619,47 @@ bool KXMLGUIClientPrivate::isEmptyContainer(const QDomElement &base, KActionColl
     // indicate the caller that it can delete "us" (the base element
     // argument of "this" call)
     QDomNode n = base.firstChild();
-    while (!n.isNull()) {
+    while (!n.isNull())
+    {
         const QDomElement e = n.toElement();
         n = n.nextSibling(); // Advance now so that we can safely delete e
-        if (e.isNull()) {
+        if (e.isNull())
+        {
             continue;
         }
 
         const QString tag = e.tagName();
 
-        if (equalstr(tag, QLatin1String("Action"))) {
+        if (equalstr(tag, QLatin1String("Action")))
+        {
             // if base contains an implemented action, then we must not get
             // deleted (note that the actionCollection contains both,
             // "global" and "local" actions)
-            if (actionCollection->action(e.attribute(QStringLiteral("name")))) {
+            if (actionCollection->action(e.attribute(QStringLiteral("name"))))
+            {
                 return false;
             }
-        } else if (equalstr(tag, QLatin1String("Separator"))) {
+        }
+        else if (equalstr(tag, QLatin1String("Separator")))
+        {
             // if we have a separator which has *not* the weak attribute
             // set, then it must be owned by the "local" tree in which case
             // we must not get deleted either
             const QString weakAttr = e.attribute(QStringLiteral("weakSeparator"));
-            if (weakAttr.isEmpty() || weakAttr.toInt() != 1) {
+            if (weakAttr.isEmpty() || weakAttr.toInt() != 1)
+            {
                 return false;
             }
         }
 
-        else if (equalstr(tag, QLatin1String("merge"))) {
+        else if (equalstr(tag, QLatin1String("merge")))
+        {
             continue;
         }
 
         // a text tag is NOT enough to spare this container
-        else if (equalstr(tag, QLatin1String("text"))) {
+        else if (equalstr(tag, QLatin1String("text")))
+        {
             continue;
         }
 
@@ -589,7 +667,8 @@ bool KXMLGUIClientPrivate::isEmptyContainer(const QDomElement &base, KActionColl
         // case (at this position we can be *sure* that the container is
         // *not* empty, as the recursive call for it was in the first loop
         // which deleted the element in case the call returned "true"
-        else {
+        else
+        {
             return false;
         }
     }
@@ -600,23 +679,27 @@ bool KXMLGUIClientPrivate::isEmptyContainer(const QDomElement &base, KActionColl
 QDomElement KXMLGUIClientPrivate::findMatchingElement(const QDomElement &base, const QDomElement &additive)
 {
     QDomNode n = additive.firstChild();
-    while (!n.isNull()) {
+    while (!n.isNull())
+    {
         QDomElement e = n.toElement();
         n = n.nextSibling(); // Advance now so that we can safely delete e -- TODO we don't, so simplify this
-        if (e.isNull()) {
+        if (e.isNull())
+        {
             continue;
         }
 
         const QString tag = e.tagName();
         // skip all action and merge tags as we will never use them
         if (equalstr(tag, QLatin1String("Action"))
-                || equalstr(tag, QLatin1String("MergeLocal"))) {
+                || equalstr(tag, QLatin1String("MergeLocal")))
+        {
             continue;
         }
 
         // now see if our tags are equivalent
         if (equalstr(tag, base.tagName()) &&
-                e.attribute(QStringLiteral("name")) == base.attribute(QStringLiteral("name"))) {
+                e.attribute(QStringLiteral("name")) == base.attribute(QStringLiteral("name")))
+        {
             return e;
         }
     }
@@ -652,7 +735,8 @@ KXMLGUIClient *KXMLGUIClient::parentClient() const
 
 void KXMLGUIClient::insertChildClient(KXMLGUIClient *child)
 {
-    if (child->d->m_parent) {
+    if (child->d->m_parent)
+    {
         child->d->m_parent->removeChildClient(child);
     }
     d->m_children.append(child);
@@ -691,7 +775,8 @@ KXMLGUIBuilder *KXMLGUIClient::clientBuilder() const
 
 void KXMLGUIClient::plugActionList(const QString &name, const QList<QAction *> &actionList)
 {
-    if (!d->m_factory) {
+    if (!d->m_factory)
+    {
         return;
     }
 
@@ -700,7 +785,8 @@ void KXMLGUIClient::plugActionList(const QString &name, const QList<QAction *> &
 
 void KXMLGUIClient::unplugActionList(const QString &name)
 {
-    if (!d->m_factory) {
+    if (!d->m_factory)
+    {
         return;
     }
 
@@ -750,18 +836,22 @@ void KXMLGUIClient::stateChanged(const QString &newstate, KXMLGUIClient::Reverse
 
     // Enable actions which need to be enabled...
     //
-    for (const auto &actionId : stateChange.actionsToEnable) {
+    for (const auto &actionId : stateChange.actionsToEnable)
+    {
         QAction *action = actionCollection()->action(actionId);
-        if (action) {
+        if (action)
+        {
             action->setEnabled(setTrue);
         }
     }
 
     // and disable actions which need to be disabled...
     //
-    for (const auto &actionId : stateChange.actionsToDisable) {
+    for (const auto &actionId : stateChange.actionsToDisable)
+    {
         QAction *action = actionCollection()->action(actionId);
-        if (action) {
+        if (action)
+        {
             action->setEnabled(setFalse);
         }
     }
@@ -771,7 +861,8 @@ void KXMLGUIClient::stateChanged(const QString &newstate, KXMLGUIClient::Reverse
 void KXMLGUIClient::beginXMLPlug(QWidget *w)
 {
     actionCollection()->addAssociatedWidget(w);
-    for (KXMLGUIClient *client : qAsConst(d->m_children)) {
+    for (KXMLGUIClient *client : qAsConst(d->m_children))
+    {
         client->beginXMLPlug(w);
     }
 }
@@ -783,7 +874,8 @@ void KXMLGUIClient::endXMLPlug()
 void KXMLGUIClient::prepareXMLUnplug(QWidget *w)
 {
     actionCollection()->removeAssociatedWidget(w);
-    for (KXMLGUIClient *client : qAsConst(d->m_children)) {
+    for (KXMLGUIClient *client : qAsConst(d->m_children))
+    {
         client->prepareXMLUnplug(w);
     }
 }
@@ -799,68 +891,85 @@ QString KXMLGUIClient::findVersionNumber(const QString &xml)
            ST_EXPECT_VERSION, ST_VERSION_NUM
          } state = ST_START;
     const int length = xml.length();
-    for (int pos = 0; pos < length; pos++) {
-        switch (state) {
-        case ST_START:
-            if (xml[pos] == QLatin1Char('<')) {
-                state = ST_AFTER_OPEN;
-            }
-            break;
-        case ST_AFTER_OPEN: {
-            //Jump to gui..
-            const int guipos = xml.indexOf(QLatin1String("gui"), pos, Qt::CaseInsensitive);
-            if (guipos == -1) {
-                return QString();    //Reject
-            }
-
-            pos = guipos + 2; //Position at i, so we're moved ahead to the next character by the ++;
-            state = ST_AFTER_GUI;
-            break;
-        }
-        case ST_AFTER_GUI:
-            state = ST_EXPECT_VERSION;
-            break;
-        case ST_EXPECT_VERSION: {
-            const int verpos = xml.indexOf(QLatin1String("version"), pos, Qt::CaseInsensitive);
-            if (verpos == -1) {
-                return QString();    //Reject
-            }
-            pos = verpos + 7; // strlen("version") is 7
-            while (xml.at(pos).isSpace()) {
-                ++pos;
-            }
-            if (xml.at(pos++) != QLatin1Char('=')) {
-                return QString();    //Reject
-            }
-            while (xml.at(pos).isSpace()) {
-                ++pos;
-            }
-
-            state = ST_VERSION_NUM;
-            break;
-        }
-        case ST_VERSION_NUM: {
-            int endpos;
-            for (endpos = pos; endpos < length; endpos++) {
-                const ushort ch = xml[endpos].unicode();
-                if (ch >= QLatin1Char('0') && ch <= QLatin1Char('9')) {
-                    continue;    //Number..
+    for (int pos = 0; pos < length; pos++)
+    {
+        switch (state)
+        {
+            case ST_START:
+                if (xml[pos] == QLatin1Char('<'))
+                {
+                    state = ST_AFTER_OPEN;
                 }
-                if (ch == QLatin1Char('"')) { //End of parameter
-                    break;
-                } else { //This shouldn't be here..
-                    endpos = length;
+                break;
+            case ST_AFTER_OPEN:
+            {
+                //Jump to gui..
+                const int guipos = xml.indexOf(QLatin1String("gui"), pos, Qt::CaseInsensitive);
+                if (guipos == -1)
+                {
+                    return QString();    //Reject
                 }
-            }
 
-            if (endpos != pos && endpos < length) {
-                const QString matchCandidate = xml.mid(pos, endpos - pos); //Don't include " ".
-                return matchCandidate;
+                pos = guipos + 2; //Position at i, so we're moved ahead to the next character by the ++;
+                state = ST_AFTER_GUI;
+                break;
             }
+            case ST_AFTER_GUI:
+                state = ST_EXPECT_VERSION;
+                break;
+            case ST_EXPECT_VERSION:
+            {
+                const int verpos = xml.indexOf(QLatin1String("version"), pos, Qt::CaseInsensitive);
+                if (verpos == -1)
+                {
+                    return QString();    //Reject
+                }
+                pos = verpos + 7; // strlen("version") is 7
+                while (xml.at(pos).isSpace())
+                {
+                    ++pos;
+                }
+                if (xml.at(pos++) != QLatin1Char('='))
+                {
+                    return QString();    //Reject
+                }
+                while (xml.at(pos).isSpace())
+                {
+                    ++pos;
+                }
 
-            state = ST_EXPECT_VERSION; //Try to match a well-formed version..
-            break;
-        } //case..
+                state = ST_VERSION_NUM;
+                break;
+            }
+            case ST_VERSION_NUM:
+            {
+                int endpos;
+                for (endpos = pos; endpos < length; endpos++)
+                {
+                    const ushort ch = xml[endpos].unicode();
+                    if (ch >= QLatin1Char('0') && ch <= QLatin1Char('9'))
+                    {
+                        continue;    //Number..
+                    }
+                    if (ch == QLatin1Char('"'))   //End of parameter
+                    {
+                        break;
+                    }
+                    else     //This shouldn't be here..
+                    {
+                        endpos = length;
+                    }
+                }
+
+                if (endpos != pos && endpos < length)
+                {
+                    const QString matchCandidate = xml.mid(pos, endpos - pos); //Don't include " ".
+                    return matchCandidate;
+                }
+
+                state = ST_EXPECT_VERSION; //Try to match a well-formed version..
+                break;
+            } //case..
         } //switch
     } //for
 

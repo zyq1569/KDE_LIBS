@@ -35,7 +35,8 @@ static QSettingsPtr localeOverridesSettings()
 {
     const QString configPath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
     const QDir configDir(configPath);
-    if (!configDir.exists()) {
+    if (!configDir.exists())
+    {
         configDir.mkpath(QStringLiteral("."));
     }
 
@@ -59,9 +60,12 @@ void setApplicationSpecificLanguage(const QByteArray &languageCode)
     QSettingsPtr settings = localeOverridesSettings();
     settings->beginGroup(QStringLiteral("Language"));
 
-    if (languageCode.isEmpty()) {
+    if (languageCode.isEmpty())
+    {
         settings->remove(qAppName());
-    } else {
+    }
+    else
+    {
         settings->setValue(qAppName(), languageCode);
     }
 }
@@ -70,11 +74,15 @@ void initializeLanguages()
 {
     const QByteArray languageCode = getApplicationSpecificLanguage();
 
-    if (!languageCode.isEmpty()) {
+    if (!languageCode.isEmpty())
+    {
         QByteArray languages = qgetenv("LANGUAGE");
-        if (languages.isEmpty()) {
+        if (languages.isEmpty())
+        {
             qputenv("LANGUAGE", languageCode);
-        } else {
+        }
+        else
+        {
             qputenv("LANGUAGE", languageCode + ':' + languages);
         }
         // Ideally setting the LANGUAGE would change the default QLocale too
@@ -88,7 +96,8 @@ void initializeLanguages()
     }
 }
 
-struct LanguageRowData {
+struct LanguageRowData
+{
     LanguageRowData()
     {
         label = nullptr;
@@ -163,13 +172,15 @@ KSwitchLanguageDialog::KSwitchLanguageDialog(QWidget *parent)
     const QStringList defaultLanguages = d->applicationLanguageList();
 
     int count = defaultLanguages.count();
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < count; ++i)
+    {
         QString language = defaultLanguages[i];
         bool primaryLanguage = (i == 0);
         d->addLanguageButton(language, primaryLanguage);
     }
 
-    if (!count) {
+    if (!count)
+    {
         QLocale l;
         d->addLanguageButton(l.name(), true);
     }
@@ -217,19 +228,22 @@ void KSwitchLanguageDialog::slotAddLanguageButton()
 void KSwitchLanguageDialog::removeButtonClicked()
 {
     QObject const *signalSender = sender();
-    if (!signalSender) {
+    if (!signalSender)
+    {
         qCCritical(DEBUG_KXMLGUI) << "KSwitchLanguageDialog::removeButtonClicked() called directly, not using signal";
         return;
     }
 
     QPushButton *removeButton = const_cast<QPushButton *>(::qobject_cast<const QPushButton *>(signalSender));
-    if (!removeButton) {
+    if (!removeButton)
+    {
         qCCritical(DEBUG_KXMLGUI) << "KSwitchLanguageDialog::removeButtonClicked() called from something else than QPushButton";
         return;
     }
 
     QMap<QPushButton *, LanguageRowData>::iterator it = d->languageRows.find(removeButton);
-    if (it == d->languageRows.end()) {
+    if (it == d->languageRows.end())
+    {
         qCCritical(DEBUG_KXMLGUI) << "KSwitchLanguageDialog::removeButtonClicked called from unknown QPushButton";
         return;
     }
@@ -248,9 +262,11 @@ void KSwitchLanguageDialog::languageOnButtonChanged(const QString &languageCode)
 {
     Q_UNUSED(languageCode);
 #if 0
-    for (int i = 0, count = d->languageButtons.count(); i < count; ++i) {
+    for (int i = 0, count = d->languageButtons.count(); i < count; ++i)
+    {
         KLanguageButton *languageButton = d->languageButtons[i];
-        if (languageButton->current() == languageCode) {
+        if (languageButton->current() == languageCode)
+        {
             //update all buttons which have matching id
             //might update buttons which were not changed, but well...
             languageButton->setText(KLocale::global()->languageCodeToName(languageCode));
@@ -263,11 +279,13 @@ void KSwitchLanguageDialog::slotOk()
 {
     QStringList languages;
 
-    for (auto *languageButton : qAsConst(d->languageButtons)) {
+    for (auto *languageButton : qAsConst(d->languageButtons))
+    {
         languages << languageButton->current();
     }
 
-    if (d->applicationLanguageList() != languages) {
+    if (d->applicationLanguageList() != languages)
+    {
         QString languageString = languages.join(QLatin1Char(':'));
         //list is different from defaults or saved languages list
         setApplicationSpecificLanguage(languageString.toLatin1());
@@ -292,7 +310,8 @@ void KSwitchLanguageDialog::slotDefault()
     // read back the new default
     QString language = QString::fromLatin1(getApplicationSpecificLanguage("en_US"));
 
-    if (defaultLanguages != (QStringList() << language)) {
+    if (defaultLanguages != (QStringList() << language))
+    {
 
         KMessageBox::information(
             this,
@@ -317,7 +336,8 @@ KSwitchLanguageDialogPrivate::KSwitchLanguageDialogPrivate(
 static bool stripCountryCode(QString *languageCode)
 {
     const int idx = languageCode->indexOf(QLatin1Char('_'));
-    if (idx != -1) {
+    if (idx != -1)
+    {
         *languageCode = languageCode->left(idx);
         return true;
     }
@@ -330,14 +350,20 @@ void KSwitchLanguageDialogPrivate::fillApplicationLanguages(KLanguageButton *but
     QSet<QString> insertedLanguges;
 
     const QList<QLocale> allLocales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry);
-    for (const QLocale &l : allLocales) {
-        if (l != cLocale) {
+    for (const QLocale &l : allLocales)
+    {
+        if (l != cLocale)
+        {
             QString languageCode = l.name();
-            if (!insertedLanguges.contains(languageCode) && KLocalizedString::isApplicationTranslatedInto(languageCode)) {
+            if (!insertedLanguges.contains(languageCode) && KLocalizedString::isApplicationTranslatedInto(languageCode))
+            {
                 button->insertLanguage(languageCode);
                 insertedLanguges << languageCode;
-            } else if (stripCountryCode(&languageCode)) {
-                if (!insertedLanguges.contains(languageCode) && KLocalizedString::isApplicationTranslatedInto(languageCode)) {
+            }
+            else if (stripCountryCode(&languageCode))
+            {
+                if (!insertedLanguges.contains(languageCode) && KLocalizedString::isApplicationTranslatedInto(languageCode))
+                {
                     button->insertLanguage(languageCode);
                     insertedLanguges << languageCode;
                 }
@@ -351,31 +377,40 @@ QStringList KSwitchLanguageDialogPrivate::applicationLanguageList()
     QStringList languagesList;
 
     QByteArray languageCode = getApplicationSpecificLanguage();
-    if (!languageCode.isEmpty()) {
+    if (!languageCode.isEmpty())
+    {
         languagesList = QString::fromLatin1(languageCode).split(QLatin1Char(':'));
     }
-    if (languagesList.isEmpty()) {
+    if (languagesList.isEmpty())
+    {
         QLocale l;
         languagesList = l.uiLanguages();
 
         // We get en-US here but we use en_US
-        for (auto &language : languagesList) {
+        for (auto &language : languagesList)
+        {
             language.replace(QLatin1Char('-'), QLatin1Char('_'));
         }
     }
 
-    for (int i = 0; i < languagesList.count();) {
+    for (int i = 0; i < languagesList.count();)
+    {
         QString languageCode = languagesList[i];
-        if (!KLocalizedString::isApplicationTranslatedInto(languageCode)) {
-            if (stripCountryCode(&languageCode)) {
-                if (KLocalizedString::isApplicationTranslatedInto(languageCode)) {
+        if (!KLocalizedString::isApplicationTranslatedInto(languageCode))
+        {
+            if (stripCountryCode(&languageCode))
+            {
+                if (KLocalizedString::isApplicationTranslatedInto(languageCode))
+                {
                     languagesList[i] = languageCode;
                     ++i;
                     continue;
                 }
             }
             languagesList.removeAt(i);
-        } else {
+        }
+        else
+        {
             ++i;
         }
     }
@@ -400,7 +435,8 @@ void KSwitchLanguageDialogPrivate::addLanguageButton(const QString &languageCode
     LanguageRowData languageRowData;
     QPushButton *removeButton = nullptr;
 
-    if (!primaryLanguage) {
+    if (!primaryLanguage)
+    {
         removeButton = new QPushButton(i18nc("@action:button", "Remove"), p);
 
         QObject::connect(removeButton, &QPushButton::clicked,
@@ -417,7 +453,8 @@ void KSwitchLanguageDialogPrivate::addLanguageButton(const QString &languageCode
     languagesLayout->addWidget(languageLabel, numRows + 1, 1, Qt::AlignLeft);
     languagesLayout->addWidget(languageButton, numRows + 1, 2, Qt::AlignLeft);
 
-    if (!primaryLanguage) {
+    if (!primaryLanguage)
+    {
         languagesLayout->addWidget(removeButton, numRows + 1, 3, Qt::AlignLeft);
         languageRowData.setRowWidgets(languageLabel, languageButton, removeButton);
         removeButton->show();

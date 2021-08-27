@@ -5,17 +5,17 @@
     SPDX-License-Identifier: LGPL-2.0-only
 */
 
-#include <QAction>
-#include <QTextEdit>
-#include <QTimer>
-#include <QApplication>
-#include <QStandardPaths>
-#include <QTest>
+//#include <QAction>
+//#include <QTextEdit>
+//#include <QTimer>
+//#include <QApplication>
+//#include <QStandardPaths>
+//#include <QTest>
 
-#include <kxmlguiwindow.h>
-#include <kactioncollection.h>
-#include <kmessagebox.h>
-#include <kconfiggroup.h>
+//#include <kxmlguiwindow.h>
+//#include <kactioncollection.h>
+//#include <kmessagebox.h>
+//#include <kconfiggroup.h>
 
 // BUG: if this symbol is defined the problem consists on:
 //      - main window is created.
@@ -27,23 +27,22 @@
 //          - Move one toolbar to other place (bottom, left, right, or deattach it).
 //          - Close the test (so settings are saved).
 //          - Reopen the test. The toolbar you moved is not keeping the place you specified.
-#define REPRODUCE_TOOLBAR_BUG
+//#define REPRODUCE_TOOLBAR_BUG
+#include "kxmlguiwindowtest.h"
+//class MainWindow: public KXmlGuiWindow
+//{
+//    Q_OBJECT
 
-class MainWindow
-    : public KXmlGuiWindow
-{
-    Q_OBJECT
+//public:
+//    MainWindow(QWidget *parent = nullptr);
 
-public:
-    MainWindow(QWidget *parent = nullptr);
+//public Q_SLOTS:
+//    void slotTest();
+//    void slotCreate();
 
-public Q_SLOTS:
-    void slotTest();
-    void slotCreate();
-
-private:
-    void setupActions();
-};
+//private:
+//    void setupActions();
+//};
 
 void MainWindow::slotTest()
 {
