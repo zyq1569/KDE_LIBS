@@ -18,4 +18,5 @@ SUBDIRS += src/KF5XmlGui.pro \
     autotests/kxmlgui_unittest.pro \
     tests/kxmlguitest.pro \
     src/designer/kxmlguiwidgets.pro \
-    tests/kxmlguiwindowtest.pro
+    tests/kxmlguiwindowtest.pro \
+    tests/kxmlGuiMain/kxmlGuiMain.pro
