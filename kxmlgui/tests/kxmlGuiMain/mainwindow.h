@@ -12,6 +12,7 @@
 #include <kactioncollection.h>
 #include <kmessagebox.h>
 #include <kconfiggroup.h>
+
 class MainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
